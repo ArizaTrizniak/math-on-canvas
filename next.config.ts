@@ -5,6 +5,10 @@ const EDITOR_URL = process.env.EDITOR_URL || "http://localhost:5173";
 const nextConfig: NextConfig = {
   reactCompiler: true,
 
+  env: {
+    NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version || "0.0.0",
+  },
+
   rewrites: async () => ({
     afterFiles: [
       {

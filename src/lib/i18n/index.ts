@@ -7,19 +7,27 @@ import commonEN from './locales/en/common.json'
 import commonRU from './locales/ru/common.json'
 import commonES from './locales/es/common.json'
 import commonDE from './locales/de/common.json'
+import landingEN from './locales/en/landing.json'
+import landingRU from './locales/ru/landing.json'
+import landingES from './locales/es/landing.json'
+import landingDE from './locales/de/landing.json'
 
 export const resources = {
     en: {
-        common: commonEN
+        common: commonEN,
+        landing: landingEN
     },
     ru: {
-        common: commonRU
+        common: commonRU,
+        landing: landingRU
     },
     es: {
-        common: commonES
+        common: commonES,
+        landing: landingES
     },
     de: {
-        common: commonDE
+        common: commonDE,
+        landing: landingDE
     }
 } as const
 
@@ -30,7 +38,7 @@ i18n
         resources,
         fallbackLng: 'en',
         defaultNS: 'common',
-        ns: ['common'],
+        ns: ['common', 'landing'],
         interpolation: {
             escapeValue: false
         },

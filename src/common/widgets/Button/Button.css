@@ -1,0 +1,14 @@
+.icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.icon-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

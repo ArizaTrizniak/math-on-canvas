@@ -1,18 +1,14 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import type { StaticImageData } from 'next/image'
-import logo from '../../assets/img/logo.svg'
-import screen1Webp from '../../assets/img/screen1.webp'
-import screen2Webp from '../../assets/img/screen2.webp'
-import screen3Webp from '../../assets/img/screen3.webp'
-import screen4Webp from '../../assets/img/screen4.webp'
 import LanguageSwitch from './widgets/LanguageSwitch/LandingLanguageSwitch'
 import './LandingPage.css'
 import { trackAnalyticsEvent } from '@/common/utils/analytics'
 
-declare global {
-    const __APP_VERSION__: string
-}
+const logo = '/images/logo.svg'
+const screen1Webp = '/images/screen1.webp'
+const screen2Webp = '/images/screen2.webp'
+const screen3Webp = '/images/screen3.webp'
+const screen4Webp = '/images/screen4.webp'
 
 type FeatureKey = 'easy' | 'formulas' | 'shapes' | 'export' | 'customize'
 type HighlightKey = 'pdf' | 'pages' | 'symbols' | 'visual' | 'library' | 'geometry'
@@ -47,31 +43,47 @@ function buildHighlightMap(
 export const LandingPage: React.FC = () => {
     const { t } = useTranslation('landing')
     const [activeSlide, setActiveSlide] = React.useState(0)
-    const carouselImages = React.useMemo(() => [screen1Webp, screen2Webp, screen3Webp, screen4Webp], [] as const) as StaticImageData[]
+    const [isCarouselActive, setIsCarouselActive] = React.useState(false)
+    const carouselImages = React.useMemo(() => [screen1Webp, screen2Webp, screen3Webp, screen4Webp], [])
 
     const features = buildFeatureMap(t)
     const highlights = buildHighlightMap(t)
 
     const handlePrimaryClick = () => {
         trackAnalyticsEvent('editor_start', { source: 'hero_cta' })
+        window.location.href = '/editor'
     }
 
     const handleHeaderClick = () => {
         trackAnalyticsEvent('editor_start', { source: 'header_link' })
+        window.location.href = '/editor'
     }
 
     React.useEffect(() => {
         const preload = document.createElement('link')
         preload.rel = 'preload'
         preload.as = 'image'
-        preload.href = carouselImages[0].src
+        preload.href = carouselImages[0]
         document.head.appendChild(preload)
         return () => {
             document.head.removeChild(preload)
         }
     }, [carouselImages])
 
+    React.useEffect(() => {
+        if (!isCarouselActive) return undefined
+        const id = window.setInterval(() => {
+            setActiveSlide((prev) => (prev + 1) % carouselImages.length)
+        }, 5200)
+        return () => {
+            window.clearInterval(id)
+        }
+    }, [carouselImages.length, isCarouselActive])
+
+    const activateCarousel = () => setIsCarouselActive(true)
+
     const goToSlide = (index: number) => {
+        activateCarousel()
         setActiveSlide((index + carouselImages.length) % carouselImages.length)
     }
 
@@ -152,13 +164,15 @@ export const LandingPage: React.FC = () => {
                                         style={{ transform: `translateX(-${activeSlide * 100}%)` }}
                                     >
                                         {carouselImages.map((image, index) => (
-                                            <picture key={image.src} className="landing__carousel-slide">
-                                                <source srcSet={image.src} type="image/webp" />
+                                            <picture key={image} className="landing__carousel-slide">
+                                                <source srcSet={image} type="image/webp" />
                                                 <img
                                                     className="landing__carousel-image"
-                                                    src={image.src}
+                                                    src={image}
                                                     alt={`${t('preview.caption')} ${index + 1}`}
                                                     decoding="async"
+                                                    fetchPriority={index === activeSlide ? 'high' : 'low'}
+                                                    loading={index === 0 ? 'eager' : 'lazy'}
                                                     width={1600}
                                                     height={900}
                                                 />
@@ -227,7 +241,7 @@ export const LandingPage: React.FC = () => {
 
             <footer className="landing__footer">
                 {t('footer')}
-                <span className="landing__version" style={{ opacity: 0.5, marginLeft: '1em' }}>v{__APP_VERSION__}</span>
+                <span className="landing__version" style={{ opacity: 0.5, marginLeft: '1em' }}>v{process.env.NEXT_PUBLIC_APP_VERSION}</span>
             </footer>
         </div>
     )
