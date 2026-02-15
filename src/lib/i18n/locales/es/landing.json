@@ -1,0 +1,62 @@
+{
+    "brand": "Math on Canvas",
+    "language": "Idioma",
+    "hero": {
+        "tag": "Para profesores de matemáticas",
+        "title": "Tus diagramas matemáticos: más simples, rápidos y claros.",
+        "subtitle": "Espacio de trabajo online para matemáticas visuales: gráficos, figuras, fórmulas, todo en un solo lienzo.",
+        "narrative": "Hay muchos materiales listos en internet, pero encontrar el adecuado lleva tiempo. Con MathOnCanvas construyes exactamente lo que tu lección necesita: tu propio mundo de matemáticas visuales."
+    },
+    "cta": {
+        "loading": "Preparando editor...",
+        "ready": "Abrir editor",
+        "error": "Intentar de nuevo"
+    },
+    "status": {
+        "loading": "Descargando el paquete del editor",
+        "ready": "Editor listo para trabajar",
+        "error": "Falló la precarga. Inténtalo de nuevo."
+    },
+    "sync": "Cambiador de idioma sincronizado con la barra de herramientas del editor.",
+    "featuresTitle": "Qué incluye",
+    "features": {
+        "easy": "Fácil de aprender con una interfaz clara y amigable.",
+        "formulas": "Fórmulas con vista previa en vivo.",
+        "shapes": "Formas geométricas, ángulos, marcadores, cuadrículas.",
+        "export": "Exporta a PDF sin pérdida de calidad.",
+        "customize": "Amplia gama de opciones de personalización para elementos."
+    },
+    "preview": {
+        "caption": "Espacio de trabajo para matemáticas visuales"
+    },
+    "highlightsTitle": "Por qué ayuda",
+    "highlightsSubtitle": "Herramientas que mantienen los apuntes legibles e imprimibles a cualquier escala.",
+    "highlightPlaceholder": "Marcador de imagen",
+    "highlights": {
+        "symbols": {
+            "title": "Símbolos matemáticos en texto",
+            "description": "Una paleta dedicada inserta ∑, √ y otros símbolos directamente en el texto sin buscar códigos."
+        },
+        "pdf": {
+            "title": "PDF sin pérdida de calidad",
+            "description": "Imprime pósters para el aula y fichas para estudiantes desde la misma fuente. El PDF se mantiene nítido y fácil de compartir."
+        },
+        "pages": {
+            "title": "Documentos multipágina",
+            "description": "Tareas y respuestas en un solo documento; imprime solo las páginas que necesites."
+        },
+        "visual": {
+            "title": "Editor visual de fórmulas",
+            "description": "No necesitas saber LaTeX. Ajusta el estilo, rota y mueve fórmulas con retroalimentación instantánea."
+        },
+        "library": {
+            "title": "Librería de fórmulas",
+            "description": "Empieza con fórmulas populares y adáptalas en lugar de empezar desde cero."
+        },
+        "geometry": {
+            "title": "Geometría",
+            "description": "Líneas, polígonos y marcadores de ángulo: todo para construir diagramas precisos rápidamente."
+        }
+    },
+    "footer": "Creado para proyectos de matemáticas y geometría"
+}
