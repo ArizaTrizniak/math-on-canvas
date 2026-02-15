@@ -1,0 +1,62 @@
+{
+    "brand": "Math on Canvas",
+    "language": "Sprache",
+    "hero": {
+        "tag": "Für Mathelehrer",
+        "title": "Ihre Mathe-Diagramme: einfacher, schneller, klarer.",
+        "subtitle": "Online-Arbeitsbereich für visuelle Mathematik: Graphen, Figuren, Formeln, alles auf einem Canvas.",
+        "narrative": "Es gibt viele fertige Materialien online, aber das Richtige zu finden dauert. Mit MathOnCanvas erstellen Sie genau das, was Ihre Unterrichtsstunde braucht: Ihre eigene Welt der visuellen Mathematik."
+    },
+    "cta": {
+        "loading": "Editor wird vorbereitet...",
+        "ready": "Editor öffnen",
+        "error": "Erneut versuchen"
+    },
+    "status": {
+        "loading": "Editor-Paket wird heruntergeladen",
+        "ready": "Editor bereit",
+        "error": "Vorladen fehlgeschlagen. Bitte versuchen Sie es erneut."
+    },
+    "sync": "Sprachumschalter synchronisiert mit Editor-Symbolleiste.",
+    "featuresTitle": "Was ist drin",
+    "features": {
+        "easy": "Leicht zu erlernen mit einer klaren, benutzerfreundlichen Oberfläche.",
+        "formulas": "Formeln mit Live-Vorschau.",
+        "shapes": "Geometrische Formen, Winkel, Markierungen, Raster.",
+        "export": "Export als PDF ohne Qualitätsverlust.",
+        "customize": "Umfangreiche Anpassungsmöglichkeiten für Elemente."
+    },
+    "preview": {
+        "caption": "Arbeitsbereich für visuelle Mathematik"
+    },
+    "highlightsTitle": "Warum es hilft",
+    "highlightsSubtitle": "Werkzeuge, die Arbeitsblätter lesbar und druckbar halten, egal in welchem Maßstab.",
+    "highlightPlaceholder": "Bildplatzhalter",
+    "highlights": {
+        "symbols": {
+            "title": "Mathe-Symbole im Text",
+            "description": "Eine spezielle Palette fügt ∑, √ und andere Symbole direkt in den Text ein, ohne Codesuche."
+        },
+        "pdf": {
+            "title": "PDF ohne Qualitätsverlust",
+            "description": "Drucken Sie Tafelposter und Schülerkarten aus derselben Quelle. PDF bleibt scharf und einfach zu teilen."
+        },
+        "pages": {
+            "title": "Mehrseitige Dokumente",
+            "description": "Aufgaben und Antworten in einem Dokument; drucken Sie nur die Seiten, die Sie benötigen."
+        },
+        "visual": {
+            "title": "Visueller Formel-Editor",
+            "description": "Keine LaTeX-Kenntnisse erforderlich. Passen Sie Stil an, drehen und verschieben Sie Formeln mit sofortigem Feedback."
+        },
+        "library": {
+            "title": "Formel-Bibliothek",
+            "description": "Beginnen Sie mit beliebten Formeln und passen Sie sie an, statt bei Null anzufangen."
+        },
+        "geometry": {
+            "title": "Geometrie",
+            "description": "Linien, Polygone und Winkelmarkierungen: alles, um präzise Diagramme schnell zu erstellen."
+        }
+    },
+    "footer": "Gebaut für Mathematik- und Geometrieprojekte"
+}

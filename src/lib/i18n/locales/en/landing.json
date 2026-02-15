@@ -1,0 +1,62 @@
+{
+    "brand": "Math on Canvas",
+    "language": "Language",
+    "hero": {
+        "tag": "For math teachers",
+        "title": "Your math diagrams: simpler, faster, clearer.",
+        "subtitle": "Online workspace for visual math: graphs, figures, formulas, all on one canvas.",
+        "narrative": "There are plenty of ready-made materials online, but finding the right one takes time. With MathOnCanvas you build exactly what your lesson needs: your own world of visual mathematics."
+    },
+    "cta": {
+        "loading": "Preparing editor...",
+        "ready": "Open editor",
+        "error": "Try again"
+    },
+    "status": {
+        "loading": "Downloading the editor bundle",
+        "ready": "Editor ready to work",
+        "error": "Preload failed. Try again."
+    },
+    "sync": "Language switcher synchronized with editor toolbar.",
+    "featuresTitle": "What's inside",
+    "features": {
+        "easy": "Easy to learn with a clear, friendly interface.",
+        "formulas": "Formulas with live preview.",
+        "shapes": "Geometric shapes, angles, markers, grids.",
+        "export": "Export to PDF without quality loss.",
+        "customize": "Wide range of customization options for elements."
+    },
+    "preview": {
+        "caption": "Workspace for visual mathematics"
+    },
+    "highlightsTitle": "Why it helps",
+    "highlightsSubtitle": "Tools that keep handouts readable and printable at any scale.",
+    "highlightPlaceholder": "Image placeholder",
+    "highlights": {
+        "symbols": {
+            "title": "Math symbols in text",
+            "description": "A dedicated palette inserts π, ≅, and other symbols directly into text with no code hunting."
+        },
+        "pdf": {
+            "title": "PDF without quality loss",
+            "description": "Print board posters and student cards from the same source. PDF stays sharp and easy to share."
+        },
+        "pages": {
+            "title": "Multi-page documents",
+            "description": "Tasks and answers in one document; print only the pages you need."
+        },
+        "visual": {
+            "title": "Visual formula editor",
+            "description": "No need to know LaTeX. Adjust style, rotate, and move formulas with instant feedback."
+        },
+        "library": {
+            "title": "Formula library",
+            "description": "Start with popular formulas and adapt them instead of starting from scratch."
+        },
+        "geometry": {
+            "title": "Geometry",
+            "description": "Lines, polygons, and angle markers: everything to build precise diagrams quickly."
+        }
+    },
+    "footer": "Built for math and geometry projects"
+}

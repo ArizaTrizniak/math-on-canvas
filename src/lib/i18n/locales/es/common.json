@@ -1,0 +1,17 @@
+{
+    "appName": "Editor de pósters matemáticos",
+    "close": "Cerrar",
+    "ok": "Aceptar",
+    "cancel": "Cancelar",
+    "apply": "Aplicar",
+    "save": "Guardar",
+    "languageSwitch": {
+        "ariaLabel": "Cambiar idioma (actual: {{language}})",
+        "title": "Cambiar idioma (actual: {{language}})"
+    },
+    "shortcuts": {
+        "ctrl": "Ctrl",
+        "alt": "Alt",
+        "shift": "Mayús"
+    }
+}

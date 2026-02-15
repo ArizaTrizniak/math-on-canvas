@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Disallow common private/system paths (none in this SPA, but keep for clarity)
+Disallow: /api/
+Disallow: /admin/
+
+Sitemap: https://math-on-canvas.com/sitemap.xml

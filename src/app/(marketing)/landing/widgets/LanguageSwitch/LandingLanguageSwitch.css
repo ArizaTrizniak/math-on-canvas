@@ -1,0 +1,22 @@
+.landing-language-switch__trigger {
+    min-width: 56px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--language-switch-border);
+    background: var(--language-switch-surface);
+    height: auto;
+    box-shadow: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.landing-language-switch__trigger:hover {
+    transform: translateY(-1px);
+    background: var(--language-switch-surface);
+}
+
+.landing-language-switch__trigger .language-switch__label {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}

@@ -1,0 +1,17 @@
+{
+    "appName": "Редактор математических плакатов",
+    "close": "Закрыть",
+    "ok": "OK",
+    "cancel": "Отмена",
+    "apply": "Применить",
+    "save": "Сохранить",
+    "languageSwitch": {
+        "ariaLabel": "Изменить язык (текущий: {{language}})",
+        "title": "Изменить язык (текущий: {{language}})"
+    },
+    "shortcuts": {
+        "ctrl": "Ctrl",
+        "alt": "Alt",
+        "shift": "Shift"
+    }
+}

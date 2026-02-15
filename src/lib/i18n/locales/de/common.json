@@ -1,0 +1,17 @@
+{
+    "appName": "Mathe-Poster-Editor",
+    "close": "Schließen",
+    "ok": "OK",
+    "cancel": "Abbrechen",
+    "apply": "Anwenden",
+    "save": "Speichern",
+    "languageSwitch": {
+        "ariaLabel": "Sprache wechseln (aktuell: {{language}})",
+        "title": "Sprache wechseln (aktuell: {{language}})"
+    },
+    "shortcuts": {
+        "ctrl": "Strg",
+        "alt": "Alt",
+        "shift": "Umschalt"
+    }
+}
