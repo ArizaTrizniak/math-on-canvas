@@ -37,7 +37,10 @@ export const UserMenu: React.FC<UserMenuProps> = ({ displayName }) => {
 
     const handleSignOut = async () => {
         try {
-            await fetch('/api/auth/logout', { method: 'POST' })
+            await fetch(process.env.NEXT_PUBLIC_AUTH_LOGOUT_URL!, {
+                method: 'POST',
+                credentials: 'include',
+            })
         } catch {
             // ignore
         } finally {
