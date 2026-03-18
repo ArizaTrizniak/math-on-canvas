@@ -1,8 +1,13 @@
+'use client'
+
+import '@/lib/i18n'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitch from './widgets/LanguageSwitch/LandingLanguageSwitch'
 import './LandingPage.css'
 import { trackAnalyticsEvent } from '@/common/utils/analytics'
+import type { AuthUser } from '@/lib/auth/types'
+import UserMenu from '@/common/widgets/UserMenu/UserMenu'
 
 const logo = '/images/logo.svg'
 const screen1Webp = '/images/screen1.webp'
@@ -40,7 +45,12 @@ function buildHighlightMap(
 }
 
 
-export const LandingPage: React.FC = () => {
+interface LandingPageProps {
+    user?: AuthUser | null
+    displayName?: string | null
+}
+
+export const LandingPage: React.FC<LandingPageProps> = ({ user, displayName }) => {
     const { t } = useTranslation('landing')
     const [activeSlide, setActiveSlide] = React.useState(0)
     const [isCarouselActive, setIsCarouselActive] = React.useState(false)
@@ -57,6 +67,14 @@ export const LandingPage: React.FC = () => {
     const handleHeaderClick = () => {
         trackAnalyticsEvent('editor_start', { source: 'header_link' })
         window.location.href = '/editor'
+    }
+
+    const handleSignInClick = () => {
+        const loginBase = process.env.NEXT_PUBLIC_AUTH_LOGIN_URL ?? '/login'
+        const redirectUri = window.location.href
+        const loginUrl = new URL(loginBase)
+        loginUrl.searchParams.set('redirect_uri', redirectUri)
+        window.location.href = loginUrl.toString()
     }
 
     React.useEffect(() => {
@@ -109,6 +127,17 @@ export const LandingPage: React.FC = () => {
 
                 <div className="landing__actions">
                     <LanguageSwitch />
+                    {user && displayName ? (
+                        <UserMenu displayName={displayName} />
+                    ) : (
+                        <button
+                            type="button"
+                            className="landing__ghost"
+                            onClick={handleSignInClick}
+                        >
+                            {t('cta.signIn')}
+                        </button>
+                    )}
                     <button
                         type="button"
                         className="landing__ghost"

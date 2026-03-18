@@ -10,7 +10,9 @@
     "cta": {
         "loading": "Editor wird vorbereitet...",
         "ready": "Editor öffnen",
-        "error": "Erneut versuchen"
+        "error": "Erneut versuchen",
+        "signIn": "Anmelden",
+        "signOut": "Abmelden"
     },
     "status": {
         "loading": "Editor-Paket wird heruntergeladen",
