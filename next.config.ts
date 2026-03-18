@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
 
   env: {
     NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version || "0.0.0",
+    NEXT_PUBLIC_AUTH_LOGIN_URL: process.env.AUTH_LOGIN_URL || "https://api.math-on-canvas.com/auth/login",
   },
 
   rewrites: async () => ({

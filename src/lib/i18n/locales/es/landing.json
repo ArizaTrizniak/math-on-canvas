@@ -10,7 +10,9 @@
     "cta": {
         "loading": "Preparando editor...",
         "ready": "Abrir editor",
-        "error": "Intentar de nuevo"
+        "error": "Intentar de nuevo",
+        "signIn": "Iniciar sesión",
+        "signOut": "Cerrar sesión"
     },
     "status": {
         "loading": "Descargando el paquete del editor",

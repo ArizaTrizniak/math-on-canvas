@@ -10,7 +10,9 @@
     "cta": {
         "loading": "Preparing editor...",
         "ready": "Open editor",
-        "error": "Try again"
+        "error": "Try again",
+        "signIn": "Sign in",
+        "signOut": "Sign out"
     },
     "status": {
         "loading": "Downloading the editor bundle",

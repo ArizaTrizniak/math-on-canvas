@@ -1,0 +1,71 @@
+.user-menu {
+    position: relative;
+}
+
+.user-menu__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #ec9022;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.15s;
+}
+
+.user-menu__avatar:hover {
+    opacity: 0.85;
+}
+
+.user-menu__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+}
+
+.user-menu__dropdown {
+    position: fixed;
+    min-width: 180px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    padding: 8px 0;
+    z-index: 100;
+}
+
+.user-menu__name {
+    padding: 6px 14px;
+    font-size: 13px;
+    color: #555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-menu__divider {
+    margin: 4px 0;
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.user-menu__item {
+    display: block;
+    width: 100%;
+    padding: 8px 14px;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    color: #222;
+}
+
+.user-menu__item:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
