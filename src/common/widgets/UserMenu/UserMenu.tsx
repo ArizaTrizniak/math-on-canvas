@@ -7,6 +7,7 @@ import './UserMenu.css'
 
 interface UserMenuProps {
     displayName: string
+    signOutLabel?: string
 }
 
 function getInitials(name: string): string {
@@ -18,7 +19,7 @@ function getInitials(name: string): string {
         .join('')
 }
 
-export const UserMenu: React.FC<UserMenuProps> = ({ displayName }) => {
+export const UserMenu: React.FC<UserMenuProps> = ({ displayName, signOutLabel }) => {
     const { t } = useTranslation('landing')
     const [open, setOpen] = React.useState(false)
     const [dropdownPos, setDropdownPos] = React.useState({ top: 0, right: 0 })
@@ -75,7 +76,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ displayName }) => {
                             className="user-menu__item"
                             onClick={handleSignOut}
                         >
-                            {t('cta.signOut')}
+                            {signOutLabel ?? t('cta.signOut')}
                         </button>
                     </div>
                 </>,

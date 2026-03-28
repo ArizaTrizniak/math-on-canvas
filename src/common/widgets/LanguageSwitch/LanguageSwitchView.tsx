@@ -1,3 +1,5 @@
+'use client'
+
 import { createPortal } from 'react-dom'
 import { Check } from 'lucide-react'
 import type { CSSProperties, ReactNode, RefObject } from 'react'
@@ -89,9 +91,12 @@ export const LanguageSwitchView = ({
                     aria-expanded={isOpen}
                     aria-label={ariaLabel}
                     title={title}
+                    suppressHydrationWarning
                 >
                     {icon && <span className="language-switch__icon">{icon}</span>}
-                    <span className="language-switch__label">{currentLanguage.toUpperCase()}</span>
+                    <span className="language-switch__label" suppressHydrationWarning>
+                        {currentLanguage.toUpperCase()}
+                    </span>
                 </button>
             </div>
             {menuContent && createPortal(menuContent, document.body)}
