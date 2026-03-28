@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-
-const BASE_URL = 'https://math-on-canvas.com'
+import { BASE_URL } from '@/lib/site'
 
 const ogMeta: Record<string, { title: string; description: string }> = {
     en: {

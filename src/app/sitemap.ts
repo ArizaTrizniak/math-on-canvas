@@ -1,6 +1,5 @@
 import type { MetadataRoute } from 'next'
-
-const BASE_URL = 'https://math-on-canvas.com'
+import { BASE_URL } from '@/lib/site'
 const LANGUAGES = ['en', 'ru', 'es', 'de'] as const
 
 export default function sitemap(): MetadataRoute.Sitemap {

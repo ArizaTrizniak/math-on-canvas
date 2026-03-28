@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import type { AuthUser } from '@/lib/auth/types'
 import type { LanguageCode } from '@/lib/i18n/constants'
 import landingEN from '@/lib/i18n/locales/en/landing.json'
@@ -62,9 +63,9 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                     ) : (
                         <LandingSignIn label={t.cta.signIn} />
                     )}
-                    <a href="/editor" className="landing__ghost">
+                    <Link href="/editor" className="landing__ghost">
                         {t.cta.ready}
-                    </a>
+                    </Link>
                 </div>
             </header>
 
@@ -76,13 +77,13 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                         <p className="landing__narrative">{t.hero.narrative}</p>
 
                         <div className="landing__controls">
-                            <a
+                            <Link
                                 href="/editor"
                                 className="landing__cta"
                                 data-testid="landing-start"
                             >
                                 {t.cta.ready}
-                            </a>
+                            </Link>
                         </div>
 
                         <div className="landing__features">
