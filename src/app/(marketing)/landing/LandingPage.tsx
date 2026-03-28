@@ -1,112 +1,42 @@
-'use client'
-
-import '@/lib/i18n'
-import React from 'react'
-import { useTranslation } from 'react-i18next'
-import LanguageSwitch from './widgets/LanguageSwitch/LandingLanguageSwitch'
-import './LandingPage.css'
-import { trackAnalyticsEvent } from '@/common/utils/analytics'
+import Image from 'next/image'
 import type { AuthUser } from '@/lib/auth/types'
+import type { LanguageCode } from '@/lib/i18n/constants'
+import landingEN from '@/lib/i18n/locales/en/landing.json'
+import landingRU from '@/lib/i18n/locales/ru/landing.json'
+import landingES from '@/lib/i18n/locales/es/landing.json'
+import landingDE from '@/lib/i18n/locales/de/landing.json'
+import LanguageSwitch from './widgets/LanguageSwitch/LandingLanguageSwitch'
+import { LandingCarousel } from './widgets/LandingCarousel/LandingCarousel'
+import { LandingSignIn } from './widgets/LandingSignIn/LandingSignIn'
 import UserMenu from '@/common/widgets/UserMenu/UserMenu'
+import './LandingPage.css'
 
 const logo = '/images/logo.svg'
-const screen1Webp = '/images/screen1.webp'
-const screen2Webp = '/images/screen2.webp'
-const screen3Webp = '/images/screen3.webp'
-const screen4Webp = '/images/screen4.webp'
+const carouselImages = [
+    '/images/screen1.webp',
+    '/images/screen2.webp',
+    '/images/screen3.webp',
+    '/images/screen4.webp',
+]
 
-type FeatureKey = 'easy' | 'formulas' | 'shapes' | 'export' | 'customize'
-type HighlightKey = 'pdf' | 'pages' | 'symbols' | 'visual' | 'library' | 'geometry'
+const translations = {
+    en: landingEN,
+    ru: landingRU,
+    es: landingES,
+    de: landingDE,
+} as const
 
-const featureKeys: FeatureKey[] = ['easy', 'formulas', 'shapes', 'export', 'customize']
-const highlightKeys: HighlightKey[] = ['pdf', 'pages', 'symbols', 'visual', 'library', 'geometry']
-
-function buildFeatureMap(t: ReturnType<typeof useTranslation>['t']): Record<FeatureKey, string> {
-    return {
-        easy: t('features.easy'),
-        formulas: t('features.formulas'),
-        shapes: t('features.shapes'),
-        export: t('features.export'),
-        customize: t('features.customize')
-    }
-}
-
-function buildHighlightMap(
-    t: ReturnType<typeof useTranslation>['t']
-): Record<HighlightKey, { title: string; description: string }> {
-    return {
-        symbols: { title: t('highlights.symbols.title'), description: t('highlights.symbols.description') },
-        pdf: { title: t('highlights.pdf.title'), description: t('highlights.pdf.description') },
-        pages: { title: t('highlights.pages.title'), description: t('highlights.pages.description') },
-        visual: { title: t('highlights.visual.title'), description: t('highlights.visual.description') },
-        library: { title: t('highlights.library.title'), description: t('highlights.library.description') },
-        geometry: { title: t('highlights.geometry.title'), description: t('highlights.geometry.description') }
-    }
-}
-
+const featureKeys = ['easy', 'formulas', 'shapes', 'export', 'customize'] as const
+const highlightKeys = ['pdf', 'pages', 'symbols', 'visual', 'library', 'geometry'] as const
 
 interface LandingPageProps {
+    lang: LanguageCode
     user?: AuthUser | null
     displayName?: string | null
 }
 
-export const LandingPage: React.FC<LandingPageProps> = ({ user, displayName }) => {
-    const { t } = useTranslation('landing')
-    const [activeSlide, setActiveSlide] = React.useState(0)
-    const [isCarouselActive, setIsCarouselActive] = React.useState(false)
-    const carouselImages = React.useMemo(() => [screen1Webp, screen2Webp, screen3Webp, screen4Webp], [])
-
-    const features = buildFeatureMap(t)
-    const highlights = buildHighlightMap(t)
-
-    const handlePrimaryClick = () => {
-        trackAnalyticsEvent('editor_start', { source: 'hero_cta' })
-        window.location.href = '/editor'
-    }
-
-    const handleHeaderClick = () => {
-        trackAnalyticsEvent('editor_start', { source: 'header_link' })
-        window.location.href = '/editor'
-    }
-
-    const handleSignInClick = () => {
-        const loginBase = process.env.NEXT_PUBLIC_AUTH_LOGIN_URL ?? '/login'
-        const redirectUri = window.location.href
-        const loginUrl = new URL(loginBase)
-        loginUrl.searchParams.set('redirect_uri', redirectUri)
-        window.location.href = loginUrl.toString()
-    }
-
-    React.useEffect(() => {
-        const preload = document.createElement('link')
-        preload.rel = 'preload'
-        preload.as = 'image'
-        preload.href = carouselImages[0]
-        document.head.appendChild(preload)
-        return () => {
-            document.head.removeChild(preload)
-        }
-    }, [carouselImages])
-
-    React.useEffect(() => {
-        if (!isCarouselActive) return undefined
-        const id = window.setInterval(() => {
-            setActiveSlide((prev) => (prev + 1) % carouselImages.length)
-        }, 5200)
-        return () => {
-            window.clearInterval(id)
-        }
-    }, [carouselImages.length, isCarouselActive])
-
-    const activateCarousel = () => setIsCarouselActive(true)
-
-    const goToSlide = (index: number) => {
-        activateCarousel()
-        setActiveSlide((index + carouselImages.length) % carouselImages.length)
-    }
-
-    const nextSlide = () => goToSlide(activeSlide + 1)
-    const prevSlide = () => goToSlide(activeSlide - 1)
+export function LandingPage({ lang, user, displayName }: LandingPageProps) {
+    const t = translations[lang]
 
     return (
         <div className="landing">
@@ -115,62 +45,51 @@ export const LandingPage: React.FC<LandingPageProps> = ({ user, displayName }) =
             </div>
             <header className="landing__header">
                 <div className="landing__brand">
-                    <img className="landing__brand-logo" src={logo} alt={t('brand')} />
+                    <Image className="landing__brand-logo" src={logo} alt={t.brand} width={44} height={44} unoptimized />
                     <div>
                         <div className="landing__brand-title">
-                            {t('brand')}
+                            {t.brand}
                             <span className="landing__beta-badge">BETA</span>
                         </div>
-                        <div className="landing__brand-subtitle">{t('hero.subtitle')}</div>
+                        <div className="landing__brand-subtitle">{t.hero.subtitle}</div>
                     </div>
                 </div>
 
                 <div className="landing__actions">
-                    <LanguageSwitch />
+                    <LanguageSwitch currentLang={lang} />
                     {user && displayName ? (
-                        <UserMenu displayName={displayName} />
+                        <UserMenu displayName={displayName} signOutLabel={t.cta.signOut} />
                     ) : (
-                        <button
-                            type="button"
-                            className="landing__ghost"
-                            onClick={handleSignInClick}
-                        >
-                            {t('cta.signIn')}
-                        </button>
+                        <LandingSignIn label={t.cta.signIn} />
                     )}
-                    <button
-                        type="button"
-                        className="landing__ghost"
-                        onClick={handleHeaderClick}
-                    >
-                        {t('cta.ready')}
-                    </button>
+                    <a href="/editor" className="landing__ghost">
+                        {t.cta.ready}
+                    </a>
                 </div>
             </header>
 
             <main className="landing__main">
                 <section className="landing__hero">
                     <div className="landing__copy">
-                        <div className="landing__pill">{t('hero.tag')}</div>
-                        <h1 className="landing__title">{t('hero.title')}</h1>
-                        <p className="landing__narrative">{t('hero.narrative')}</p>
+                        <div className="landing__pill">{t.hero.tag}</div>
+                        <h1 className="landing__title">{t.hero.title}</h1>
+                        <p className="landing__narrative">{t.hero.narrative}</p>
 
                         <div className="landing__controls">
-                            <button
-                                type="button"
+                            <a
+                                href="/editor"
                                 className="landing__cta"
                                 data-testid="landing-start"
-                                onClick={handlePrimaryClick}
                             >
-                                {t('cta.ready')}
-                            </button>
+                                {t.cta.ready}
+                            </a>
                         </div>
 
                         <div className="landing__features">
-                            <div className="landing__features-title">{t('featuresTitle')}</div>
+                            <div className="landing__features-title">{t.featuresTitle}</div>
                             <ul>
                                 {featureKeys.map((key) => (
-                                    <li key={key}>{features[key]}</li>
+                                    <li key={key}>{t.features[key]}</li>
                                 ))}
                             </ul>
                         </div>
@@ -186,81 +105,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({ user, displayName }) =
                         </div>
 
                         <div className="landing__preview-body">
-                            <div className="landing__carousel" aria-label={t('preview.caption')}>
-                                <div className="landing__carousel-window">
-                                    <div
-                                        className="landing__carousel-track"
-                                        style={{ transform: `translateX(-${activeSlide * 100}%)` }}
-                                    >
-                                        {carouselImages.map((image, index) => (
-                                            <picture key={image} className="landing__carousel-slide">
-                                                <source srcSet={image} type="image/webp" />
-                                                <img
-                                                    className="landing__carousel-image"
-                                                    src={image}
-                                                    alt={`${t('preview.caption')} ${index + 1}`}
-                                                    decoding="async"
-                                                    fetchPriority={index === activeSlide ? 'high' : 'low'}
-                                                    loading={index === 0 ? 'eager' : 'lazy'}
-                                                    width={1600}
-                                                    height={900}
-                                                />
-                                            </picture>
-                                        ))}
-                                    </div>
-                                    <button
-                                        type="button"
-                                        className="landing__carousel-control landing__carousel-control--prev"
-                                        onClick={prevSlide}
-                                        aria-label="Previous slide"
-                                    >
-                                        {'<'}
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="landing__carousel-control landing__carousel-control--next"
-                                        onClick={nextSlide}
-                                        aria-label="Next slide"
-                                    >
-                                        {'>'}
-                                    </button>
-                                </div>
-                                <div className="landing__carousel-footer">
-                                    <div className="landing__carousel-caption">
-                                        {t('preview.caption')} | {activeSlide + 1}/{carouselImages.length}
-                                    </div>
-                                    <div className="landing__carousel-dots" role="tablist">
-                                        {carouselImages.map((image, index) => (
-                                            <button
-                                                type="button"
-                                                key={index}
-                                                className={`landing__carousel-dot${
-                                                    activeSlide === index ? ' landing__carousel-dot--active' : ''
-                                                }`}
-                                                onClick={() => goToSlide(index)}
-                                                aria-label={`${t('preview.caption')} ${index + 1}`}
-                                                aria-selected={activeSlide === index}
-                                                role="tab"
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
+                            <LandingCarousel
+                                images={carouselImages}
+                                captionText={t.preview.caption}
+                            />
                         </div>
                     </div>
                 </section>
 
                 <section className="landing__highlights">
                     <div className="landing__highlights-header">
-                        <h2>{t('highlightsTitle')}</h2>
-                        <p>{t('highlightsSubtitle')}</p>
+                        <h2>{t.highlightsTitle}</h2>
+                        <p>{t.highlightsSubtitle}</p>
                     </div>
                     <div className="landing__highlights-grid">
                         {highlightKeys.map((key) => (
                             <article className="landing__highlight-card" key={key}>
                                 <div className="landing__highlight-body">
-                                    <h3>{highlights[key].title}</h3>
-                                    <p>{highlights[key].description}</p>
+                                    <h3>{t.highlights[key].title}</h3>
+                                    <p>{t.highlights[key].description}</p>
                                 </div>
                             </article>
                         ))}
@@ -269,8 +132,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ user, displayName }) =
             </main>
 
             <footer className="landing__footer">
-                {t('footer')}
-                <span className="landing__version" style={{ opacity: 0.5, marginLeft: '1em' }}>v{process.env.NEXT_PUBLIC_APP_VERSION}</span>
+                {t.footer}
+                <span className="landing__version" style={{ opacity: 0.5, marginLeft: '1em' }}>
+                    v{process.env.NEXT_PUBLIC_APP_VERSION}
+                </span>
             </footer>
         </div>
     )

@@ -1,3 +1,6 @@
+'use client'
+
+import '@/lib/i18n'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LANGUAGES } from '@/lib/i18n/constants'
