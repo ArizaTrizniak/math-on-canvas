@@ -1,7 +1,8 @@
 {
   "name": "math-on-canvas",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
