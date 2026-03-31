@@ -3,6 +3,7 @@
 import React from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
+import { trackAnalyticsEvent } from '@/common/utils/analytics'
 import './UserMenu.css'
 
 interface UserMenuProps {
@@ -37,6 +38,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ displayName, signOutLabel })
     }
 
     const handleSignOut = async () => {
+        trackAnalyticsEvent('sign_out')
         try {
             await fetch(process.env.NEXT_PUBLIC_AUTH_LOGOUT_URL!, {
                 method: 'POST',

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import { BASE_URL } from '@/lib/site'
+import { AnalyticsInit } from '@/common/utils/AnalyticsInit'
 import "./globals.css";
 
 const geistSans = Geist({
@@ -64,6 +65,7 @@ export default async function RootLayout({
                 />
             </head>
             <body className={`${geistSans.variable} ${geistMono.variable}`}>
+                <AnalyticsInit />
                 {children}
             </body>
         </html>
