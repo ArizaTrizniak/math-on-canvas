@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+    verification: {
+        google: 'V9aBAqm7iwSfHdstdu5wLhcsneSwHEDUufFC4VnBIgk',
+    },
     title: "Math on Canvas — Online Math Diagram & Formula Editor for Teachers",
     description: "Create math diagrams, geometry figures and LaTeX formulas on one canvas. Export to PDF. Free online tool for math teachers.",
     openGraph: {
