@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import type { AuthUser } from '@/lib/auth/types'
 import type { LanguageCode } from '@/lib/i18n/constants'
 import landingEN from '@/lib/i18n/locales/en/landing.json'
@@ -9,6 +8,7 @@ import landingDE from '@/lib/i18n/locales/de/landing.json'
 import LanguageSwitch from './widgets/LanguageSwitch/LandingLanguageSwitch'
 import { LandingCarousel } from './widgets/LandingCarousel/LandingCarousel'
 import { LandingSignIn } from './widgets/LandingSignIn/LandingSignIn'
+import { LandingCTALink } from './widgets/LandingCTALink/LandingCTALink'
 import UserMenu from '@/common/widgets/UserMenu/UserMenu'
 import './LandingPage.css'
 
@@ -63,9 +63,9 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                     ) : (
                         <LandingSignIn label={t.cta.signIn} />
                     )}
-                    <Link href="/editor" className="landing__ghost">
+                    <LandingCTALink href="/editor" className="landing__ghost" location="header">
                         {t.cta.ready}
-                    </Link>
+                    </LandingCTALink>
                 </div>
             </header>
 
@@ -77,13 +77,14 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                         <p className="landing__narrative">{t.hero.narrative}</p>
 
                         <div className="landing__controls">
-                            <Link
+                            <LandingCTALink
                                 href="/editor"
                                 className="landing__cta"
-                                data-testid="landing-start"
+                                testId="landing-start"
+                                location="hero"
                             >
                                 {t.cta.ready}
-                            </Link>
+                            </LandingCTALink>
                         </div>
 
                         <div className="landing__features">
