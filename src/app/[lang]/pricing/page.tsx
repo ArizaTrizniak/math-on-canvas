@@ -15,33 +15,6 @@ const metaTranslations: Record<string, { title: string; description: string }> =
     de: pricingDE.meta,
 }
 
-const schemaOrg = {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: 'Math on Canvas — Pricing',
-    url: `${BASE_URL}/en/pricing`,
-    mainEntity: {
-        '@type': 'SoftwareApplication',
-        name: 'Math on Canvas',
-        offers: [
-            {
-                '@type': 'Offer',
-                name: 'Guest',
-                price: '0',
-                priceCurrency: 'USD',
-                description: 'Full editor access, LaTeX formulas, 3D/2D shapes, export to PDF/PNG/SVG. No account required.',
-            },
-            {
-                '@type': 'Offer',
-                name: 'Free',
-                price: '0',
-                priceCurrency: 'USD',
-                description: 'Everything in Guest, plus save source files locally for re-editing.',
-            },
-        ],
-    },
-}
-
 export async function generateMetadata({
     params,
 }: {
@@ -88,6 +61,33 @@ export default async function PricingRoutePage({
     const { lang } = await params
     const isValid = LANGUAGES.some(l => l.code === lang)
     if (!isValid) notFound()
+
+    const schemaOrg = {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: 'Math on Canvas — Pricing',
+        url: `${BASE_URL}/${lang}/pricing`,
+        mainEntity: {
+            '@type': 'SoftwareApplication',
+            name: 'Math on Canvas',
+            offers: [
+                {
+                    '@type': 'Offer',
+                    name: 'Guest',
+                    price: '0',
+                    priceCurrency: 'USD',
+                    description: 'Full editor access, LaTeX formulas, 3D/2D shapes, export to PDF/PNG/SVG. No account required.',
+                },
+                {
+                    '@type': 'Offer',
+                    name: 'Free',
+                    price: '0',
+                    priceCurrency: 'USD',
+                    description: 'Everything in Guest, plus save source files locally for re-editing.',
+                },
+            ],
+        },
+    }
 
     return (
         <>
