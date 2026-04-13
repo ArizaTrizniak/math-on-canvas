@@ -1,35 +1,18 @@
-'use client'
-
 import Link from 'next/link'
 import type { Tier } from '@/lib/pricing/tiers'
+import { SignUpButton } from './SignUpButton'
+import type pricingEN from '@/lib/i18n/locales/en/pricing.json'
 
-interface TierTranslation {
-    name: string
-    price: string
-    priceNote: string
-    cta: string
-}
-
-interface PricingTranslations {
-    tiers: { [id: string]: TierTranslation }
-    features: { [key: string]: string }
-}
+type PricingT = typeof pricingEN
 
 interface PricingCardProps {
     tier: Tier
-    t: PricingTranslations
+    t: PricingT
     lang: string
 }
 
 export function PricingCard({ tier, t, lang }: PricingCardProps) {
-    const tt = t.tiers[tier.id]
-
-    const handleSignUp = () => {
-        const loginBase = process.env.NEXT_PUBLIC_AUTH_LOGIN_URL ?? '/login'
-        const loginUrl = new URL(loginBase)
-        loginUrl.searchParams.set('redirect_uri', window.location.origin + '/' + lang)
-        window.location.href = loginUrl.toString()
-    }
+    const tt = t.tiers[tier.id as keyof typeof t.tiers]
 
     const cardClass = [
         'pricing-card',
@@ -54,7 +37,7 @@ export function PricingCard({ tier, t, lang }: PricingCardProps) {
                 {tier.featureKeys.map((key) => (
                     <li key={key} className="pricing-card__feature">
                         <span className="pricing-card__check" aria-hidden="true">✓</span>
-                        {t.features[key]}
+                        {t.features[key as keyof typeof t.features]}
                     </li>
                 ))}
             </ul>
@@ -65,13 +48,7 @@ export function PricingCard({ tier, t, lang }: PricingCardProps) {
                 </Link>
             )}
             {tier.id === 'free' && (
-                <button
-                    type="button"
-                    className="pricing-card__cta pricing-card__cta--primary"
-                    onClick={handleSignUp}
-                >
-                    {tt.cta}
-                </button>
+                <SignUpButton label={tt.cta} lang={lang} />
             )}
             {tier.id === 'pro' && (
                 <button
