@@ -1,0 +1,44 @@
+{
+    "meta": {
+        "title": "Pricing — Math on Canvas",
+        "description": "Math on Canvas is free to use. See what's included in the Guest and Free plans, and what's coming in Pro."
+    },
+    "nav": "Pricing",
+    "headline": "Simple, transparent pricing",
+    "subline": "Start for free. Upgrade when you need more.",
+    "tiers": {
+        "guest": {
+            "name": "Guest",
+            "price": "Free",
+            "priceNote": "No account needed",
+            "cta": "Open editor"
+        },
+        "free": {
+            "name": "Free",
+            "price": "Free",
+            "priceNote": "Free forever",
+            "cta": "Sign up"
+        },
+        "pro": {
+            "name": "Pro",
+            "price": "Coming soon",
+            "priceNote": "",
+            "cta": "Coming soon"
+        }
+    },
+    "features": {
+        "editor": "Full editor access",
+        "latex": "LaTeX formulas with symbol palette (MathJax)",
+        "shapes3d": "3D shapes with real-time mouse rotation",
+        "shapes2d": "2D shapes: polygons, arcs, parabolas and more",
+        "text": "Text with font and style selection",
+        "tools": "Layers, grid, undo/redo, free drawing",
+        "export": "Export to PDF, PNG, SVG",
+        "languages": "Interface in 4 languages",
+        "sourceSave": "Save source files — reload and edit later",
+        "ai": "AI assistant: generate shapes and formulas by text",
+        "cloud": "Cloud project storage",
+        "share": "Share projects by link (read-only)"
+    },
+    "footer": "Built for math and geometry projects"
+}
