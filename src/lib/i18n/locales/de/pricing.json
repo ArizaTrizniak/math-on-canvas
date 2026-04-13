@@ -1,0 +1,44 @@
+{
+    "meta": {
+        "title": "Preise — Math on Canvas",
+        "description": "Math on Canvas ist kostenlos. Sehen Sie, was in den Gast- und Gratis-Plänen enthalten ist, und was im Pro-Plan kommen wird."
+    },
+    "nav": "Preise",
+    "headline": "Einfache, transparente Preise",
+    "subline": "Kostenlos starten. Upgraden, wenn Sie mehr brauchen.",
+    "tiers": {
+        "guest": {
+            "name": "Gast",
+            "price": "Kostenlos",
+            "priceNote": "Kein Konto erforderlich",
+            "cta": "Editor öffnen"
+        },
+        "free": {
+            "name": "Gratis",
+            "price": "Kostenlos",
+            "priceNote": "Für immer kostenlos",
+            "cta": "Registrieren"
+        },
+        "pro": {
+            "name": "Pro",
+            "price": "Demnächst",
+            "priceNote": "",
+            "cta": "Demnächst"
+        }
+    },
+    "features": {
+        "editor": "Vollständiger Editor-Zugriff",
+        "latex": "LaTeX-Formeln mit Symbolpalette (MathJax)",
+        "shapes3d": "3D-Formen mit Echtzeit-Mausrotation",
+        "shapes2d": "2D-Formen: Polygone, Bögen, Parabeln und mehr",
+        "text": "Text mit Schriftart- und Stilauswahl",
+        "tools": "Ebenen, Raster, Rückgängig/Wiederholen, freies Zeichnen",
+        "export": "Export als PDF, PNG, SVG",
+        "languages": "Benutzeroberfläche in 4 Sprachen",
+        "sourceSave": "Quelldateien speichern — später laden und bearbeiten",
+        "ai": "KI-Assistent: Formen und Formeln per Text generieren",
+        "cloud": "Cloud-Projektspeicher",
+        "share": "Projekte per Link teilen (nur Ansicht)"
+    },
+    "footer": "Für Mathematik- und Geometrieprojekte entwickelt"
+}

@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import type { AuthUser } from '@/lib/auth/types'
 import type { LanguageCode } from '@/lib/i18n/constants'
 import landingEN from '@/lib/i18n/locales/en/landing.json'
@@ -58,6 +59,9 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
 
                 <div className="landing__actions">
                     <LanguageSwitch currentLang={lang} />
+                    <Link href={`/${lang}/pricing`} className="landing__ghost">
+                        {t.cta.pricing}
+                    </Link>
                     {user && displayName ? (
                         <UserMenu displayName={displayName} signOutLabel={t.cta.signOut} />
                     ) : (
@@ -135,6 +139,10 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
 
             <footer className="landing__footer">
                 {t.footer}
+                <span style={{ margin: '0 0.75em' }}>·</span>
+                <Link href={`/${lang}/pricing`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                    {t.cta.pricing}
+                </Link>
                 <span className="landing__version" style={{ opacity: 0.5, marginLeft: '1em' }}>
                     v{process.env.NEXT_PUBLIC_APP_VERSION}
                 </span>

@@ -12,7 +12,8 @@
         "ready": "Open editor",
         "error": "Try again",
         "signIn": "Sign in",
-        "signOut": "Sign out"
+        "signOut": "Sign out",
+        "pricing": "Pricing"
     },
     "status": {
         "loading": "Downloading the editor bundle",

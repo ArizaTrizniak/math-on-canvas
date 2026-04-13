@@ -12,7 +12,8 @@
         "ready": "Abrir editor",
         "error": "Intentar de nuevo",
         "signIn": "Iniciar sesión",
-        "signOut": "Cerrar sesión"
+        "signOut": "Cerrar sesión",
+        "pricing": "Precios"
     },
     "status": {
         "loading": "Descargando el paquete del editor",
