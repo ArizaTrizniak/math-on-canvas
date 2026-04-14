@@ -9,10 +9,8 @@ interface LandingSignInProps {
 export function LandingSignIn({ label }: LandingSignInProps) {
     const handleClick = () => {
         trackAnalyticsEvent('sign_in')
-        const loginBase = process.env.NEXT_PUBLIC_AUTH_LOGIN_URL ?? '/login'
-        const loginUrl = new URL(loginBase)
-        loginUrl.searchParams.set('redirect_uri', window.location.href)
-        window.location.href = loginUrl.toString()
+        const signinUrl = `/auth/signin?redirect_uri=${encodeURIComponent(window.location.pathname + window.location.search)}`
+        window.location.href = signinUrl
     }
 
     return (

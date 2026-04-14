@@ -11,23 +11,31 @@ import landingEN from './locales/en/landing.json'
 import landingRU from './locales/ru/landing.json'
 import landingES from './locales/es/landing.json'
 import landingDE from './locales/de/landing.json'
+import authEN from './locales/en/auth.json'
+import authRU from './locales/ru/auth.json'
+import authES from './locales/es/auth.json'
+import authDE from './locales/de/auth.json'
 
 export const resources = {
     en: {
         common: commonEN,
-        landing: landingEN
+        landing: landingEN,
+        auth: authEN
     },
     ru: {
         common: commonRU,
-        landing: landingRU
+        landing: landingRU,
+        auth: authRU
     },
     es: {
         common: commonES,
-        landing: landingES
+        landing: landingES,
+        auth: authES
     },
     de: {
         common: commonDE,
-        landing: landingDE
+        landing: landingDE,
+        auth: authDE
     }
 } as const
 
@@ -38,7 +46,7 @@ i18n
         resources,
         fallbackLng: 'en',
         defaultNS: 'common',
-        ns: ['common', 'landing'],
+        ns: ['common', 'landing', 'auth'],
         interpolation: {
             escapeValue: false
         },
