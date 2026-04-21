@@ -4,6 +4,7 @@ import React from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { trackAnalyticsEvent } from '@/common/utils/analytics'
+import { useAuthContext } from '@/lib/auth/authContext'
 import './UserMenu.css'
 
 interface UserMenuProps {
@@ -20,11 +21,14 @@ function getInitials(name: string): string {
         .join('')
 }
 
-export const UserMenu: React.FC<UserMenuProps> = ({ displayName, signOutLabel }) => {
+export const UserMenu: React.FC<UserMenuProps> = ({ displayName: serverDisplayName, signOutLabel }) => {
     const { t } = useTranslation('landing')
+    const { user: contextUser, signOut } = useAuthContext()
     const [open, setOpen] = React.useState(false)
     const [dropdownPos, setDropdownPos] = React.useState({ top: 0, right: 0 })
     const avatarRef = React.useRef<HTMLButtonElement>(null)
+
+    const displayName = contextUser?.displayName ?? serverDisplayName
 
     const handleAvatarClick = () => {
         if (avatarRef.current) {
@@ -37,18 +41,9 @@ export const UserMenu: React.FC<UserMenuProps> = ({ displayName, signOutLabel })
         setOpen((v) => !v)
     }
 
-    const handleSignOut = async () => {
+    const handleSignOut = () => {
         trackAnalyticsEvent('sign_out')
-        try {
-            await fetch(process.env.NEXT_PUBLIC_AUTH_LOGOUT_URL!, {
-                method: 'POST',
-                credentials: 'include',
-            })
-        } catch {
-            // ignore
-        } finally {
-            window.location.reload()
-        }
+        void signOut()
     }
 
     return (
