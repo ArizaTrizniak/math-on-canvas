@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import { BASE_URL } from '@/lib/site'
 import { AnalyticsInit } from '@/common/utils/AnalyticsInit'
+import { AuthProvider } from '@/lib/auth/authContext'
+import { NativeAuthModal } from '@/common/widgets/NativeAuthModal/NativeAuthModal'
+import { SessionExpiredModal } from '@/common/widgets/SessionExpiredModal/SessionExpiredModal'
 import "./globals.css";
 
 const geistSans = Geist({
@@ -68,8 +71,12 @@ export default async function RootLayout({
                 />
             </head>
             <body className={`${geistSans.variable} ${geistMono.variable}`}>
-                <AnalyticsInit />
-                {children}
+                <AuthProvider>
+                    <AnalyticsInit />
+                    {children}
+                    <NativeAuthModal />
+                    <SessionExpiredModal />
+                </AuthProvider>
             </body>
         </html>
     );

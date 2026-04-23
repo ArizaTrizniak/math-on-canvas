@@ -1,0 +1,40 @@
+.auth-dropdown__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+}
+
+.auth-dropdown__menu {
+    position: fixed;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.13);
+    padding: 6px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.auth-dropdown__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 14px;
+    background: none;
+    border: none;
+    border-radius: 7px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #222;
+    cursor: pointer;
+    text-align: left;
+    white-space: nowrap;
+    transition: background 0.12s;
+}
+
+.auth-dropdown__item:hover {
+    background: rgba(0, 0, 0, 0.05);
+}

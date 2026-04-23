@@ -1,0 +1,54 @@
+.session-modal__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1000;
+}
+
+.session-modal__panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1001;
+    background: #fff;
+    border-radius: 12px;
+    padding: 32px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+}
+
+.session-modal__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111;
+    margin: 0;
+}
+
+.session-modal__message {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.session-modal__button {
+    padding: 11px 16px;
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.session-modal__button:hover {
+    background: #4f46e5;
+}
