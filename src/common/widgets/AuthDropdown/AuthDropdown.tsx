@@ -57,7 +57,7 @@ export function AuthDropdown({ anchorRect, open, onClose, defaultView = 'signIn'
         onClose()
         const base = process.env.NEXT_PUBLIC_AUTH_LOGIN_URL ?? '/auth/login'
         const url = new URL(base)
-        url.searchParams.set('redirect_uri', window.location.href)
+        url.searchParams.set('redirect_uri', window.location.origin + window.location.pathname)
         window.location.href = url.toString()
     }
 
