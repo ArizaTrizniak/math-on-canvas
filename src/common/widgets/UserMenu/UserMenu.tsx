@@ -23,12 +23,14 @@ function getInitials(name: string): string {
 
 export const UserMenu: React.FC<UserMenuProps> = ({ displayName: serverDisplayName, signOutLabel }) => {
     const { t } = useTranslation('landing')
-    const { user: contextUser, signOut } = useAuthContext()
+    const { user: contextUser, status, signOut } = useAuthContext()
     const [open, setOpen] = React.useState(false)
     const [dropdownPos, setDropdownPos] = React.useState({ top: 0, right: 0 })
     const avatarRef = React.useRef<HTMLButtonElement>(null)
 
     const displayName = contextUser?.displayName ?? serverDisplayName
+
+    if (status === 'guest') return null
 
     const handleAvatarClick = () => {
         if (avatarRef.current) {
@@ -42,6 +44,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ displayName: serverDisplayNa
     }
 
     const handleSignOut = () => {
+        setOpen(false)
         trackAnalyticsEvent('sign_out')
         void signOut()
     }
