@@ -235,8 +235,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [])
 
     const signOut = useCallback(async () => {
-        await authApiClient.signOut()
         dispatch({ type: 'SIGN_OUT' })
+        await authApiClient.signOut()
         router.refresh()
     }, [router])
 
