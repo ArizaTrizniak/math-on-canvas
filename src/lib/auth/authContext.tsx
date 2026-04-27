@@ -176,6 +176,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             router.refresh()
         } catch (err) {
             if (err instanceof AuthNativeError && err.code === 'user_not_confirmed') {
+                // best-effort — user sees confirmEmail view regardless of whether resend succeeds
                 void authApiClient.resendCode(email).catch(() => {})
                 dispatch({ type: 'SET_PENDING_EMAIL', email })
                 dispatch({ type: 'SET_VIEW', view: 'confirmEmail' })
