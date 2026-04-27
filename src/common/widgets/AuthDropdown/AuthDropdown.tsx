@@ -55,7 +55,7 @@ export function AuthDropdown({ anchorRect, open, onClose, defaultView = 'signIn'
 
     const handleGoogle = () => {
         onClose()
-        const base = process.env.NEXT_PUBLIC_AUTH_LOGIN_URL ?? '/auth/login'
+        const base = (process.env.NEXT_PUBLIC_AUTH_API_URL ?? '') + '/auth/login'
         const url = new URL(base)
         url.searchParams.set('redirect_uri', window.location.origin + window.location.pathname)
         window.location.href = url.toString()
