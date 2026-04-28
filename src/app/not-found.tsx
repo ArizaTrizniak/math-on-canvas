@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { headers } from 'next/headers'
 import type { Metadata } from 'next'
-import { LANGUAGES, normalizeLanguage, type LanguageCode } from '@/lib/i18n/constants'
+import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
 import notFoundEN from '@/lib/i18n/locales/en/not-found.json'
 import notFoundRU from '@/lib/i18n/locales/ru/not-found.json'
 import notFoundES from '@/lib/i18n/locales/es/not-found.json'
@@ -24,21 +24,25 @@ const translations = {
 async function detectLang(): Promise<LanguageCode> {
     const headersList = await headers()
 
-    // x-pathname is set by Next.js routing; x-invoke-path is a fallback
-    const path = headersList.get('x-pathname')
-        ?? headersList.get('x-invoke-path')
-        ?? ''
-    const firstSegment = path.split('/').filter(Boolean)[0] ?? ''
-    const langFromUrl = LANGUAGES.find(l => l.code === firstSegment)?.code
-    if (langFromUrl) return langFromUrl
+    // B: URL path — set by middleware as x-pathname (e.g. /es/broken → 'es')
+    const pathname = headersList.get('x-pathname') ?? ''
+    const firstSegment = pathname.split('/').filter(Boolean)[0] ?? ''
+    const langFromPath = LANGUAGES.find(l => l.code === firstSegment)?.code
+    if (langFromPath) return langFromPath
 
-    const acceptLang = headersList.get('accept-language') ?? ''
-    if (acceptLang) {
-        const primary = acceptLang.split(',')[0]?.split(';')[0]?.trim() ?? ''
-        return normalizeLanguage(primary)
+    // B2: referer — user navigated from a localized page (e.g. /es → /es3reerweqw)
+    const referer = headersList.get('referer') ?? ''
+    if (referer) {
+        try {
+            const refSegment = new URL(referer).pathname.split('/').filter(Boolean)[0] ?? ''
+            const langFromRef = LANGUAGES.find(l => l.code === refSegment)?.code
+            if (langFromRef) return langFromRef
+        } catch {}
     }
 
-    return 'en'
+    // A: accept-language resolved by middleware into x-lang
+    const xLang = headersList.get('x-lang') ?? ''
+    return LANGUAGES.find(l => l.code === xLang)?.code ?? 'en'
 }
 
 export default async function NotFound() {
@@ -66,7 +70,7 @@ export default async function NotFound() {
                             Math on Canvas
                             <span className="notfound__beta-badge">BETA</span>
                         </div>
-                        <div className="notfound__brand-subtitle">mathoncanvas.com</div>
+                        <div className="notfound__brand-subtitle">math-on-canvas.com</div>
                     </div>
                 </div>
                 <Link href={`/${lang}`} className="notfound__nav-link">
