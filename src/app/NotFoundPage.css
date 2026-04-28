@@ -1,0 +1,201 @@
+.notfound {
+    min-height: 100vh;
+    padding: 28px 32px 48px;
+    background: linear-gradient(180deg, #f8fafc 0%, #f3f4f6 45%, #f8fafc 100%);
+    color: #0f172a;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.notfound__texture {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.notfound__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(17, 36, 48, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(18, 33, 44, 0.2) 1px, transparent 1px);
+    background-size: 36px 36px, 36px 36px;
+    mask-image: radial-gradient(circle at 40% 25%, black 0%, transparent 70%);
+}
+
+.notfound__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.notfound__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.notfound__brand-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    object-fit: contain;
+    background: white;
+    padding: 5px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+
+.notfound__brand-title {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.notfound__beta-badge {
+    background: rgba(234, 179, 8, 0.15);
+    color: #ca8a04;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    vertical-align: middle;
+}
+
+.notfound__brand-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #4c5c67;
+}
+
+.notfound__nav-link {
+    padding: 9px 16px;
+    border-radius: 12px;
+    border: 1px solid #111827;
+    background: transparent;
+    color: #111827;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 120ms ease, color 120ms ease;
+}
+
+.notfound__nav-link:hover {
+    background: #111827;
+    color: white;
+}
+
+.notfound__main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    padding: 48px 24px;
+}
+
+.notfound__code {
+    font-size: clamp(80px, 14vw, 120px);
+    font-weight: 900;
+    line-height: 1;
+    color: #0f172a;
+    letter-spacing: -4px;
+}
+
+.notfound__title {
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.notfound__description {
+    font-size: 15px;
+    color: #4b5563;
+    max-width: 400px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.notfound__actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.notfound__ghost {
+    padding: 11px 20px;
+    border-radius: 12px;
+    border: 1px solid #111827;
+    background: transparent;
+    color: #111827;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 120ms ease, color 120ms ease;
+}
+
+.notfound__ghost:hover {
+    background: #111827;
+    color: white;
+}
+
+.notfound__cta {
+    padding: 11px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(232, 146, 46, 0.6);
+    background: linear-gradient(135deg, #ffbe7a, #e86f1d);
+    color: #2c1604;
+    font-weight: 800;
+    font-size: 14px;
+    box-shadow: 0 10px 32px rgba(232, 146, 46, 0.3);
+    transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.notfound__cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 36px rgba(15, 23, 42, 0.28);
+}
+
+.notfound__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    color: #6b7280;
+    font-size: 12px;
+    position: relative;
+    z-index: 1;
+}
+
+.notfound__version {
+    opacity: 0.5;
+}
+
+@media (max-width: 720px) {
+    .notfound {
+        padding: 20px 16px 32px;
+    }
+
+    .notfound__header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .notfound__nav-link {
+        align-self: flex-end;
+    }
+}
