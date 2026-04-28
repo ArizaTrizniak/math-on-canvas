@@ -7,6 +7,10 @@ import notFoundEN from '@/lib/i18n/locales/en/not-found.json'
 import notFoundRU from '@/lib/i18n/locales/ru/not-found.json'
 import notFoundES from '@/lib/i18n/locales/es/not-found.json'
 import notFoundDE from '@/lib/i18n/locales/de/not-found.json'
+import commonEN from '@/lib/i18n/locales/en/common.json'
+import commonRU from '@/lib/i18n/locales/ru/common.json'
+import commonES from '@/lib/i18n/locales/es/common.json'
+import commonDE from '@/lib/i18n/locales/de/common.json'
 import './NotFoundPage.css'
 
 export const metadata: Metadata = {
@@ -19,6 +23,13 @@ const translations = {
     ru: notFoundRU,
     es: notFoundES,
     de: notFoundDE,
+} as const
+
+const commonTranslations = {
+    en: commonEN,
+    ru: commonRU,
+    es: commonES,
+    de: commonDE,
 } as const
 
 async function detectLang(): Promise<LanguageCode> {
@@ -48,6 +59,7 @@ async function detectLang(): Promise<LanguageCode> {
 export default async function NotFound() {
     const lang = await detectLang()
     const t = translations[lang]
+    const tCommon = commonTranslations[lang]
 
     return (
         <div className="notfound">
@@ -70,7 +82,7 @@ export default async function NotFound() {
                             Math on Canvas
                             <span className="notfound__beta-badge">BETA</span>
                         </div>
-                        <div className="notfound__brand-subtitle">math-on-canvas.com</div>
+                        <div className="notfound__brand-subtitle">{tCommon.brandSubtitle}</div>
                     </div>
                 </div>
                 <Link href={`/${lang}`} className="notfound__nav-link">

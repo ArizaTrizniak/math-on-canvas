@@ -4,8 +4,7 @@
     "hero": {
         "tag": "For math teachers",
         "title": "Your math diagrams: simpler, faster, clearer.",
-        "subtitle": "Online workspace for visual math: graphs, figures, formulas, all on one canvas.",
-        "narrative": "There are plenty of ready-made materials online, but finding the right one takes time. With MathOnCanvas you build exactly what your lesson needs: your own world of visual mathematics."
+"narrative": "There are plenty of ready-made materials online, but finding the right one takes time. With MathOnCanvas you build exactly what your lesson needs: your own world of visual mathematics."
     },
     "cta": {
         "loading": "Preparing editor...",
