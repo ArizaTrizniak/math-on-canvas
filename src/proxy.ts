@@ -34,25 +34,29 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
         ? langMatch[1]
         : null
 
+    // Forward x-lang and x-pathname to Server Components via request headers.
+    // x-lang: from URL path (e.g. /es/...) or cookie/accept-language fallback.
+    // x-pathname: needed by not-found.tsx to detect lang when notFound() is called.
+    const lang = langCode ?? getLangFromRequest(request)
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set('x-lang', lang)
+    requestHeaders.set('x-pathname', pathname)
+
     const token = request.cookies.get('access_token')?.value
 
     if (!token) {
-        const response = NextResponse.next()
-        if (langCode) response.headers.set('x-lang', langCode)
-        return response
+        return NextResponse.next({ request: { headers: requestHeaders } })
     }
 
     try {
         const user = await verifyAccessToken(token)
-        const response = NextResponse.next()
-        if (langCode) response.headers.set('x-lang', langCode)
+        const response = NextResponse.next({ request: { headers: requestHeaders } })
         response.headers.set('x-user-id', user.userId)
         response.headers.set('x-user-role', user.role)
         response.headers.set('x-user-ent', JSON.stringify(user.entitlements))
         return response
     } catch {
-        const response = NextResponse.next()
-        if (langCode) response.headers.set('x-lang', langCode)
+        const response = NextResponse.next({ request: { headers: requestHeaders } })
         clearAccessTokenCookie(response)
         return response
     }
