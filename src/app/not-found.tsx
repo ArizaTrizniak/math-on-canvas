@@ -24,8 +24,11 @@ const translations = {
 async function detectLang(): Promise<LanguageCode> {
     const headersList = await headers()
 
-    const nextUrl = headersList.get('next-url') ?? ''
-    const firstSegment = nextUrl.split('/').filter(Boolean)[0] ?? ''
+    // x-pathname is set by Next.js routing; x-invoke-path is a fallback
+    const path = headersList.get('x-pathname')
+        ?? headersList.get('x-invoke-path')
+        ?? ''
+    const firstSegment = path.split('/').filter(Boolean)[0] ?? ''
     const langFromUrl = LANGUAGES.find(l => l.code === firstSegment)?.code
     if (langFromUrl) return langFromUrl
 
@@ -67,7 +70,7 @@ export default async function NotFound() {
                     </div>
                 </div>
                 <Link href={`/${lang}`} className="notfound__nav-link">
-                    ← {t.goHome}
+                    {t.goHome}
                 </Link>
             </header>
 

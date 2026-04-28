@@ -85,7 +85,6 @@
     color: #111827;
     font-weight: 600;
     font-size: 14px;
-    cursor: pointer;
     transition: background 120ms ease, color 120ms ease;
 }
 
@@ -146,7 +145,6 @@
     color: #111827;
     font-weight: 600;
     font-size: 14px;
-    cursor: pointer;
     transition: background 120ms ease, color 120ms ease;
 }
 
@@ -163,7 +161,6 @@
     color: #2c1604;
     font-weight: 800;
     font-size: 14px;
-    cursor: pointer;
     box-shadow: 0 10px 32px rgba(232, 146, 46, 0.3);
     transition: transform 160ms ease, box-shadow 160ms ease;
 }
