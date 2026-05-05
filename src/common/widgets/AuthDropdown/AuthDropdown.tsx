@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuthContext } from '@/lib/auth/authContext'
-import { isEnabled } from '@/features/flags'
 import './AuthDropdown.css'
 
 interface AnchorRect {
@@ -84,12 +83,10 @@ export function AuthDropdown({ anchorRect, open, onClose, defaultView = 'signIn'
                     <GoogleIcon />
                     {t('dropdown.withGoogle')}
                 </button>
-                {isEnabled('nativeAuth') && (
-                    <button type="button" className="auth-dropdown__item" role="menuitem" onClick={handleEmail}>
-                        <EmailIcon />
-                        {t('dropdown.withEmail')}
-                    </button>
-                )}
+                <button type="button" className="auth-dropdown__item" role="menuitem" onClick={handleEmail}>
+                    <EmailIcon />
+                    {t('dropdown.withEmail')}
+                </button>
             </div>
         </>,
         document.body
