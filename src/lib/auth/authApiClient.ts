@@ -9,16 +9,19 @@ import {
 const baseUrl = () => process.env.NEXT_PUBLIC_AUTH_API_URL ?? ''
 
 async function parseError(res: Response): Promise<never> {
-    if (res.status === 401 || res.status === 403) {
-        throw new AuthUnauthenticatedError()
-    }
-    let body: NativeAuthApiError
+    let body: NativeAuthApiError | undefined
     try {
         body = (await res.json()) as NativeAuthApiError
     } catch {
-        throw new AuthNetworkError(`HTTP ${res.status}`)
+        // not JSON
     }
-    throw new AuthNativeError(body.message, body.error)
+    if (body?.error) {
+        throw new AuthNativeError(body.message, body.error)
+    }
+    if (res.status === 401 || res.status === 403) {
+        throw new AuthUnauthenticatedError()
+    }
+    throw new AuthNetworkError(`HTTP ${res.status}`)
 }
 
 async function post<T>(path: string, body?: unknown): Promise<T> {
