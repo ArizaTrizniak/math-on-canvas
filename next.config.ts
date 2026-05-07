@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const EDITOR_URL = process.env.EDITOR_URL || "http://localhost:5173";
+const DOCS_URL = process.env.DOCS_URL || "http://localhost:4321";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
@@ -19,6 +20,14 @@ const nextConfig: NextConfig = {
       {
         source: "/editor/:path*",
         destination: `${EDITOR_URL}/editor/:path*`,
+      },
+      {
+        source: "/docs",
+        destination: `${DOCS_URL}/docs/`,
+      },
+      {
+        source: "/docs/:path*",
+        destination: `${DOCS_URL}/docs/:path*`,
       },
       {
         source: "/assets/:path*",

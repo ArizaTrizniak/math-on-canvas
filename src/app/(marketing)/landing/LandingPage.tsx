@@ -79,7 +79,10 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                     ) : (
                         <LandingSignIn label={t.cta.signIn} />
                     )}
-                    <LandingCTALink href="/editor" className="landing__ghost" location="header">
+                    <Link href="/doc" className="landing__doc">
+                        {t.cta.docs}
+                    </Link>
+                    <LandingCTALink href="/editor" className="landing__cta" location="header">
                         {t.cta.ready}
                     </LandingCTALink>
                 </div>
@@ -101,6 +104,9 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                             >
                                 {t.cta.ready}
                             </LandingCTALink>
+                            <Link href="/doc" className="landing__doc">
+                                {t.cta.docs}
+                            </Link>
                         </div>
 
                         <div className="landing__features">
