@@ -12,7 +12,8 @@
         "error": "Try again",
         "signIn": "Sign in",
         "signOut": "Sign out",
-        "pricing": "Pricing"
+        "pricing": "Pricing",
+        "docs": "Documentation"
     },
     "status": {
         "loading": "Downloading the editor bundle",

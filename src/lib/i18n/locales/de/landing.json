@@ -12,7 +12,8 @@
         "error": "Erneut versuchen",
         "signIn": "Anmelden",
         "signOut": "Abmelden",
-        "pricing": "Preise"
+        "pricing": "Preise",
+        "docs": "Dokumentation"
     },
     "status": {
         "loading": "Editor-Paket wird heruntergeladen",
