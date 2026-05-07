@@ -18,6 +18,7 @@ import UserMenu from '@/common/widgets/UserMenu/UserMenu'
 import './LandingPage.css'
 
 const logo = '/images/logo.svg'
+const docsUrl = process.env.DOCS_URL ?? 'https://docs.math-on-canvas.com/'
 const carouselImages = [
     '/images/screen1.webp',
     '/images/screen2.webp',
@@ -51,6 +52,11 @@ interface LandingPageProps {
 export function LandingPage({ lang, user, displayName }: LandingPageProps) {
     const t = translations[lang]
     const tCommon = commonTranslations[lang]
+    const docsLink = (
+        <a href={docsUrl} className="landing__doc" target="_blank" rel="noopener noreferrer">
+            {t.cta.docs}
+        </a>
+    )
 
     return (
         <div className="landing">
@@ -79,9 +85,7 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                     ) : (
                         <LandingSignIn label={t.cta.signIn} />
                     )}
-                    <Link href="/docs" className="landing__doc">
-                        {t.cta.docs}
-                    </Link>
+                    {docsLink}
                     <LandingCTALink href="/editor" className="landing__cta" location="header">
                         {t.cta.ready}
                     </LandingCTALink>
@@ -104,9 +108,7 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                             >
                                 {t.cta.ready}
                             </LandingCTALink>
-                            <Link href="/docs" className="landing__doc">
-                                {t.cta.docs}
-                            </Link>
+                            {docsLink}
                         </div>
 
                         <div className="landing__features">
