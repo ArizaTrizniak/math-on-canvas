@@ -146,7 +146,7 @@ function NativeAuthForms({
                             type={showPassword ? 'text' : 'password'}
                             autoComplete="new-password"
                             required
-                            minLength={12}
+                            minLength={8}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             disabled={loading}
@@ -162,8 +162,9 @@ function NativeAuthForms({
                     </div>
                     <ul className="auth-modal__req-list">
                         {[
-                            { key: 'minLength', met: password.length >= 12 },
+                            { key: 'minLength', met: password.length >= 8 },
                             { key: 'uppercase', met: /[A-Z]/.test(password) },
+                            { key: 'lowercase', met: /[a-z]/.test(password) },
                             { key: 'number', met: /[0-9]/.test(password) },
                             { key: 'special', met: /[^A-Za-z0-9]/.test(password) },
                         ].map(({ key, met }) => (
