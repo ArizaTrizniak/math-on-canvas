@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
-import { Eye, EyeOff, X } from 'lucide-react'
+import { Check, Circle, Eye, EyeOff, X } from 'lucide-react'
 import { useAuthContext } from '@/lib/auth/authContext'
 import './NativeAuthModal.css'
 
@@ -160,7 +160,19 @@ function NativeAuthForms({
                             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                         </button>
                     </div>
-                    <p className="auth-modal__hint">{t('signUp.passwordHint')}</p>
+                    <ul className="auth-modal__req-list">
+                        {[
+                            { key: 'minLength', met: password.length >= 12 },
+                            { key: 'uppercase', met: /[A-Z]/.test(password) },
+                            { key: 'number', met: /[0-9]/.test(password) },
+                            { key: 'special', met: /[^A-Za-z0-9]/.test(password) },
+                        ].map(({ key, met }) => (
+                            <li key={key} className={`auth-modal__req-item${met ? ' auth-modal__req-item--met' : ' auth-modal__req-item--unmet'}`}>
+                                {met ? <Check size={12} /> : <Circle size={12} />}
+                                {t(`signUp.passwordReq.${key}`)}
+                            </li>
+                        ))}
+                    </ul>
                 </div>
 
                 {error && <p className="auth-modal__error">{t(error)}</p>}

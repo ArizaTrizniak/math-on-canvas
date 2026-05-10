@@ -122,11 +122,29 @@
     color: #333;
 }
 
-.auth-modal__hint {
-    font-size: 0.75rem;
-    color: #6b7280;
+.auth-modal__req-list {
+    list-style: none;
     margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.auth-modal__req-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
     line-height: 1.4;
+}
+
+.auth-modal__req-item--met {
+    color: #16a34a;
+}
+
+.auth-modal__req-item--unmet {
+    color: #dc2626;
 }
 
 .auth-modal__error {
