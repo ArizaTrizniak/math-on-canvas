@@ -146,6 +146,7 @@ function NativeAuthForms({
                             type={showPassword ? 'text' : 'password'}
                             autoComplete="new-password"
                             required
+                            minLength={12}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             disabled={loading}
@@ -159,6 +160,7 @@ function NativeAuthForms({
                             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                         </button>
                     </div>
+                    <p className="auth-modal__hint">{t('signUp.passwordHint')}</p>
                 </div>
 
                 {error && <p className="auth-modal__error">{t(error)}</p>}

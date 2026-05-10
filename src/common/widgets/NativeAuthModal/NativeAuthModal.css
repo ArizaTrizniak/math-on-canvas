@@ -122,6 +122,13 @@
     color: #333;
 }
 
+.auth-modal__hint {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.4;
+}
+
 .auth-modal__error {
     font-size: 0.8125rem;
     color: #dc2626;
