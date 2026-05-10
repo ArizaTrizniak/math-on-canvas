@@ -4,8 +4,7 @@
     "hero": {
         "tag": "Für Mathelehrer",
         "title": "Ihre Mathe-Diagramme: einfacher, schneller, klarer.",
-        "subtitle": "Online-Arbeitsbereich für visuelle Mathematik: Graphen, Figuren, Formeln, alles auf einem Canvas.",
-        "narrative": "Es gibt viele fertige Materialien online, aber das Richtige zu finden dauert. Mit MathOnCanvas erstellen Sie genau das, was Ihre Unterrichtsstunde braucht: Ihre eigene Welt der visuellen Mathematik."
+"narrative": "Es gibt viele fertige Materialien online, aber das Richtige zu finden dauert. Mit MathOnCanvas erstellen Sie genau das, was Ihre Unterrichtsstunde braucht: Ihre eigene Welt der visuellen Mathematik."
     },
     "cta": {
         "loading": "Editor wird vorbereitet...",
@@ -13,7 +12,8 @@
         "error": "Erneut versuchen",
         "signIn": "Anmelden",
         "signOut": "Abmelden",
-        "pricing": "Preise"
+        "pricing": "Preise",
+        "docs": "Dokumentation"
     },
     "status": {
         "loading": "Editor-Paket wird heruntergeladen",

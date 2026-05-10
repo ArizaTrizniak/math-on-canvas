@@ -1,14 +1,14 @@
 import type { NextConfig } from "next";
 
 const EDITOR_URL = process.env.EDITOR_URL || "http://localhost:5173";
+const DOCS_URL = process.env.DOCS_URL || "http://localhost:4321";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
 
   env: {
     NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version || "0.0.0",
-    NEXT_PUBLIC_AUTH_LOGIN_URL: process.env.AUTH_LOGIN_URL || "https://api.math-on-canvas.com/auth/login",
-    NEXT_PUBLIC_AUTH_LOGOUT_URL: process.env.AUTH_LOGOUT_URL || "https://api.math-on-canvas.com/auth/logout",
+    NEXT_PUBLIC_AUTH_API_URL: process.env.AUTH_API_URL || "https://api.math-on-canvas.com",
   },
 
   rewrites: async () => ({
@@ -20,6 +20,14 @@ const nextConfig: NextConfig = {
       {
         source: "/editor/:path*",
         destination: `${EDITOR_URL}/editor/:path*`,
+      },
+      {
+        source: "/docs",
+        destination: `${DOCS_URL}/docs/`,
+      },
+      {
+        source: "/docs/:path*",
+        destination: `${DOCS_URL}/docs/:path*`,
       },
       {
         source: "/assets/:path*",

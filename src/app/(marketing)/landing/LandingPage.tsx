@@ -6,6 +6,10 @@ import landingEN from '@/lib/i18n/locales/en/landing.json'
 import landingRU from '@/lib/i18n/locales/ru/landing.json'
 import landingES from '@/lib/i18n/locales/es/landing.json'
 import landingDE from '@/lib/i18n/locales/de/landing.json'
+import commonEN from '@/lib/i18n/locales/en/common.json'
+import commonRU from '@/lib/i18n/locales/ru/common.json'
+import commonES from '@/lib/i18n/locales/es/common.json'
+import commonDE from '@/lib/i18n/locales/de/common.json'
 import LanguageSwitch from './widgets/LanguageSwitch/LandingLanguageSwitch'
 import { LandingCarousel } from './widgets/LandingCarousel/LandingCarousel'
 import { LandingSignIn } from './widgets/LandingSignIn/LandingSignIn'
@@ -14,6 +18,7 @@ import UserMenu from '@/common/widgets/UserMenu/UserMenu'
 import './LandingPage.css'
 
 const logo = '/images/logo.svg'
+const docsUrl = process.env.DOCS_URL ?? 'https://docs.math-on-canvas.com/'
 const carouselImages = [
     '/images/screen1.webp',
     '/images/screen2.webp',
@@ -28,6 +33,13 @@ const translations = {
     de: landingDE,
 } as const
 
+const commonTranslations = {
+    en: commonEN,
+    ru: commonRU,
+    es: commonES,
+    de: commonDE,
+} as const
+
 const featureKeys = ['easy', 'formulas', 'shapes', 'export', 'customize'] as const
 const highlightKeys = ['pdf', 'pages', 'symbols', 'visual', 'library', 'geometry'] as const
 
@@ -39,6 +51,12 @@ interface LandingPageProps {
 
 export function LandingPage({ lang, user, displayName }: LandingPageProps) {
     const t = translations[lang]
+    const tCommon = commonTranslations[lang]
+    const docsLink = (
+        <a href={docsUrl} className="landing__doc" target="_blank" rel="noopener noreferrer">
+            {t.cta.docs}
+        </a>
+    )
 
     return (
         <div className="landing">
@@ -53,7 +71,7 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                             {t.brand}
                             <span className="landing__beta-badge">BETA</span>
                         </div>
-                        <div className="landing__brand-subtitle">{t.hero.subtitle}</div>
+                        <div className="landing__brand-subtitle">{tCommon.brandSubtitle}</div>
                     </div>
                 </div>
 
@@ -67,7 +85,8 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                     ) : (
                         <LandingSignIn label={t.cta.signIn} />
                     )}
-                    <LandingCTALink href="/editor" className="landing__ghost" location="header">
+                    {docsLink}
+                    <LandingCTALink href="/editor" className="landing__cta" location="header">
                         {t.cta.ready}
                     </LandingCTALink>
                 </div>
@@ -89,6 +108,7 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                             >
                                 {t.cta.ready}
                             </LandingCTALink>
+                            {docsLink}
                         </div>
 
                         <div className="landing__features">

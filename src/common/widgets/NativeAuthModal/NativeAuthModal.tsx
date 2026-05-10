@@ -247,10 +247,7 @@ export function NativeAuthModal() {
 
     return createPortal(
         <>
-            <div
-                className="auth-modal__backdrop"
-                onClick={() => { if (!nativeAuthLoading) closeNativeAuthModal() }}
-            />
+            <div className="auth-modal__backdrop" />
             <div className="auth-modal__panel" role="dialog" aria-modal="true">
                 <button
                     type="button"

@@ -4,8 +4,7 @@
     "hero": {
         "tag": "Para profesores de matemáticas",
         "title": "Tus diagramas matemáticos: más simples, rápidos y claros.",
-        "subtitle": "Espacio de trabajo online para matemáticas visuales: gráficos, figuras, fórmulas, todo en un solo lienzo.",
-        "narrative": "Hay muchos materiales listos en internet, pero encontrar el adecuado lleva tiempo. Con MathOnCanvas construyes exactamente lo que tu lección necesita: tu propio mundo de matemáticas visuales."
+"narrative": "Hay muchos materiales listos en internet, pero encontrar el adecuado lleva tiempo. Con MathOnCanvas construyes exactamente lo que tu lección necesita: tu propio mundo de matemáticas visuales."
     },
     "cta": {
         "loading": "Preparando editor...",
@@ -13,7 +12,8 @@
         "error": "Intentar de nuevo",
         "signIn": "Iniciar sesión",
         "signOut": "Cerrar sesión",
-        "pricing": "Precios"
+        "pricing": "Precios",
+        "docs": "Documentación"
     },
     "status": {
         "loading": "Descargando el paquete del editor",
