@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
-import { Eye, EyeOff, X } from 'lucide-react'
+import { Check, Circle, Eye, EyeOff, X } from 'lucide-react'
 import { useAuthContext } from '@/lib/auth/authContext'
 import './NativeAuthModal.css'
 
@@ -146,6 +146,7 @@ function NativeAuthForms({
                             type={showPassword ? 'text' : 'password'}
                             autoComplete="new-password"
                             required
+                            minLength={8}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             disabled={loading}
@@ -159,6 +160,20 @@ function NativeAuthForms({
                             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                         </button>
                     </div>
+                    <ul className="auth-modal__req-list">
+                        {[
+                            { key: 'minLength', met: password.length >= 8 },
+                            { key: 'uppercase', met: /[A-Z]/.test(password) },
+                            { key: 'lowercase', met: /[a-z]/.test(password) },
+                            { key: 'number', met: /[0-9]/.test(password) },
+                            { key: 'special', met: /[^A-Za-z0-9]/.test(password) },
+                        ].map(({ key, met }) => (
+                            <li key={key} className={`auth-modal__req-item${met ? ' auth-modal__req-item--met' : ' auth-modal__req-item--unmet'}`}>
+                                {met ? <Check size={12} /> : <Circle size={12} />}
+                                {t(`signUp.passwordReq.${key}`)}
+                            </li>
+                        ))}
+                    </ul>
                 </div>
 
                 {error && <p className="auth-modal__error">{t(error)}</p>}
