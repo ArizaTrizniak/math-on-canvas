@@ -20,7 +20,7 @@ export function FilterBar({ lang }: Props) {
   const currentCategory = searchParams.get('category') ?? ''
   const currentTags = searchParams.get('tags') ?? ''
   const currentLanguage = searchParams.get('language') ?? lang
-  const currentSort = searchParams.get('sort') ?? ''
+  const currentSort = searchParams.get('sort') ?? 'updatedAt'
 
   function updateParam(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString())
