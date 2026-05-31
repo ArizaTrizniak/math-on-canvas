@@ -14,7 +14,7 @@ import catalogEN from '@/lib/i18n/locales/en/catalog.json'
 import catalogRU from '@/lib/i18n/locales/ru/catalog.json'
 import catalogES from '@/lib/i18n/locales/es/catalog.json'
 import catalogDE from '@/lib/i18n/locales/de/catalog.json'
-import { CATEGORIES } from '@/features/catalog/taxonomy'
+import { CATEGORIES, humanizeSlug } from '@/features/catalog/taxonomy'
 import LanguageSwitch from './widgets/LanguageSwitch/LandingLanguageSwitch'
 import { LandingCarousel } from './widgets/LandingCarousel/LandingCarousel'
 import { LandingSignIn } from './widgets/LandingSignIn/LandingSignIn'
@@ -53,10 +53,6 @@ const catalogTranslations = {
 } as const
 
 const TOP_CATEGORIES = CATEGORIES.slice(0, 6)
-
-function humanizeCategory(slug: string): string {
-    return slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-}
 
 const featureKeys = ['easy', 'formulas', 'shapes', 'export', 'customize'] as const
 const highlightKeys = ['pdf', 'pages', 'symbols', 'visual', 'library', 'geometry'] as const
@@ -181,19 +177,19 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
 
             <footer className="landing__footer">
                 {t.footer}
-                <span style={{ margin: '0 0.75em' }}>·</span>
+                <span aria-hidden="true" style={{ margin: '0 0.75em' }}>·</span>
                 <Link href={`/${lang}/pricing`} style={{ color: 'inherit', textDecoration: 'none' }}>
                     {t.cta.pricing}
                 </Link>
-                <span style={{ margin: '0 0.75em' }}>·</span>
+                <span aria-hidden="true" style={{ margin: '0 0.75em' }}>·</span>
                 <Link href={`/${lang}/catalog`} style={{ color: 'inherit', textDecoration: 'none' }}>
                     {tCatalog.nav}
                 </Link>
                 {TOP_CATEGORIES.map((c) => (
                     <span key={c}>
-                        <span style={{ margin: '0 0.75em' }}>·</span>
+                        <span aria-hidden="true" style={{ margin: '0 0.75em' }}>·</span>
                         <Link href={`/${lang}/catalog/category/${c}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                            {humanizeCategory(c)}
+                            {humanizeSlug(c)}
                         </Link>
                     </span>
                 ))}

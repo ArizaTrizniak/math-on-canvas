@@ -4,7 +4,7 @@ import { BASE_URL } from '@/lib/site'
 import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
 import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { CatalogGrid } from '@/features/catalog/components/CatalogGrid'
-import { isCategory } from '@/features/catalog/taxonomy'
+import { isCategory, humanizeSlug } from '@/features/catalog/taxonomy'
 import { buildSlug } from '@/features/catalog/slug'
 import { hreflangAlternates } from '@/features/catalog/seo/metadata'
 import { collectionPage, breadcrumbList } from '@/features/catalog/seo/jsonld'
@@ -24,16 +24,13 @@ const catalogTranslations: Record<string, CatalogStrings> = {
     de: catalogDE,
 }
 
-const humanize = (slug: string) =>
-    slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-
 export async function generateMetadata({
     params,
 }: {
     params: Promise<{ lang: string; category: string }>
 }): Promise<Metadata> {
     const { lang, category } = await params
-    const categoryLabel = humanize(category)
+    const categoryLabel = humanizeSlug(category)
     const strings = catalogTranslations[lang] ?? catalogTranslations['en']
     const canonical = `${BASE_URL}/${lang}/catalog/category/${category}`
 
@@ -78,7 +75,7 @@ export default async function CategoryHubPage({
     const documents = result.documents
 
     const strings = catalogTranslations[lang as LanguageCode] ?? catalogTranslations['en']
-    const categoryLabel = humanize(category)
+    const categoryLabel = humanizeSlug(category)
     const heading = strings.categoryHub.heading.replaceAll('{category}', categoryLabel)
 
     const canonical = `${BASE_URL}/${lang}/catalog/category/${category}`
