@@ -15,5 +15,15 @@
   "share": "Share",
   "gateIntro": "Sign in or create a free account",
   "related": "Related documents",
-  "breadcrumbs": { "home": "Home", "catalog": "Catalog" }
+  "breadcrumbs": { "home": "Home", "catalog": "Catalog" },
+  "categoryHub": {
+    "heading": "{category} templates",
+    "metaTitle": "{category} templates | Math on Canvas",
+    "metaDescription": "Browse ready-made {category} diagrams, figures and formula templates. Open any one in the editor and make it yours."
+  },
+  "tagHub": {
+    "heading": "Templates tagged \"{tag}\"",
+    "metaTitle": "{tag} math templates | Math on Canvas",
+    "metaDescription": "Browse math templates tagged \"{tag}\". Open any one in the editor and adapt it to your lesson."
+  }
 }

@@ -31,12 +31,14 @@ export async function generateMetadata({
     params: Promise<{ lang: string; tag: string }>
 }): Promise<Metadata> {
     const { lang, tag } = await params
+    const strings = catalogTranslations[lang] ?? catalogTranslations['en']
     const encodedTag = encodeURIComponent(tag)
     const canonical = `${BASE_URL}/${lang}/catalog/tag/${encodedTag}`
 
-    const title = `${tag} templates | Math on Canvas`
-    const description = `Browse ready-made math diagrams and formula templates tagged "${tag}". Open any template in the editor and make it yours.`
+    const title = strings.tagHub.metaTitle.replaceAll('{tag}', tag)
+    const description = strings.tagHub.metaDescription.replaceAll('{tag}', tag)
 
+    // Deduped with the page's identical fetch by Next.js request memoization (same URL + options).
     const result = await listPublicDocuments({ tags: [tag], limit: 24 })
     const thinTag = result.documents.length < TAG_INDEX_MIN
 
@@ -80,9 +82,10 @@ export default async function TagHubPage({
     const strings = catalogTranslations[lang as LanguageCode] ?? catalogTranslations['en']
     const encodedTag = encodeURIComponent(tag)
     const canonical = `${BASE_URL}/${lang}/catalog/tag/${encodedTag}`
+    const heading = strings.tagHub.heading.replaceAll('{tag}', tag)
 
     const jsonLdCollection = collectionPage({
-        name: `${tag} templates`,
+        name: heading,
         url: canonical,
         itemUrls: documents.map(doc => `${BASE_URL}/${lang}/catalog/${buildSlug(doc.title, doc.documentId)}`),
     })
@@ -111,7 +114,7 @@ export default async function TagHubPage({
                         <li aria-current="page">{tag}</li>
                     </ol>
                 </nav>
-                <h1>{tag} templates</h1>
+                <h1>{heading}</h1>
                 <CatalogGrid documents={documents} lang={lang} emptyLabel={strings.empty} />
             </main>
         </>

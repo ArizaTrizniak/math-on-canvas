@@ -15,5 +15,15 @@
   "share": "Поделиться",
   "gateIntro": "Войдите или создайте бесплатную учётную запись",
   "related": "Похожие документы",
-  "breadcrumbs": { "home": "Главная", "catalog": "Каталог" }
+  "breadcrumbs": { "home": "Главная", "catalog": "Каталог" },
+  "categoryHub": {
+    "heading": "Шаблоны: {category}",
+    "metaTitle": "Шаблоны {category} | Math on Canvas",
+    "metaDescription": "Готовые диаграммы, фигуры и шаблоны формул по теме «{category}». Откройте любой в редакторе и адаптируйте под себя."
+  },
+  "tagHub": {
+    "heading": "Шаблоны с тегом «{tag}»",
+    "metaTitle": "Математические шаблоны с тегом {tag} | Math on Canvas",
+    "metaDescription": "Готовые математические шаблоны с тегом «{tag}». Откройте любой в редакторе и адаптируйте под свой урок."
+  }
 }

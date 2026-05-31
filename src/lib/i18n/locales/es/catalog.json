@@ -15,5 +15,15 @@
   "share": "Compartir",
   "gateIntro": "Inicia sesión o crea una cuenta gratuita",
   "related": "Documentos relacionados",
-  "breadcrumbs": { "home": "Inicio", "catalog": "Catálogo" }
+  "breadcrumbs": { "home": "Inicio", "catalog": "Catálogo" },
+  "categoryHub": {
+    "heading": "Plantillas de {category}",
+    "metaTitle": "Plantillas de {category} | Math on Canvas",
+    "metaDescription": "Explora diagramas, figuras y plantillas de fórmulas de {category} listas para usar. Abre cualquiera en el editor y personalízala."
+  },
+  "tagHub": {
+    "heading": "Plantillas etiquetadas \"{tag}\"",
+    "metaTitle": "Plantillas matemáticas de {tag} | Math on Canvas",
+    "metaDescription": "Explora plantillas matemáticas etiquetadas \"{tag}\". Abre cualquiera en el editor y adáptala a tu lección."
+  }
 }

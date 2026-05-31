@@ -24,17 +24,21 @@ const catalogTranslations: Record<string, CatalogStrings> = {
     de: catalogDE,
 }
 
+const humanize = (slug: string) =>
+    slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+
 export async function generateMetadata({
     params,
 }: {
     params: Promise<{ lang: string; category: string }>
 }): Promise<Metadata> {
     const { lang, category } = await params
-    const categoryTitle = category.charAt(0).toUpperCase() + category.slice(1)
+    const categoryLabel = humanize(category)
+    const strings = catalogTranslations[lang] ?? catalogTranslations['en']
     const canonical = `${BASE_URL}/${lang}/catalog/category/${category}`
 
-    const title = `${categoryTitle} templates | Math on Canvas`
-    const description = `Browse ready-made ${categoryTitle.toLowerCase()} math diagrams and formula templates. Open any template in the editor and make it yours.`
+    const title = strings.categoryHub.metaTitle.replaceAll('{category}', categoryLabel)
+    const description = strings.categoryHub.metaDescription.replaceAll('{category}', categoryLabel)
 
     return {
         title,
@@ -74,12 +78,13 @@ export default async function CategoryHubPage({
     const documents = result.documents
 
     const strings = catalogTranslations[lang as LanguageCode] ?? catalogTranslations['en']
-    const categoryTitle = category.charAt(0).toUpperCase() + category.slice(1)
+    const categoryLabel = humanize(category)
+    const heading = strings.categoryHub.heading.replaceAll('{category}', categoryLabel)
 
     const canonical = `${BASE_URL}/${lang}/catalog/category/${category}`
 
     const jsonLdCollection = collectionPage({
-        name: `${categoryTitle} templates`,
+        name: heading,
         url: canonical,
         itemUrls: documents.map(doc => `${BASE_URL}/${lang}/catalog/${buildSlug(doc.title, doc.documentId)}`),
     })
@@ -87,7 +92,7 @@ export default async function CategoryHubPage({
     const jsonLdBreadcrumb = breadcrumbList([
         { name: strings.breadcrumbs.home, url: `${BASE_URL}/${lang}` },
         { name: strings.breadcrumbs.catalog, url: `${BASE_URL}/${lang}/catalog` },
-        { name: categoryTitle, url: canonical },
+        { name: categoryLabel, url: canonical },
     ])
 
     return (
@@ -105,10 +110,10 @@ export default async function CategoryHubPage({
                     <ol>
                         <li><a href={`/${lang}`}>{strings.breadcrumbs.home}</a></li>
                         <li><a href={`/${lang}/catalog`}>{strings.breadcrumbs.catalog}</a></li>
-                        <li aria-current="page">{categoryTitle}</li>
+                        <li aria-current="page">{categoryLabel}</li>
                     </ol>
                 </nav>
-                <h1>{categoryTitle} templates</h1>
+                <h1>{heading}</h1>
                 <CatalogGrid documents={documents} lang={lang} emptyLabel={strings.empty} />
             </main>
         </>

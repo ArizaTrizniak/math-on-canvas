@@ -15,5 +15,15 @@
   "share": "Teilen",
   "gateIntro": "Anmelden oder kostenloses Konto erstellen",
   "related": "Ähnliche Dokumente",
-  "breadcrumbs": { "home": "Startseite", "catalog": "Katalog" }
+  "breadcrumbs": { "home": "Startseite", "catalog": "Katalog" },
+  "categoryHub": {
+    "heading": "{category}-Vorlagen",
+    "metaTitle": "{category}-Vorlagen | Math on Canvas",
+    "metaDescription": "Durchsuchen Sie fertige {category}-Diagramme, Figuren und Formel-Vorlagen. Öffnen Sie beliebige im Editor und gestalten Sie sie nach Ihren Wünschen."
+  },
+  "tagHub": {
+    "heading": "Vorlagen mit dem Tag „{tag}“",
+    "metaTitle": "Mathe-Vorlagen mit dem Tag {tag} | Math on Canvas",
+    "metaDescription": "Mathe-Vorlagen mit dem Tag „{tag}“. Öffnen Sie beliebige im Editor und passen Sie sie für Ihre Unterrichtsstunde an."
+  }
 }
