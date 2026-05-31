@@ -3,8 +3,7 @@ import { BASE_URL } from '@/lib/site'
 import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { catalogSitemapEntries } from '@/features/catalog/sitemap'
 import type { DocumentSummary } from '@/features/catalog/types'
-
-const LANGUAGES = ['en', 'ru', 'es', 'de'] as const
+import { LANGUAGES } from '@/lib/i18n/constants'
 
 const MAX_PAGES = 10
 const PAGE_SIZE = 100
@@ -22,14 +21,14 @@ async function fetchAllCatalogDocuments(): Promise<DocumentSummary[]> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const homeEntries: MetadataRoute.Sitemap = LANGUAGES.map((lang) => ({
-        url: `${BASE_URL}/${lang}`,
+    const homeEntries: MetadataRoute.Sitemap = LANGUAGES.map(({ code }) => ({
+        url: `${BASE_URL}/${code}`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 1.0,
         alternates: {
             languages: Object.fromEntries(
-                LANGUAGES.map((l) => [l, `${BASE_URL}/${l}`])
+                LANGUAGES.map(({ code: c }) => [c, `${BASE_URL}/${c}`])
             ),
         },
     }))
