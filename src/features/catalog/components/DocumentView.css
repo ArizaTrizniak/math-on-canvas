@@ -1,0 +1,223 @@
+/* ── DocumentView layout ─────────────────────────────────────────────── */
+
+.catalog-doc {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    grid-template-rows: auto auto;
+    column-gap: 40px;
+    row-gap: 32px;
+    align-items: start;
+}
+
+/* Left column spans rows 1-2 (preview + strip) */
+.catalog-doc__left {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    min-width: 0;
+}
+
+/* Right sticky rail */
+.catalog-doc__rail {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Description + related row below both columns */
+.catalog-doc__below {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+/* ── Title ───────────────────────────────────────────────────────────── */
+
+.catalog-doc__title {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #0f172a;
+    margin: 0 0 20px;
+}
+
+/* ── Main preview image ──────────────────────────────────────────────── */
+
+.catalog-doc__preview {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #f1f5f9;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.catalog-doc__preview-img {
+    object-fit: contain;
+}
+
+.catalog-doc__preview-placeholder {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(135deg, #f1f5f9 25%, transparent 25%) -10px 0,
+        linear-gradient(225deg, #f1f5f9 25%, transparent 25%) -10px 0,
+        linear-gradient(315deg, #f1f5f9 25%, transparent 25%),
+        linear-gradient(45deg,  #f1f5f9 25%, transparent 25%);
+    background-size: 20px 20px;
+    background-color: #e2e8f0;
+    opacity: 0.6;
+}
+
+/* ── Page-thumbnail strip ────────────────────────────────────────────── */
+
+.catalog-doc__strip {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.catalog-doc__strip-cell {
+    flex: 0 0 72px;
+    height: 54px;
+    background: #f1f5f9;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    user-select: none;
+    overflow: hidden;
+}
+
+.catalog-doc__strip-cell--first {
+    position: relative;
+    border-color: #3b82f6;
+}
+
+.catalog-doc__strip-img {
+    object-fit: cover;
+}
+
+/* ── Rail sections ───────────────────────────────────────────────────── */
+
+.catalog-doc__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.catalog-doc__badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.catalog-doc__badge--lang {
+    background: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.catalog-doc__badge--category {
+    background: rgba(232, 146, 46, 0.1);
+    color: #c2610a;
+    border: 1px solid rgba(232, 146, 46, 0.25);
+}
+
+.catalog-doc__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.catalog-doc__meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #374151;
+}
+
+.catalog-doc__meta-label {
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.catalog-doc__meta-value {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* ── Share button ────────────────────────────────────────────────────── */
+
+.catalog-doc__share {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+}
+
+.catalog-doc__share:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+/* ── Description ─────────────────────────────────────────────────────── */
+
+.catalog-doc__description {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #374151;
+    max-width: 72ch;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+/* ── Related row ─────────────────────────────────────────────────────── */
+
+.catalog-related {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.catalog-related__heading {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+.catalog-related__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
