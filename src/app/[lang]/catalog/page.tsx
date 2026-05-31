@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { BASE_URL } from '@/lib/site'
-import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
+import { LANGUAGES } from '@/lib/i18n/constants'
 import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { CatalogGrid } from '@/features/catalog/components/CatalogGrid'
 import { FilterBar } from '@/features/catalog/components/FilterBar'
@@ -10,21 +10,9 @@ import { hreflangAlternates } from '@/features/catalog/seo/metadata'
 import { collectionPage } from '@/features/catalog/seo/jsonld'
 import { buildSlug } from '@/features/catalog/slug'
 import type { CatalogListParams } from '@/features/catalog/types'
-import catalogEN from '@/lib/i18n/locales/en/catalog.json'
-import catalogRU from '@/lib/i18n/locales/ru/catalog.json'
-import catalogES from '@/lib/i18n/locales/es/catalog.json'
-import catalogDE from '@/lib/i18n/locales/de/catalog.json'
+import { getCatalogStrings } from '@/features/catalog/i18n'
 
 export const revalidate = 300
-
-type CatalogStrings = typeof catalogEN
-
-const catalogTranslations: Record<string, CatalogStrings> = {
-    en: catalogEN,
-    ru: catalogRU,
-    es: catalogES,
-    de: catalogDE,
-}
 
 export async function generateMetadata({
     params,
@@ -32,7 +20,7 @@ export async function generateMetadata({
     params: Promise<{ lang: string }>
 }): Promise<Metadata> {
     const { lang } = await params
-    const strings = catalogTranslations[lang] ?? catalogTranslations['en']
+    const strings = getCatalogStrings(lang)
     const canonical = `${BASE_URL}/${lang}/catalog`
 
     return {
@@ -90,7 +78,7 @@ export default async function CatalogHubPage({
     const main = mainResult.documents
     const popular = popularResult.documents
 
-    const strings = catalogTranslations[lang as LanguageCode] ?? catalogTranslations['en']
+    const strings = getCatalogStrings(lang)
 
     const pageUrl = `${BASE_URL}/${lang}/catalog`
     const jsonLd = collectionPage({

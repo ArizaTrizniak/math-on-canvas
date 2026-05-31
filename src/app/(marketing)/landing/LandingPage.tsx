@@ -10,10 +10,7 @@ import commonEN from '@/lib/i18n/locales/en/common.json'
 import commonRU from '@/lib/i18n/locales/ru/common.json'
 import commonES from '@/lib/i18n/locales/es/common.json'
 import commonDE from '@/lib/i18n/locales/de/common.json'
-import catalogEN from '@/lib/i18n/locales/en/catalog.json'
-import catalogRU from '@/lib/i18n/locales/ru/catalog.json'
-import catalogES from '@/lib/i18n/locales/es/catalog.json'
-import catalogDE from '@/lib/i18n/locales/de/catalog.json'
+import { getCatalogStrings } from '@/features/catalog/i18n'
 import { CATEGORIES, humanizeSlug } from '@/features/catalog/taxonomy'
 import LanguageSwitch from './widgets/LanguageSwitch/LandingLanguageSwitch'
 import { LandingCarousel } from './widgets/LandingCarousel/LandingCarousel'
@@ -45,13 +42,6 @@ const commonTranslations = {
     de: commonDE,
 } as const
 
-const catalogTranslations = {
-    en: catalogEN,
-    ru: catalogRU,
-    es: catalogES,
-    de: catalogDE,
-} as const
-
 const TOP_CATEGORIES = CATEGORIES.slice(0, 6)
 
 const featureKeys = ['easy', 'formulas', 'shapes', 'export', 'customize'] as const
@@ -66,7 +56,7 @@ interface LandingPageProps {
 export function LandingPage({ lang, user, displayName }: LandingPageProps) {
     const t = translations[lang]
     const tCommon = commonTranslations[lang]
-    const tCatalog = catalogTranslations[lang]
+    const tCatalog = getCatalogStrings(lang)
     const docsLink = (
         <a href={docsUrl} className="landing__doc" target="_blank" rel="noopener noreferrer">
             {t.cta.docs}

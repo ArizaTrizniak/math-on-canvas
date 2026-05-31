@@ -1,28 +1,16 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { BASE_URL } from '@/lib/site'
-import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
+import { LANGUAGES } from '@/lib/i18n/constants'
 import { getPublicDocumentMeta, listPublicDocuments } from '@/features/catalog/serverClient'
 import { parseIdFromSlug } from '@/features/catalog/slug'
 import { DocumentView } from '@/features/catalog/components/DocumentView'
 import { documentLocalizedMeta, hreflangAlternates } from '@/features/catalog/seo/metadata'
 import { creativeWork, breadcrumbList } from '@/features/catalog/seo/jsonld'
 import { buildThumbnailUrl } from '@/features/catalog/thumbnail'
-import catalogEN from '@/lib/i18n/locales/en/catalog.json'
-import catalogRU from '@/lib/i18n/locales/ru/catalog.json'
-import catalogES from '@/lib/i18n/locales/es/catalog.json'
-import catalogDE from '@/lib/i18n/locales/de/catalog.json'
+import { getCatalogStrings } from '@/features/catalog/i18n'
 
 export const revalidate = 300
-
-type CatalogStrings = typeof catalogEN
-
-const catalogTranslations: Record<string, CatalogStrings> = {
-    en: catalogEN,
-    ru: catalogRU,
-    es: catalogES,
-    de: catalogDE,
-}
 
 export async function generateMetadata({
     params,
@@ -85,7 +73,7 @@ export default async function CatalogDocumentPage({
     })
     const related = relatedResult.documents.filter(d => d.documentId !== doc.documentId)
 
-    const strings = catalogTranslations[lang as LanguageCode] ?? catalogTranslations['en']
+    const strings = getCatalogStrings(lang)
     const docStrings = {
         open: strings.open,
         share: strings.share,

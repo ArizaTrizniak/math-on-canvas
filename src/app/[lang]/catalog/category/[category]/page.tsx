@@ -1,28 +1,16 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { BASE_URL } from '@/lib/site'
-import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
+import { LANGUAGES } from '@/lib/i18n/constants'
 import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { CatalogGrid } from '@/features/catalog/components/CatalogGrid'
 import { isCategory, humanizeSlug } from '@/features/catalog/taxonomy'
 import { buildSlug } from '@/features/catalog/slug'
 import { hreflangAlternates } from '@/features/catalog/seo/metadata'
 import { collectionPage, breadcrumbList } from '@/features/catalog/seo/jsonld'
-import catalogEN from '@/lib/i18n/locales/en/catalog.json'
-import catalogRU from '@/lib/i18n/locales/ru/catalog.json'
-import catalogES from '@/lib/i18n/locales/es/catalog.json'
-import catalogDE from '@/lib/i18n/locales/de/catalog.json'
+import { getCatalogStrings } from '@/features/catalog/i18n'
 
 export const revalidate = 300
-
-type CatalogStrings = typeof catalogEN
-
-const catalogTranslations: Record<string, CatalogStrings> = {
-    en: catalogEN,
-    ru: catalogRU,
-    es: catalogES,
-    de: catalogDE,
-}
 
 export async function generateMetadata({
     params,
@@ -31,7 +19,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { lang, category } = await params
     const categoryLabel = humanizeSlug(category)
-    const strings = catalogTranslations[lang] ?? catalogTranslations['en']
+    const strings = getCatalogStrings(lang)
     const canonical = `${BASE_URL}/${lang}/catalog/category/${category}`
 
     const title = strings.categoryHub.metaTitle.replaceAll('{category}', categoryLabel)
@@ -74,7 +62,7 @@ export default async function CategoryHubPage({
     const result = await listPublicDocuments({ category, limit: 24 })
     const documents = result.documents
 
-    const strings = catalogTranslations[lang as LanguageCode] ?? catalogTranslations['en']
+    const strings = getCatalogStrings(lang)
     const categoryLabel = humanizeSlug(category)
     const heading = strings.categoryHub.heading.replaceAll('{category}', categoryLabel)
 

@@ -1,29 +1,17 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { BASE_URL } from '@/lib/site'
-import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
+import { LANGUAGES } from '@/lib/i18n/constants'
 import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { CatalogGrid } from '@/features/catalog/components/CatalogGrid'
 import { buildSlug } from '@/features/catalog/slug'
 import { hreflangAlternates } from '@/features/catalog/seo/metadata'
 import { collectionPage, breadcrumbList } from '@/features/catalog/seo/jsonld'
-import catalogEN from '@/lib/i18n/locales/en/catalog.json'
-import catalogRU from '@/lib/i18n/locales/ru/catalog.json'
-import catalogES from '@/lib/i18n/locales/es/catalog.json'
-import catalogDE from '@/lib/i18n/locales/de/catalog.json'
+import { getCatalogStrings } from '@/features/catalog/i18n'
 
 export const revalidate = 300
 
 const TAG_INDEX_MIN = 3
-
-type CatalogStrings = typeof catalogEN
-
-const catalogTranslations: Record<string, CatalogStrings> = {
-    en: catalogEN,
-    ru: catalogRU,
-    es: catalogES,
-    de: catalogDE,
-}
 
 export async function generateMetadata({
     params,
@@ -31,7 +19,7 @@ export async function generateMetadata({
     params: Promise<{ lang: string; tag: string }>
 }): Promise<Metadata> {
     const { lang, tag } = await params
-    const strings = catalogTranslations[lang] ?? catalogTranslations['en']
+    const strings = getCatalogStrings(lang)
     const encodedTag = encodeURIComponent(tag)
     const canonical = `${BASE_URL}/${lang}/catalog/tag/${encodedTag}`
 
@@ -79,7 +67,7 @@ export default async function TagHubPage({
     const result = await listPublicDocuments({ tags: [tag], limit: 24 })
     const documents = result.documents
 
-    const strings = catalogTranslations[lang as LanguageCode] ?? catalogTranslations['en']
+    const strings = getCatalogStrings(lang)
     const encodedTag = encodeURIComponent(tag)
     const canonical = `${BASE_URL}/${lang}/catalog/tag/${encodedTag}`
     const heading = strings.tagHub.heading.replaceAll('{tag}', tag)
