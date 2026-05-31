@@ -24,6 +24,13 @@ import {
 type AuthStatus = 'loading' | 'authenticated' | 'guest'
 type ModalView = 'signIn' | 'signUp' | 'confirmEmail'
 
+export interface AuthModalContext {
+    kind: 'catalogOpen'
+    title: string
+    thumbnailUrl: string | null
+    intro: string
+}
+
 interface AuthState {
     status: AuthStatus
     user: UserProfile | null
@@ -33,6 +40,7 @@ interface AuthState {
     nativeAuthError: string | null
     pendingConfirmEmail: string | null
     sessionExpiredModalOpen: boolean
+    modalContext: AuthModalContext | null
 }
 
 const initialState: AuthState = {
@@ -44,6 +52,7 @@ const initialState: AuthState = {
     nativeAuthError: null,
     pendingConfirmEmail: null,
     sessionExpiredModalOpen: false,
+    modalContext: null,
 }
 
 // ─── Actions ─────────────────────────────────────────────────────────────────
@@ -52,7 +61,7 @@ type Action =
     | { type: 'AUTH_INIT_DONE'; user: UserProfile | null }
     | { type: 'SET_LOADING'; loading: boolean }
     | { type: 'SET_ERROR'; error: string | null }
-    | { type: 'OPEN_MODAL'; view: ModalView }
+    | { type: 'OPEN_MODAL'; view: ModalView; context?: AuthModalContext | null }
     | { type: 'CLOSE_MODAL' }
     | { type: 'SET_VIEW'; view: ModalView }
     | { type: 'SET_PENDING_EMAIL'; email: string | null }
@@ -77,6 +86,7 @@ function reducer(state: AuthState, action: Action): AuthState {
                 nativeAuthModalOpen: true,
                 nativeAuthModalView: action.view,
                 nativeAuthError: null,
+                modalContext: action.context ?? null,
             }
         case 'CLOSE_MODAL':
             return {
@@ -84,6 +94,7 @@ function reducer(state: AuthState, action: Action): AuthState {
                 nativeAuthModalOpen: false,
                 nativeAuthError: null,
                 pendingConfirmEmail: null,
+                modalContext: null,
             }
         case 'SET_VIEW':
             return { ...state, nativeAuthModalView: action.view, nativeAuthError: null }
@@ -101,8 +112,8 @@ function reducer(state: AuthState, action: Action): AuthState {
 // ─── Context ─────────────────────────────────────────────────────────────────
 
 interface AuthContextValue extends AuthState {
-    openSignInModal(): void
-    openSignUpModal(): void
+    openSignInModal(context?: AuthModalContext): void
+    openSignUpModal(context?: AuthModalContext): void
     closeNativeAuthModal(): void
     setModalView(view: ModalView): void
     submitSignIn(email: string, password: string): Promise<void>
@@ -160,8 +171,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return () => uninstallAuthInterceptor()
     }, [])
 
-    const openSignInModal = useCallback(() => dispatch({ type: 'OPEN_MODAL', view: 'signIn' }), [])
-    const openSignUpModal = useCallback(() => dispatch({ type: 'OPEN_MODAL', view: 'signUp' }), [])
+    const openSignInModal = useCallback((context?: AuthModalContext) => dispatch({ type: 'OPEN_MODAL', view: 'signIn', context }), [])
+    const openSignUpModal = useCallback((context?: AuthModalContext) => dispatch({ type: 'OPEN_MODAL', view: 'signUp', context }), [])
     const closeNativeAuthModal = useCallback(() => dispatch({ type: 'CLOSE_MODAL' }), [])
     const setModalView = useCallback((view: ModalView) => dispatch({ type: 'SET_VIEW', view }), [])
     const closeSessionExpiredModal = useCallback(() => dispatch({ type: 'SET_SESSION_EXPIRED', open: false }), [])
