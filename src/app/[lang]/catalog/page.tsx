@@ -72,7 +72,9 @@ export default async function CatalogHubPage({
     const sp = await searchParams
 
     const category = typeof sp.category === 'string' ? sp.category : undefined
-    const tagsRaw = typeof sp.tags === 'string' ? sp.tags : undefined
+    const tagsRaw = typeof sp.tags === 'string'
+        ? sp.tags
+        : Array.isArray(sp.tags) ? sp.tags.join(',') : undefined
     const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : undefined
     const language = typeof sp.language === 'string' ? sp.language : undefined
     const sortRaw = typeof sp.sort === 'string' ? sp.sort : undefined
@@ -112,7 +114,7 @@ export default async function CatalogHubPage({
                     <CatalogGrid documents={popular} lang={lang} emptyLabel={strings.empty} />
                 </section>
 
-                <Suspense>
+                <Suspense fallback={<div className="catalog-filter" aria-hidden="true" />}>
                     <FilterBar lang={lang} />
                 </Suspense>
 
