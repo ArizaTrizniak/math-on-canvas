@@ -12,8 +12,14 @@ export function buildSlug(title: string, documentId: string): string {
   return base ? `${base}-${documentId}` : documentId
 }
 
-/** The documentId is the last '-'-separated segment of the slug. */
+/** UUID v4 (the documentId format) at the tail of the slug. */
+const TRAILING_UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+/**
+ * Recover the documentId from a slug. documentIds are UUIDs (which contain dashes),
+ * so we match the trailing UUID rather than splitting on the last dash.
+ * Falls back to the whole slug when no UUID is present.
+ */
 export function parseIdFromSlug(slug: string): string {
-  const idx = slug.lastIndexOf('-')
-  return idx === -1 ? slug : slug.slice(idx + 1)
+  return slug.match(TRAILING_UUID)?.[0] ?? slug
 }

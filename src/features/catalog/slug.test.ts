@@ -1,17 +1,27 @@
 import { describe, it, expect } from 'vitest'
 import { buildSlug, parseIdFromSlug } from './slug'
 
+// Real document ids are UUIDs (node:crypto randomUUID) — they CONTAIN dashes,
+// so the slug round-trip must recover the full UUID, not just the last segment.
+const ID = '1ded5c3d-a18e-4216-963b-c284021c682c'
+
 describe('catalog slug', () => {
-  it('builds a kebab slug with the id tail', () => {
-    expect(buildSlug('Pythagorean Theorem Poster!', 'a1b2c3')).toBe('pythagorean-theorem-poster-a1b2c3')
+  it('builds a kebab slug with the uuid tail', () => {
+    expect(buildSlug('Pythagorean Theorem Poster!', ID)).toBe(`pythagorean-theorem-poster-${ID}`)
   })
-  it('handles empty/non-ascii titles by falling back to the id', () => {
-    expect(buildSlug('   ', 'a1b2c3')).toBe('a1b2c3')
+  it('falls back to the bare id for empty / non-latin titles', () => {
+    expect(buildSlug('   ', ID)).toBe(ID)
+    expect(buildSlug('Картинки', ID)).toBe(ID)
   })
-  it('parses the id from the slug tail', () => {
-    expect(parseIdFromSlug('pythagorean-theorem-poster-a1b2c3')).toBe('a1b2c3')
+  it('parses the uuid from a title+id slug', () => {
+    expect(parseIdFromSlug(`pythagorean-theorem-poster-${ID}`)).toBe(ID)
   })
-  it('parses the id when the slug is just the id', () => {
-    expect(parseIdFromSlug('a1b2c3')).toBe('a1b2c3')
+  it('parses the uuid from a bare-id slug', () => {
+    expect(parseIdFromSlug(ID)).toBe(ID)
+  })
+  it('round-trips any title back to the id', () => {
+    for (const title of ['Pythagorean Theorem Poster!', 'Картинки', '   ', 'a/b c']) {
+      expect(parseIdFromSlug(buildSlug(title, ID))).toBe(ID)
+    }
   })
 })
