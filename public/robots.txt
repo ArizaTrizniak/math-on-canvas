@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Allow: /catalog
 
 # Disallow common private/system paths (none in this SPA, but keep for clarity)
 Disallow: /api/

@@ -10,6 +10,11 @@ import commonEN from '@/lib/i18n/locales/en/common.json'
 import commonRU from '@/lib/i18n/locales/ru/common.json'
 import commonES from '@/lib/i18n/locales/es/common.json'
 import commonDE from '@/lib/i18n/locales/de/common.json'
+import catalogEN from '@/lib/i18n/locales/en/catalog.json'
+import catalogRU from '@/lib/i18n/locales/ru/catalog.json'
+import catalogES from '@/lib/i18n/locales/es/catalog.json'
+import catalogDE from '@/lib/i18n/locales/de/catalog.json'
+import { CATEGORIES } from '@/features/catalog/taxonomy'
 import LanguageSwitch from './widgets/LanguageSwitch/LandingLanguageSwitch'
 import { LandingCarousel } from './widgets/LandingCarousel/LandingCarousel'
 import { LandingSignIn } from './widgets/LandingSignIn/LandingSignIn'
@@ -40,6 +45,19 @@ const commonTranslations = {
     de: commonDE,
 } as const
 
+const catalogTranslations = {
+    en: catalogEN,
+    ru: catalogRU,
+    es: catalogES,
+    de: catalogDE,
+} as const
+
+const TOP_CATEGORIES = CATEGORIES.slice(0, 6)
+
+function humanizeCategory(slug: string): string {
+    return slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+}
+
 const featureKeys = ['easy', 'formulas', 'shapes', 'export', 'customize'] as const
 const highlightKeys = ['pdf', 'pages', 'symbols', 'visual', 'library', 'geometry'] as const
 
@@ -52,6 +70,7 @@ interface LandingPageProps {
 export function LandingPage({ lang, user, displayName }: LandingPageProps) {
     const t = translations[lang]
     const tCommon = commonTranslations[lang]
+    const tCatalog = catalogTranslations[lang]
     const docsLink = (
         <a href={docsUrl} className="landing__doc" target="_blank" rel="noopener noreferrer">
             {t.cta.docs}
@@ -77,6 +96,9 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
 
                 <div className="landing__actions">
                     <LanguageSwitch currentLang={lang} />
+                    <Link href={`/${lang}/catalog`} className="landing__ghost">
+                        {tCatalog.nav}
+                    </Link>
                     <Link href={`/${lang}/pricing`} className="landing__ghost">
                         {t.cta.pricing}
                     </Link>
@@ -163,6 +185,18 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                 <Link href={`/${lang}/pricing`} style={{ color: 'inherit', textDecoration: 'none' }}>
                     {t.cta.pricing}
                 </Link>
+                <span style={{ margin: '0 0.75em' }}>·</span>
+                <Link href={`/${lang}/catalog`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                    {tCatalog.nav}
+                </Link>
+                {TOP_CATEGORIES.map((c) => (
+                    <span key={c}>
+                        <span style={{ margin: '0 0.75em' }}>·</span>
+                        <Link href={`/${lang}/catalog/category/${c}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                            {humanizeCategory(c)}
+                        </Link>
+                    </span>
+                ))}
                 <span className="landing__version" style={{ opacity: 0.5, marginLeft: '1em' }}>
                     v{process.env.NEXT_PUBLIC_APP_VERSION}
                 </span>
