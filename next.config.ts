@@ -4,13 +4,14 @@ const EDITOR_URL = process.env.EDITOR_URL || "http://localhost:5173";
 const DOCS_URL = process.env.DOCS_URL || "http://localhost:4321";
 
 // Local-only: when set (e.g. in .env.local), the dev server proxies the API paths
-// below to the given backend (e.g. https://api-staging.math-on-canvas.com). This makes
-// /auth, /catalog and /documents same-origin so SameSite cookies work and there is no
-// CORS — the Next analogue of the editor's vite `server.proxy`. Leave unset in production.
+// below to the given backend (e.g. https://api-staging.math-on-canvas.com), making them
+// same-origin (no CORS) — the Next analogue of the editor's vite `server.proxy`.
+// NOTE: /auth is NOT proxied here — it is handled by the route at src/app/auth/[...path]/
+// which additionally rewrites the Set-Cookie domain so sessions stick on localhost.
+// Leave STAGING_API_PROXY unset in production.
 const STAGING_API_PROXY = process.env.STAGING_API_PROXY;
 const stagingProxyRewrites = STAGING_API_PROXY
   ? [
-      { source: "/auth/:path*", destination: `${STAGING_API_PROXY}/auth/:path*` },
       { source: "/catalog/:path*", destination: `${STAGING_API_PROXY}/catalog/:path*` },
       { source: "/documents/:path*", destination: `${STAGING_API_PROXY}/documents/:path*` },
     ]
