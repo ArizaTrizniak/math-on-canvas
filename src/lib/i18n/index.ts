@@ -15,27 +15,35 @@ import authEN from './locales/en/auth.json'
 import authRU from './locales/ru/auth.json'
 import authES from './locales/es/auth.json'
 import authDE from './locales/de/auth.json'
+import catalogEN from './locales/en/catalog.json'
+import catalogRU from './locales/ru/catalog.json'
+import catalogES from './locales/es/catalog.json'
+import catalogDE from './locales/de/catalog.json'
 
 export const resources = {
     en: {
         common: commonEN,
         landing: landingEN,
         auth: authEN,
+        catalog: catalogEN,
     },
     ru: {
         common: commonRU,
         landing: landingRU,
         auth: authRU,
+        catalog: catalogRU,
     },
     es: {
         common: commonES,
         landing: landingES,
         auth: authES,
+        catalog: catalogES,
     },
     de: {
         common: commonDE,
         landing: landingDE,
         auth: authDE,
+        catalog: catalogDE,
     }
 } as const
 
@@ -46,7 +54,7 @@ i18n
         resources,
         fallbackLng: 'en',
         defaultNS: 'common',
-        ns: ['common', 'landing', 'auth'],
+        ns: ['common', 'landing', 'auth', 'catalog'],
         interpolation: {
             escapeValue: false
         },
