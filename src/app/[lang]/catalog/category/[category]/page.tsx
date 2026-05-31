@@ -1,0 +1,116 @@
+import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
+import { BASE_URL } from '@/lib/site'
+import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
+import { listPublicDocuments } from '@/features/catalog/serverClient'
+import { CatalogGrid } from '@/features/catalog/components/CatalogGrid'
+import { isCategory } from '@/features/catalog/taxonomy'
+import { buildSlug } from '@/features/catalog/slug'
+import { hreflangAlternates } from '@/features/catalog/seo/metadata'
+import { collectionPage, breadcrumbList } from '@/features/catalog/seo/jsonld'
+import catalogEN from '@/lib/i18n/locales/en/catalog.json'
+import catalogRU from '@/lib/i18n/locales/ru/catalog.json'
+import catalogES from '@/lib/i18n/locales/es/catalog.json'
+import catalogDE from '@/lib/i18n/locales/de/catalog.json'
+
+export const revalidate = 300
+
+type CatalogStrings = typeof catalogEN
+
+const catalogTranslations: Record<string, CatalogStrings> = {
+    en: catalogEN,
+    ru: catalogRU,
+    es: catalogES,
+    de: catalogDE,
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ lang: string; category: string }>
+}): Promise<Metadata> {
+    const { lang, category } = await params
+    const categoryTitle = category.charAt(0).toUpperCase() + category.slice(1)
+    const canonical = `${BASE_URL}/${lang}/catalog/category/${category}`
+
+    const title = `${categoryTitle} templates | Math on Canvas`
+    const description = `Browse ready-made ${categoryTitle.toLowerCase()} math diagrams and formula templates. Open any template in the editor and make it yours.`
+
+    return {
+        title,
+        description,
+        alternates: {
+            canonical,
+            languages: hreflangAlternates(`/catalog/category/${category}`),
+        },
+        openGraph: {
+            title,
+            description,
+            url: canonical,
+            siteName: 'Math on Canvas',
+            type: 'website',
+            images: [{
+                url: `${BASE_URL}/images/screen1.webp`,
+                width: 1600,
+                height: 900,
+                alt: 'Math on Canvas — math diagram editor',
+            }],
+        },
+    }
+}
+
+export default async function CategoryHubPage({
+    params,
+}: {
+    params: Promise<{ lang: string; category: string }>
+}) {
+    const { lang, category } = await params
+
+    const isValidLang = LANGUAGES.some(l => l.code === lang)
+    if (!isValidLang) notFound()
+    if (!isCategory(category)) notFound()
+
+    const result = await listPublicDocuments({ category, limit: 24 })
+    const documents = result.documents
+
+    const strings = catalogTranslations[lang as LanguageCode] ?? catalogTranslations['en']
+    const categoryTitle = category.charAt(0).toUpperCase() + category.slice(1)
+
+    const canonical = `${BASE_URL}/${lang}/catalog/category/${category}`
+
+    const jsonLdCollection = collectionPage({
+        name: `${categoryTitle} templates`,
+        url: canonical,
+        itemUrls: documents.map(doc => `${BASE_URL}/${lang}/catalog/${buildSlug(doc.title, doc.documentId)}`),
+    })
+
+    const jsonLdBreadcrumb = breadcrumbList([
+        { name: strings.breadcrumbs.home, url: `${BASE_URL}/${lang}` },
+        { name: strings.breadcrumbs.catalog, url: `${BASE_URL}/${lang}/catalog` },
+        { name: categoryTitle, url: canonical },
+    ])
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdCollection) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
+            />
+            <main>
+                <nav aria-label="Breadcrumb">
+                    <ol>
+                        <li><a href={`/${lang}`}>{strings.breadcrumbs.home}</a></li>
+                        <li><a href={`/${lang}/catalog`}>{strings.breadcrumbs.catalog}</a></li>
+                        <li aria-current="page">{categoryTitle}</li>
+                    </ol>
+                </nav>
+                <h1>{categoryTitle} templates</h1>
+                <CatalogGrid documents={documents} lang={lang} emptyLabel={strings.empty} />
+            </main>
+        </>
+    )
+}
