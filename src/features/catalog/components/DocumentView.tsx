@@ -4,6 +4,7 @@ import type { CatalogDocumentMeta, DocumentSummary } from '../types'
 import { OpenInEditorCTA } from './OpenInEditorCTA'
 import { ViewBeacon } from './ViewBeacon'
 import { RelatedRow } from './RelatedRow'
+import { buildThumbnailUrl } from '../thumbnail'
 import './DocumentView.css'
 
 interface Strings {
@@ -21,17 +22,15 @@ interface Props {
 }
 
 export function DocumentView({ doc, lang, related, strings }: Props) {
-  const thumbnailUrl = doc.thumbnailS3Key
-    ? `${process.env.NEXT_PUBLIC_DOCUMENTS_CDN_BASE_URL ?? ''}/${doc.thumbnailS3Key}`
-    : null
+  const thumbnailUrl = buildThumbnailUrl(doc.thumbnailS3Key)
 
   const pageCount = doc.metadata.pageCount
 
   return (
     <>
-      <h1 className="catalog-doc__title">{doc.title}</h1>
-
       <div className="catalog-doc">
+        <h1 className="catalog-doc__title">{doc.title}</h1>
+
         {/* ── Left column: preview + page strip ── */}
         <div className="catalog-doc__left">
           <div className="catalog-doc__preview">
@@ -56,7 +55,7 @@ export function DocumentView({ doc, lang, related, strings }: Props) {
                 {thumbnailUrl ? (
                   <Image
                     src={thumbnailUrl}
-                    alt={`Page 1`}
+                    alt="Page 1"
                     fill
                     sizes="72px"
                     className="catalog-doc__strip-img"

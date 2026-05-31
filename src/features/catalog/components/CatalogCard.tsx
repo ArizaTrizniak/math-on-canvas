@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { buildSlug } from '../slug'
+import { buildThumbnailUrl } from '../thumbnail'
 import type { DocumentSummary } from '../types'
 import './CatalogCard.css'
 
@@ -12,9 +13,7 @@ interface Props {
 export function CatalogCard({ doc, lang }: Props) {
   const slug = buildSlug(doc.title, doc.documentId)
   const href = `/${lang}/catalog/${slug}`
-  const thumbnailUrl = doc.thumbnailS3Key
-    ? `${process.env.NEXT_PUBLIC_DOCUMENTS_CDN_BASE_URL ?? ''}/${doc.thumbnailS3Key}`
-    : null
+  const thumbnailUrl = buildThumbnailUrl(doc.thumbnailS3Key)
 
   return (
     <Link href={href} className="catalog-card">
