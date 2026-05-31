@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { buildSlug } from '../slug'
 import { buildThumbnailUrl } from '../thumbnail'
 import type { DocumentSummary } from '../types'
@@ -19,11 +18,10 @@ export function CatalogCard({ doc, lang }: Props) {
     <Link href={href} className="catalog-card">
       <div className="catalog-card__thumbnail">
         {thumbnailUrl ? (
-          <Image
+          // eslint-disable-next-line @next/next/no-img-element -- arbitrary external thumbnail URL; next/image remotePatterns not configured for the documents CDN
+          <img
             src={thumbnailUrl}
             alt={doc.title}
-            fill
-            sizes="(min-width: 1400px) 220px, (min-width: 900px) 20vw, 220px"
             className="catalog-card__thumbnail-img"
           />
         ) : (

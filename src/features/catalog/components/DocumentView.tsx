@@ -1,9 +1,9 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import type { CatalogDocumentMeta, DocumentSummary } from '../types'
 import { OpenInEditorCTA } from './OpenInEditorCTA'
 import { ViewBeacon } from './ViewBeacon'
 import { RelatedRow } from './RelatedRow'
+import { ShareButton } from './ShareButton'
 import { buildThumbnailUrl } from '../thumbnail'
 import './DocumentView.css'
 
@@ -35,12 +35,12 @@ export function DocumentView({ doc, lang, related, strings }: Props) {
         <div className="catalog-doc__left">
           <div className="catalog-doc__preview">
             {thumbnailUrl ? (
-              <Image
+              // eslint-disable-next-line @next/next/no-img-element -- arbitrary external thumbnail URL; next/image remotePatterns not configured for the documents CDN
+              <img
                 src={thumbnailUrl}
                 alt={doc.title}
-                fill
-                priority
-                sizes="(min-width: 1400px) 800px, (min-width: 900px) calc(100vw - 400px), 100vw"
+                loading="eager"
+                decoding="async"
                 className="catalog-doc__preview-img"
               />
             ) : (
@@ -53,11 +53,10 @@ export function DocumentView({ doc, lang, related, strings }: Props) {
               {/* First page uses the actual thumbnail */}
               <div className="catalog-doc__strip-cell catalog-doc__strip-cell--first">
                 {thumbnailUrl ? (
-                  <Image
+                  // eslint-disable-next-line @next/next/no-img-element -- arbitrary external thumbnail URL; next/image remotePatterns not configured for the documents CDN
+                  <img
                     src={thumbnailUrl}
                     alt="Page 1"
-                    fill
-                    sizes="72px"
                     className="catalog-doc__strip-img"
                   />
                 ) : (
@@ -119,25 +118,8 @@ export function DocumentView({ doc, lang, related, strings }: Props) {
             intro={strings.gateIntro}
           />
 
-          {/* Share button — plain server-rendered button, no handler needed */}
-          <button type="button" className="catalog-doc__share">
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <circle cx="18" cy="5" r="3" />
-              <circle cx="6" cy="12" r="3" />
-              <circle cx="18" cy="19" r="3" />
-              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-            </svg>
-            {strings.share}
-          </button>
+          {/* Share button — client island: copies URL or uses native share sheet */}
+          <ShareButton label={strings.share} className="catalog-doc__share" />
         </aside>
 
         {/* ── Below both columns ── */}
