@@ -2,6 +2,7 @@
 
 import '@/lib/i18n'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CATEGORIES } from '../taxonomy'
 import { LANGUAGES } from '@/lib/i18n/constants'
@@ -11,6 +12,7 @@ interface Props {
   lang: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function FilterBar({ lang }: Props) {
   const { t } = useTranslation('catalog')
   const router = useRouter()
@@ -18,9 +20,15 @@ export function FilterBar({ lang }: Props) {
   const searchParams = useSearchParams()
 
   const currentCategory = searchParams.get('category') ?? ''
-  const currentTags = searchParams.get('tags') ?? ''
-  const currentLanguage = searchParams.get('language') ?? lang
+  const currentLanguage = searchParams.get('language') ?? ''
   const currentSort = searchParams.get('sort') ?? 'updatedAt'
+
+  const [tagsDraft, setTagsDraft] = useState(searchParams.get('tags') ?? '')
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTagsDraft(searchParams.get('tags') ?? '')
+  }, [searchParams])
 
   function updateParam(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString())
@@ -75,9 +83,16 @@ export function FilterBar({ lang }: Props) {
           id="cf-tags"
           type="text"
           className="catalog-filter__input"
-          value={currentTags}
+          value={tagsDraft}
           placeholder={t('filters.tagsPlaceholder')}
-          onChange={(e) => updateParam('tags', e.target.value)}
+          onChange={(e) => setTagsDraft(e.target.value)}
+          onBlur={() => updateParam('tags', tagsDraft)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              updateParam('tags', tagsDraft)
+            }
+          }}
         />
       </div>
 
