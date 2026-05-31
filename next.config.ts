@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version || "0.0.0",
     NEXT_PUBLIC_AUTH_API_URL: process.env.AUTH_API_URL || "https://api.math-on-canvas.com",
+    DOCUMENTS_API_URL: process.env.DOCUMENTS_API_URL || "https://api.math-on-canvas.com",
   },
 
   rewrites: async () => ({
