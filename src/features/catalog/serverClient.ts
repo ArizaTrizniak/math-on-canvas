@@ -1,8 +1,6 @@
 import { documentsApiBaseUrl } from './config'
 import type { CatalogDocumentMeta, CatalogListParams, CatalogListResult } from './types'
 
-const EMPTY: CatalogListResult = { documents: [], nextCursor: null }
-
 function buildQuery(params: CatalogListParams): string {
   const q = new URLSearchParams()
   if (params.limit) q.set('limit', String(params.limit))
@@ -21,10 +19,10 @@ export async function listPublicDocuments(params: CatalogListParams): Promise<Ca
     const res = await fetch(`${documentsApiBaseUrl()}/catalog/documents${qs ? `?${qs}` : ''}`, {
       next: { revalidate: 300, tags: ['catalog'] },
     })
-    if (!res.ok) return EMPTY
+    if (!res.ok) return { documents: [], nextCursor: null }
     return (await res.json()) as CatalogListResult
   } catch {
-    return EMPTY
+    return { documents: [], nextCursor: null }
   }
 }
 

@@ -25,10 +25,17 @@ describe('serverClient.listPublicDocuments', () => {
     expect(url).toContain('language=en')
     expect(url).toContain('sort=likesCount')
     expect(url).toContain('limit=12')
+    expect(fetchMock.mock.calls[0]![1]).toEqual({ next: { revalidate: 300, tags: ['catalog'] } })
   })
 
   it('returns an empty result on a non-ok response (degrade, never throw)', async () => {
     fetchMock.mockReturnValue(Promise.resolve({ ok: false, status: 500 } as Response))
+    const res = await listPublicDocuments({})
+    expect(res).toEqual({ documents: [], nextCursor: null })
+  })
+
+  it('returns a fresh empty result when fetch rejects (network failure, never throw)', async () => {
+    fetchMock.mockRejectedValue(new Error('network'))
     const res = await listPublicDocuments({})
     expect(res).toEqual({ documents: [], nextCursor: null })
   })
@@ -43,5 +50,12 @@ describe('serverClient.getPublicDocumentMeta', () => {
     fetchMock.mockReturnValue(ok({ documentId: 'd1', title: 'T' }))
     const meta = await getPublicDocumentMeta('d1')
     expect(meta?.documentId).toBe('d1')
+  })
+
+  it('encodes the documentId and appends /meta in the URL', async () => {
+    fetchMock.mockReturnValue(ok({ documentId: 'x' }))
+    await getPublicDocumentMeta('a/b c')
+    const url = fetchMock.mock.calls[0]![0] as string
+    expect(url).toContain('/catalog/documents/a%2Fb%20c/meta')
   })
 })
