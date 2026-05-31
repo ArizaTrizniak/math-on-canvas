@@ -3,6 +3,19 @@ import type { NextConfig } from "next";
 const EDITOR_URL = process.env.EDITOR_URL || "http://localhost:5173";
 const DOCS_URL = process.env.DOCS_URL || "http://localhost:4321";
 
+// Local-only: when set (e.g. in .env.local), the dev server proxies the API paths
+// below to the given backend (e.g. https://api-staging.math-on-canvas.com). This makes
+// /auth, /catalog and /documents same-origin so SameSite cookies work and there is no
+// CORS — the Next analogue of the editor's vite `server.proxy`. Leave unset in production.
+const STAGING_API_PROXY = process.env.STAGING_API_PROXY;
+const stagingProxyRewrites = STAGING_API_PROXY
+  ? [
+      { source: "/auth/:path*", destination: `${STAGING_API_PROXY}/auth/:path*` },
+      { source: "/catalog/:path*", destination: `${STAGING_API_PROXY}/catalog/:path*` },
+      { source: "/documents/:path*", destination: `${STAGING_API_PROXY}/documents/:path*` },
+    ]
+  : [];
+
 const nextConfig: NextConfig = {
   reactCompiler: true,
 
@@ -34,6 +47,7 @@ const nextConfig: NextConfig = {
         source: "/assets/:path*",
         destination: `${EDITOR_URL}/editor/assets/:path*`,
       },
+      ...stagingProxyRewrites,
     ],
   }),
 
