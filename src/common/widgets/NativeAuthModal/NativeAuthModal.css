@@ -202,20 +202,12 @@
     max-width: 760px;
     display: grid;
     grid-template-columns: 280px 1fr;
-    grid-template-rows: auto 1fr;
     column-gap: 32px;
     align-items: start;
 }
 
-/* The close button spans both columns so it stays top-right */
-.auth-modal__with-context .auth-modal__close {
-    grid-column: 1 / -1;
-    justify-self: end;
-}
-
 .auth-modal__context {
     grid-column: 1;
-    grid-row: 2;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -248,5 +240,4 @@
 /* The form pane sits in the second column */
 .auth-modal__with-context .auth-modal__form {
     grid-column: 2;
-    grid-row: 2;
 }

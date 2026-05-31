@@ -287,7 +287,7 @@ export function NativeAuthModal() {
                                 alt={modalContext.title}
                             />
                         )}
-                        <h3 className="auth-modal__context-heading">{modalContext.title}</h3>
+                        <p className="auth-modal__context-heading">{modalContext.title}</p>
                         <p className="auth-modal__context-intro">{modalContext.intro}</p>
                     </div>
                 )}
