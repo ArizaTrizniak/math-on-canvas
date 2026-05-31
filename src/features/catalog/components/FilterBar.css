@@ -1,0 +1,108 @@
+/* FilterBar — horizontal row of labeled filter controls */
+
+.catalog-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px 20px;
+    padding: 14px 20px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+/* Individual labeled control */
+
+.catalog-filter__control {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.catalog-filter__control--reset {
+    /* align the button to the bottom of the row */
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+/* Label above each control */
+
+.catalog-filter__label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6b7280;
+    white-space: nowrap;
+    user-select: none;
+}
+
+/* Shared base for select and text input */
+
+.catalog-filter__select,
+.catalog-filter__input {
+    height: 34px;
+    padding: 0 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #0f172a;
+    outline: none;
+    transition: border-color 140ms ease, box-shadow 140ms ease;
+    cursor: pointer;
+}
+
+.catalog-filter__select {
+    /* leave room for the native arrow */
+    padding-right: 28px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+}
+
+.catalog-filter__input {
+    min-width: 160px;
+    cursor: text;
+}
+
+.catalog-filter__select:hover,
+.catalog-filter__input:hover {
+    border-color: #cbd5e1;
+}
+
+.catalog-filter__select:focus,
+.catalog-filter__input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+/* Reset button */
+
+.catalog-filter__reset {
+    height: 34px;
+    padding: 0 14px;
+    background: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+.catalog-filter__reset:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+
+.catalog-filter__reset:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
