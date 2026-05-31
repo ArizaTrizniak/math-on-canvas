@@ -1,0 +1,24 @@
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+}
+
+/* Empty state */
+
+.catalog-grid__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 24px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 16px;
+}
+
+.catalog-grid__empty-label {
+    font-size: 15px;
+    color: #6b7280;
+    margin: 0;
+    text-align: center;
+}
