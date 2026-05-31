@@ -7,7 +7,7 @@
   "hubHeadline": "Mathe-Vorlagen & Beispiele",
   "hubIntro": "Fertige Mathe-Diagramme und Formel-Poster. Öffnen Sie beliebige im Editor und passen Sie sie für Ihre Unterrichtsstunde an.",
   "popular": "Beliebt",
-  "filters": { "category": "Kategorie", "tags": "Tags", "language": "Sprache", "sort": "Sortieren", "allCategories": "Alle Kategorien", "allLanguages": "Alle Sprachen", "newest": "Neueste", "mostLiked": "Beliebteste", "mostViewed": "Meistgesehen", "reset": "Filter zurücksetzen" },
+  "filters": { "category": "Kategorie", "tags": "Tags", "tagsPlaceholder": "z. B. Dreieck, Fläche", "language": "Sprache", "sort": "Sortieren", "allCategories": "Alle Kategorien", "allLanguages": "Alle Sprachen", "newest": "Neueste", "mostLiked": "Beliebteste", "mostViewed": "Meistgesehen", "reset": "Filter zurücksetzen" },
   "empty": "Keine Dokumente entsprechen diesen Filtern.",
   "error": "Der Katalog konnte nicht geladen werden. Bitte versuchen Sie es erneut.",
   "retry": "Erneut versuchen",

@@ -76,7 +76,7 @@ export function FilterBar({ lang }: Props) {
           type="text"
           className="catalog-filter__input"
           value={currentTags}
-          placeholder="e.g. triangle, area"
+          placeholder={t('filters.tagsPlaceholder')}
           onChange={(e) => updateParam('tags', e.target.value)}
         />
       </div>

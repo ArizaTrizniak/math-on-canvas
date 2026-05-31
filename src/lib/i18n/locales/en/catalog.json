@@ -7,7 +7,7 @@
   "hubHeadline": "Math templates & examples",
   "hubIntro": "Ready-made math diagrams and formula posters. Open any one in the editor and adapt it to your lesson.",
   "popular": "Popular",
-  "filters": { "category": "Category", "tags": "Tags", "language": "Language", "sort": "Sort", "allCategories": "All categories", "allLanguages": "All languages", "newest": "Newest", "mostLiked": "Most liked", "mostViewed": "Most viewed", "reset": "Reset filters" },
+  "filters": { "category": "Category", "tags": "Tags", "tagsPlaceholder": "e.g. triangle, area", "language": "Language", "sort": "Sort", "allCategories": "All categories", "allLanguages": "All languages", "newest": "Newest", "mostLiked": "Most liked", "mostViewed": "Most viewed", "reset": "Reset filters" },
   "empty": "No documents match these filters.",
   "error": "Could not load the catalog. Please try again.",
   "retry": "Retry",

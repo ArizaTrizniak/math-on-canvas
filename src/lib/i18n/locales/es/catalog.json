@@ -7,7 +7,7 @@
   "hubHeadline": "Plantillas y ejemplos matemáticos",
   "hubIntro": "Diagramas matemáticos y pósters de fórmulas listos para usar. Abre cualquiera en el editor y adáptalo a tu lección.",
   "popular": "Popular",
-  "filters": { "category": "Categoría", "tags": "Etiquetas", "language": "Idioma", "sort": "Ordenar", "allCategories": "Todas las categorías", "allLanguages": "Todos los idiomas", "newest": "Más recientes", "mostLiked": "Más valorados", "mostViewed": "Más vistos", "reset": "Restablecer filtros" },
+  "filters": { "category": "Categoría", "tags": "Etiquetas", "tagsPlaceholder": "p. ej. triángulo, área", "language": "Idioma", "sort": "Ordenar", "allCategories": "Todas las categorías", "allLanguages": "Todos los idiomas", "newest": "Más recientes", "mostLiked": "Más valorados", "mostViewed": "Más vistos", "reset": "Restablecer filtros" },
   "empty": "Ningún documento coincide con estos filtros.",
   "error": "No se pudo cargar el catálogo. Por favor, inténtalo de nuevo.",
   "retry": "Reintentar",
