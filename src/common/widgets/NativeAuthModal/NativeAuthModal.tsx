@@ -245,6 +245,7 @@ export function NativeAuthModal() {
         submitSignUp,
         submitConfirmEmail,
         resendConfirmCode,
+        modalContext,
     } = useAuthContext()
 
     useEffect(() => {
@@ -261,7 +262,11 @@ export function NativeAuthModal() {
     return createPortal(
         <>
             <div className="auth-modal__backdrop" />
-            <div className="auth-modal__panel" role="dialog" aria-modal="true">
+            <div
+                className={`auth-modal__panel${modalContext ? ' auth-modal__with-context' : ''}`}
+                role="dialog"
+                aria-modal="true"
+            >
                 <button
                     type="button"
                     className="auth-modal__close"
@@ -271,6 +276,21 @@ export function NativeAuthModal() {
                 >
                     <X size={18} />
                 </button>
+
+                {modalContext && (
+                    <div className="auth-modal__context">
+                        {modalContext.thumbnailUrl && (
+                            // eslint-disable-next-line @next/next/no-img-element -- thumbnail is an arbitrary external URL; no remotePatterns configured
+                            <img
+                                className="auth-modal__context-thumb"
+                                src={modalContext.thumbnailUrl}
+                                alt={modalContext.title}
+                            />
+                        )}
+                        <h3 className="auth-modal__context-heading">{modalContext.title}</h3>
+                        <p className="auth-modal__context-intro">{modalContext.intro}</p>
+                    </div>
+                )}
 
                 <NativeAuthForms
                     key={nativeAuthModalView}
