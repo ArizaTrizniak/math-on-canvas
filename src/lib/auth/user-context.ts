@@ -8,6 +8,6 @@ export async function getUserFromHeaders(): Promise<AuthUser | null> {
     return {
         userId,
         role: headersList.get('x-user-role') as Role,
-        entitlements: JSON.parse(headersList.get('x-user-ent') ?? '[]'),
+        entitlements: JSON.parse(headersList.get('x-user-ent') || '[]'),
     }
 }

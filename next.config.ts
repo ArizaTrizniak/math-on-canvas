@@ -3,12 +3,27 @@ import type { NextConfig } from "next";
 const EDITOR_URL = process.env.EDITOR_URL || "http://localhost:5173";
 const DOCS_URL = process.env.DOCS_URL || "http://localhost:4321";
 
+// Local-only: when set (e.g. in .env.local), the dev server proxies the API paths
+// below to the given backend (e.g. https://api-staging.math-on-canvas.com), making them
+// same-origin (no CORS) — the Next analogue of the editor's vite `server.proxy`.
+// NOTE: /auth is NOT proxied here — it is handled by the route at src/app/auth/[...path]/
+// which additionally rewrites the Set-Cookie domain so sessions stick on localhost.
+// Leave STAGING_API_PROXY unset in production.
+const STAGING_API_PROXY = process.env.STAGING_API_PROXY;
+const stagingProxyRewrites = STAGING_API_PROXY
+  ? [
+      { source: "/catalog/:path*", destination: `${STAGING_API_PROXY}/catalog/:path*` },
+      { source: "/documents/:path*", destination: `${STAGING_API_PROXY}/documents/:path*` },
+    ]
+  : [];
+
 const nextConfig: NextConfig = {
   reactCompiler: true,
 
   env: {
     NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version || "0.0.0",
     NEXT_PUBLIC_AUTH_API_URL: process.env.AUTH_API_URL || "https://api.math-on-canvas.com",
+    DOCUMENTS_API_URL: process.env.DOCUMENTS_API_URL || "https://api.math-on-canvas.com",
   },
 
   rewrites: async () => ({
@@ -33,6 +48,7 @@ const nextConfig: NextConfig = {
         source: "/assets/:path*",
         destination: `${EDITOR_URL}/editor/assets/:path*`,
       },
+      ...stagingProxyRewrites,
     ],
   }),
 

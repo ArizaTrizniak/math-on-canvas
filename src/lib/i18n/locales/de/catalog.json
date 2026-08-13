@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "hubTitle": "Vorlagen für Mathe-Diagramme und Formeln | Math on Canvas",
+    "hubDescription": "Durchsuchen Sie fertige Mathe-Diagramme, geometrische Figuren und Formel-Poster. Öffnen Sie eine Vorlage im Editor und gestalten Sie sie nach Ihren Wünschen."
+  },
+  "nav": "Katalog",
+  "hubHeadline": "Mathe-Vorlagen & Beispiele",
+  "hubIntro": "Fertige Mathe-Diagramme und Formel-Poster. Öffnen Sie beliebige im Editor und passen Sie sie für Ihre Unterrichtsstunde an.",
+  "popular": "Beliebt",
+  "filters": { "category": "Kategorie", "tags": "Tags", "tagsPlaceholder": "z. B. Dreieck, Fläche", "language": "Sprache", "sort": "Sortieren", "allCategories": "Alle Kategorien", "allLanguages": "Alle Sprachen", "newest": "Neueste", "mostLiked": "Beliebteste", "mostViewed": "Meistgesehen", "reset": "Filter zurücksetzen" },
+  "empty": "Keine Dokumente entsprechen diesen Filtern.",
+  "error": "Der Katalog konnte nicht geladen werden. Bitte versuchen Sie es erneut.",
+  "retry": "Erneut versuchen",
+  "open": "Im Editor öffnen",
+  "share": "Teilen",
+  "gateIntro": "Anmelden oder kostenloses Konto erstellen",
+  "related": "Ähnliche Dokumente",
+  "breadcrumbs": { "home": "Startseite", "catalog": "Katalog" },
+  "categoryHub": {
+    "heading": "{category}-Vorlagen",
+    "metaTitle": "{category}-Vorlagen | Math on Canvas",
+    "metaDescription": "Durchsuchen Sie fertige {category}-Diagramme, Figuren und Formel-Vorlagen. Öffnen Sie beliebige im Editor und gestalten Sie sie nach Ihren Wünschen."
+  },
+  "tagHub": {
+    "heading": "Vorlagen mit dem Tag „{tag}“",
+    "metaTitle": "Mathe-Vorlagen mit dem Tag {tag} | Math on Canvas",
+    "metaDescription": "Mathe-Vorlagen mit dem Tag „{tag}“. Öffnen Sie beliebige im Editor und passen Sie sie für Ihre Unterrichtsstunde an."
+  }
+}

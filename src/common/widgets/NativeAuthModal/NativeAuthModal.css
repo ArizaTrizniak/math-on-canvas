@@ -195,3 +195,49 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+/* ── 2-pane layout: only when a catalog context is present ── */
+
+.auth-modal__with-context {
+    max-width: 760px;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    column-gap: 32px;
+    align-items: start;
+}
+
+.auth-modal__context {
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 4px;
+}
+
+.auth-modal__context-thumb {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    aspect-ratio: 16 / 9;
+    background: #f3f4f6;
+}
+
+.auth-modal__context-heading {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.auth-modal__context-intro {
+    font-size: 0.875rem;
+    color: #555;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* The form pane sits in the second column */
+.auth-modal__with-context .auth-modal__form {
+    grid-column: 2;
+}
