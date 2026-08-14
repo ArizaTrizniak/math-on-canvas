@@ -263,7 +263,7 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
 
             <footer className="landing__footer">
                 {t.footer}
-                <span aria-hidden="true" style={{ margin: '0 0.75em' }}>·</span>
+                <span style={{ margin: '0 0.75em' }}>·</span>
                 <Link href={`/${lang}/pricing`} style={{ color: 'inherit', textDecoration: 'none' }}>
                     {t.cta.pricing}
                 </Link>
