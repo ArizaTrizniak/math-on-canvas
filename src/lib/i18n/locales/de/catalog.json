@@ -16,6 +16,15 @@
   "gateIntro": "Anmelden oder kostenloses Konto erstellen",
   "related": "Ähnliche Dokumente",
   "breadcrumbs": { "home": "Startseite", "catalog": "Katalog" },
+  "categories": {
+    "algebra": "Algebra",
+    "geometry": "Geometrie",
+    "calculus": "Analysis",
+    "statistics": "Statistik",
+    "trigonometry": "Trigonometrie",
+    "number-theory": "Zahlentheorie",
+    "other": "Sonstiges"
+  },
   "categoryHub": {
     "heading": "{category}-Vorlagen",
     "metaTitle": "{category}-Vorlagen | Math on Canvas",

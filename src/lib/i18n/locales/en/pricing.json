@@ -16,7 +16,7 @@
         "free": {
             "name": "Free",
             "price": "Free",
-            "priceNote": "Free forever",
+            "priceNote": "",
             "cta": "Sign up"
         },
         "pro": {

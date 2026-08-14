@@ -4,11 +4,11 @@ import { BASE_URL } from '@/lib/site'
 import { LANGUAGES } from '@/lib/i18n/constants'
 import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { CatalogGrid } from '@/features/catalog/components/CatalogGrid'
-import { isCategory, humanizeSlug } from '@/features/catalog/taxonomy'
+import { isCategory } from '@/features/catalog/taxonomy'
 import { buildSlug } from '@/features/catalog/slug'
 import { hreflangAlternates } from '@/features/catalog/seo/metadata'
 import { collectionPage, breadcrumbList } from '@/features/catalog/seo/jsonld'
-import { getCatalogStrings } from '@/features/catalog/i18n'
+import { getCatalogStrings, getCategoryLabel } from '@/features/catalog/i18n'
 
 export const revalidate = 300
 
@@ -18,7 +18,7 @@ export async function generateMetadata({
     params: Promise<{ lang: string; category: string }>
 }): Promise<Metadata> {
     const { lang, category } = await params
-    const categoryLabel = humanizeSlug(category)
+    const categoryLabel = getCategoryLabel(category, lang)
     const strings = getCatalogStrings(lang)
     const canonical = `${BASE_URL}/${lang}/catalog/category/${category}`
 
@@ -63,7 +63,7 @@ export default async function CategoryHubPage({
     const documents = result.documents
 
     const strings = getCatalogStrings(lang)
-    const categoryLabel = humanizeSlug(category)
+    const categoryLabel = getCategoryLabel(category, lang)
     const heading = strings.categoryHub.heading.replaceAll('{category}', categoryLabel)
 
     const canonical = `${BASE_URL}/${lang}/catalog/category/${category}`

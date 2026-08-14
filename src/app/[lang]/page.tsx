@@ -1,25 +1,14 @@
 import { notFound } from 'next/navigation'
 import { cookies } from 'next/headers'
-import type { Metadata } from 'next'
+import { BASE_URL } from '@/lib/site'
 import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
 import { getUserFromHeaders } from '@/lib/auth/user-context'
 import LandingPage from '@/app/(marketing)/landing/LandingPage'
+import { buildLandingJsonLd } from '@/features/landing/jsonld'
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.math-on-canvas.com'
-
-export async function generateMetadata({
-    params,
-}: {
-    params: Promise<{ lang: string }>
-}): Promise<Metadata> {
-    const { lang } = await params
-    return {
-        alternates: {
-            canonical: `${appUrl}/${lang}`,
-            languages: Object.fromEntries(LANGUAGES.map(l => [l.code, `${appUrl}/${l.code}`])),
-        },
-    }
-}
+// Metadata (title, description, canonical, hreflang, OG, Twitter) is owned by
+// the [lang] layout — defining it here too would override the layout's
+// alternates and silently drop the x-default hreflang.
 
 async function fetchDisplayName(token: string): Promise<string | null> {
     try {
@@ -56,5 +45,15 @@ export default async function LangPage({
         if (token) displayName = await fetchDisplayName(token)
     }
 
-    return <LandingPage lang={langCode} user={user} displayName={displayName} />
+    const jsonLd = buildLandingJsonLd(langCode, BASE_URL)
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <LandingPage lang={langCode} user={user} displayName={displayName} />
+        </>
+    )
 }

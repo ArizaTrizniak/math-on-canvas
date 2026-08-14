@@ -19,6 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+    metadataBase: new URL(BASE_URL),
     verification: {
         google: 'V9aBAqm7iwSfHdstdu5wLhcsneSwHEDUufFC4VnBIgk',
     },
@@ -39,20 +40,8 @@ export const metadata: Metadata = {
     },
 }
 
-const schemaOrg = {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name: 'Math on Canvas',
-    url: BASE_URL,
-    description: 'Online math diagram and formula editor for teachers. Create geometry figures, LaTeX formulas, and export to PDF.',
-    applicationCategory: 'EducationApplication',
-    operatingSystem: 'Web',
-    offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'USD',
-    },
-}
+// Structured data is emitted per route, in the route's own language:
+// the landing builds WebApplication + FAQPage, catalog and pricing build their own.
 
 export default async function RootLayout({
     children,
@@ -64,12 +53,6 @@ export default async function RootLayout({
 
     return (
         <html lang={lang}>
-            <head>
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
-                />
-            </head>
             <body className={`${geistSans.variable} ${geistMono.variable}`}>
                 <AuthProvider>
                     <AnalyticsInit />

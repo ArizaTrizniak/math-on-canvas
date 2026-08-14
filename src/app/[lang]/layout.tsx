@@ -1,23 +1,22 @@
 import type { Metadata } from 'next'
 import { BASE_URL } from '@/lib/site'
+import landingEN from '@/lib/i18n/locales/en/landing.json'
+import landingRU from '@/lib/i18n/locales/ru/landing.json'
+import landingES from '@/lib/i18n/locales/es/landing.json'
+import landingDE from '@/lib/i18n/locales/de/landing.json'
 
-const ogMeta: Record<string, { title: string; description: string }> = {
-    en: {
-        title: 'Math on Canvas — Your math diagrams: simpler, faster, clearer.',
-        description: 'There are plenty of ready-made materials online, but finding the right one takes time. With MathOnCanvas you build exactly what your lesson needs.',
-    },
-    ru: {
-        title: 'Math on Canvas — Ваши математические наглядные пособия: проще, быстрее, удобнее',
-        description: 'В сети много готовых пособий, но поиск нужного занимает время. С MathOnCanvas вы делаете именно то, что нужно вашему уроку — и именно так, как хотите.',
-    },
-    es: {
-        title: 'Math on Canvas — Tus diagramas matemáticos: más simples, rápidos y claros.',
-        description: 'Hay muchos materiales listos en internet, pero encontrar el adecuado lleva tiempo. Con MathOnCanvas construyes exactamente lo que tu lección necesita.',
-    },
-    de: {
-        title: 'Math on Canvas — Ihre Mathe-Diagramme: einfacher, schneller, klarer.',
-        description: 'Es gibt viele fertige Materialien online, aber das Richtige zu finden dauert. Mit MathOnCanvas erstellen Sie genau das, was Ihre Unterrichtsstunde braucht.',
-    },
+const metaTranslations: Record<string, { title: string; description: string }> = {
+    en: landingEN.meta,
+    ru: landingRU.meta,
+    es: landingES.meta,
+    de: landingDE.meta,
+}
+
+const OG_LOCALES: Record<string, string> = {
+    en: 'en_US',
+    ru: 'ru_RU',
+    es: 'es_ES',
+    de: 'de_DE',
 }
 
 export async function generateMetadata({
@@ -27,9 +26,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { lang } = await params
     const canonical = `${BASE_URL}/${lang}`
-    const og = ogMeta[lang] ?? ogMeta['en']
+    const meta = metaTranslations[lang] ?? metaTranslations['en']
+    const ogLocale = OG_LOCALES[lang] ?? OG_LOCALES['en']
 
     return {
+        title: meta.title,
+        description: meta.description,
         alternates: {
             canonical,
             languages: {
@@ -41,17 +43,25 @@ export async function generateMetadata({
             },
         },
         openGraph: {
-            title: og.title,
-            description: og.description,
+            title: meta.title,
+            description: meta.description,
             url: canonical,
             siteName: 'Math on Canvas',
             type: 'website',
+            locale: ogLocale,
+            alternateLocale: Object.values(OG_LOCALES).filter((l) => l !== ogLocale),
             images: [{
                 url: `${BASE_URL}/images/screen1.webp`,
                 width: 1600,
                 height: 900,
                 alt: 'Math on Canvas — math diagram editor',
             }],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: meta.title,
+            description: meta.description,
+            images: [`${BASE_URL}/images/screen1.webp`],
         },
     }
 }

@@ -1,10 +1,15 @@
 {
+    "meta": {
+        "title": "Online Math Diagram & Formula Editor — Math on Canvas",
+        "description": "Draw geometry figures, 3D solids and LaTeX formulas on one canvas, then export a print-ready PDF, SVG or PNG. Free, in your browser, no account needed."
+    },
     "brand": "Math on Canvas",
     "language": "Language",
     "hero": {
         "tag": "For math teachers",
-        "title": "Your math diagrams: simpler, faster, clearer.",
-"narrative": "There are plenty of ready-made materials online, but finding the right one takes time. With MathOnCanvas you build exactly what your lesson needs: your own world of visual mathematics."
+        "title": "Online math diagram and formula editor",
+        "subtitle": "Your math diagrams: simpler, faster, clearer.",
+        "narrative": "Build geometry figures, 3D solids and LaTeX formulas on one canvas, then export a print-ready PDF. Start from a ready-made diagram in the catalog and adapt it to your lesson, or draw your own from scratch. Everything runs in the browser: nothing to install, no account required."
     },
     "cta": {
         "loading": "Preparing editor...",
@@ -23,42 +28,164 @@
     "sync": "Language switcher synchronized with editor toolbar.",
     "featuresTitle": "What's inside",
     "features": {
-        "easy": "Easy to learn with a clear, friendly interface.",
-        "formulas": "Formulas with live preview.",
-        "shapes": "Geometric shapes, angles, markers, grids.",
-        "export": "Export to PDF without quality loss.",
-        "customize": "Wide range of customization options for elements."
+        "formulas": "Visual formula editor with live preview — no LaTeX required.",
+        "shapes3d": "3D solids: cube, prism, pyramid, sphere, cone, cylinder — rotate them with the mouse.",
+        "shapes": "13 plane shapes: polygons, circles, sectors, angle markers, polylines.",
+        "symbols": "Math symbol palette: nine categories, from Greek letters to calculus.",
+        "pages": "Multi-page documents in A4, US Letter or 11×17 poster format.",
+        "export": "Export to PDF, SVG or PNG — one page, a range, or the whole document.",
+        "draw": "Freehand pencil and marker on top of any diagram.",
+        "tools": "Groups, layers, snap-to-grid, undo/redo and keyboard shortcuts.",
+        "source": "Save the source file and keep editing later.",
+        "languages": "Interface in English, Russian, Spanish and German."
     },
     "preview": {
-        "caption": "Workspace for visual mathematics"
+        "caption": "Workspace for visual mathematics",
+        "shots": {
+            "s1": "Math on Canvas editor: a triangle with colored angle markers and Greek letters next to a highlighted α + β = θ formula, with the plane shapes and math symbols palettes open",
+            "s2": "Editing a half-angle trigonometry formula in Math on Canvas, with the LaTeX formula editor and the frequently used formulas panel open",
+            "s3": "A congruent triangles diagram built in Math on Canvas with angle sectors, side tick marks and the △ABC ≅ △EFG statement",
+            "s4": "A math logic puzzle worksheet made in Math on Canvas from images, plus and equals signs on a US Letter page"
+        },
+        "cards": {
+            "s1": {
+                "tag": "Geometry + formulas",
+                "caption": "Angle markers, Greek letters and a live α + β = θ formula, all on one canvas."
+            },
+            "s2": {
+                "tag": "Formula editor",
+                "caption": "Type LaTeX or use the field — the identity updates live."
+            },
+            "s3": {
+                "tag": "Geometry proofs",
+                "caption": "Angle sectors and side ticks, built for a worksheet."
+            },
+            "s4": {
+                "tag": "Print-ready page",
+                "caption": "What actually comes out of the PDF export."
+            }
+        }
     },
-    "highlightsTitle": "Why it helps",
+    "catalogTeaser": {
+        "title": "Start from a ready-made diagram",
+        "description": "Browse diagrams shared by other teachers, open any of them in the editor and change what your lesson needs — the wording, the numbers, the figures. No need to start from a blank canvas.",
+        "cta": "Browse the catalog",
+        "categoriesLabel": "Popular categories"
+    },
+    "highlightsTitle": "Why teachers use it",
     "highlightsSubtitle": "Tools that keep handouts readable and printable at any scale.",
     "highlightPlaceholder": "Image placeholder",
     "highlights": {
+        "visual": {
+            "title": "Visual formula editor",
+            "description": "No need to know LaTeX. Type in a math field with live preview, then restyle, rotate and move the formula anywhere on the canvas."
+        },
+        "shapes3d": {
+            "title": "3D solids you can turn",
+            "description": "Cube, prism, pyramid, sphere, cone and cylinder rotate in real time with the mouse. Label the vertices and set face opacity so the back edges stay readable."
+        },
+        "geometry": {
+            "title": "Geometry that stays precise",
+            "description": "Polygons, circles, sectors, polylines, angle and side markers — snap-to-grid keeps every diagram aligned while you work."
+        },
         "symbols": {
             "title": "Math symbols in text",
-            "description": "A dedicated palette inserts π, ≅, and other symbols directly into text with no code hunting."
+            "description": "A dedicated palette inserts π, ≅, ∈ and hundreds of other symbols straight into text — nine categories, no code hunting."
         },
         "pdf": {
             "title": "PDF without quality loss",
-            "description": "Print board posters and student cards from the same source. PDF stays sharp and easy to share."
+            "description": "Everything is vector, so a board poster and a student handout print sharp from the same source file."
+        },
+        "export": {
+            "title": "PDF, SVG and PNG",
+            "description": "Export the whole document, a page range, or a hand-picked set of pages. Several pages come back as a ZIP archive."
         },
         "pages": {
             "title": "Multi-page documents",
-            "description": "Tasks and answers in one document; print only the pages you need."
-        },
-        "visual": {
-            "title": "Visual formula editor",
-            "description": "No need to know LaTeX. Adjust style, rotate, and move formulas with instant feedback."
+            "description": "Tasks and answers in one file, each page with its own format and orientation. Print only the pages you need."
         },
         "library": {
             "title": "Formula library",
-            "description": "Start with popular formulas and adapt them instead of starting from scratch."
+            "description": "Algebra, geometry and trigonometry presets — start from a common formula and adapt it instead of typing it from scratch."
+        }
+    },
+    "steps": {
+        "title": "From idea to handout in four steps",
+        "subtitle": "No setup, no learning curve — the first diagram takes a few minutes.",
+        "items": {
+            "open": {
+                "title": "Open the editor",
+                "description": "Start in the browser as a guest. Nothing to install, no account required."
+            },
+            "place": {
+                "title": "Place your figures",
+                "description": "Pick shapes, 3D solids and formulas from the palettes, or open a diagram from the catalog as a starting point."
+            },
+            "adjust": {
+                "title": "Adjust the details",
+                "description": "Colors, stroke styles, angle markers, vertex labels, fonts — every element has its own properties panel."
+            },
+            "export": {
+                "title": "Export and print",
+                "description": "Save a print-ready PDF, or an SVG or PNG to drop straight into your slides."
+            }
+        }
+    },
+    "audience": {
+        "title": "Who it's for",
+        "subtitle": "One canvas, three very different ways of using it.",
+        "items": {
+            "teachers": {
+                "title": "School teachers",
+                "description": "Worksheets, board posters and test papers with the exact figures and wording your class needs."
+            },
+            "tutors": {
+                "title": "Private tutors",
+                "description": "Quick one-off diagrams for a single lesson, saved as a source file you can reuse next time."
+            },
+            "students": {
+                "title": "Students",
+                "description": "Clean figures for coursework and presentations, exported as SVG so they scale without going blurry."
+            }
+        }
+    },
+    "coming": {
+        "title": "What's coming in Pro",
+        "description": "These features already live in the editor and unlock with the Pro plan.",
+        "items": {
+            "ai": "AI assistant — describe a formula or a whole document in plain words and have it generated.",
+            "cloud": "Cloud storage — your documents available on every device.",
+            "share": "Share by link — send a read-only view to colleagues or students."
         },
-        "geometry": {
-            "title": "Geometry",
-            "description": "Lines, polygons, and angle markers: everything to build precise diagrams quickly."
+        "cta": "See pricing"
+    },
+    "faq": {
+        "title": "Frequently asked questions",
+        "items": {
+            "account": {
+                "q": "Do I need an account?",
+                "a": "No. The editor opens in guest mode and keeps your work in the browser. An account is only needed to save source files you can come back to later."
+            },
+            "latex": {
+                "q": "Do I need to know LaTeX?",
+                "a": "No. Formulas are typed in a visual math field with live preview, and the formula library covers the most common algebra, geometry and trigonometry cases. If you do know LaTeX, you can edit the source directly."
+            },
+            "poster": {
+                "q": "Can I print at poster size?",
+                "a": "Yes. Choose the 11×17 poster format, or set each page to A4 or US Letter, portrait or landscape. Everything is vector, so it stays sharp at any size."
+            },
+            "edit": {
+                "q": "Can I edit a diagram later?",
+                "a": "Yes. With a free account you can save the document as a source file and import it back into the editor whenever you need to change something."
+            },
+            "price": {
+                "q": "Is it free?",
+                "a": "Yes. The full editor, every shape and formula tool, and export to PDF, SVG and PNG are free to use. A Pro plan with AI generation, cloud storage and sharing is coming."
+            },
+            "license": {
+                "q": "Can I use the diagrams in my own materials?",
+                "a": "Yes. Whatever you build is yours — use it in handouts, slides, tests and printed materials, at school or in private lessons."
+            }
         }
     },
     "footer": "Built for math and geometry projects"
