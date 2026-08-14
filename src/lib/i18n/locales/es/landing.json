@@ -46,6 +46,24 @@
             "s2": "Edición de una fórmula trigonométrica de ángulo mitad en Math on Canvas, con el editor de fórmulas LaTeX y el panel de fórmulas frecuentes abiertos",
             "s3": "Diagrama de triángulos congruentes creado en Math on Canvas con sectores de ángulo, marcas en los lados y la expresión △ABC ≅ △EFG",
             "s4": "Ficha de acertijo matemático hecha en Math on Canvas con imágenes y signos de suma e igual en una página US Letter"
+        },
+        "cards": {
+            "s1": {
+                "tag": "Geometría y fórmulas",
+                "caption": "Marcadores de ángulo, letras griegas y una fórmula α + β = θ en vivo, todo en el mismo lienzo."
+            },
+            "s2": {
+                "tag": "Editor de fórmulas",
+                "caption": "Escribe en LaTeX o usa el campo — la identidad se actualiza en vivo."
+            },
+            "s3": {
+                "tag": "Demostraciones geométricas",
+                "caption": "Sectores de ángulo y marcas en los lados, listos para una ficha."
+            },
+            "s4": {
+                "tag": "Página lista para imprimir",
+                "caption": "Lo que realmente sale al exportar a PDF."
+            }
         }
     },
     "catalogTeaser": {

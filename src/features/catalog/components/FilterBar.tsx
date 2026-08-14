@@ -5,6 +5,7 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CATEGORIES } from '../taxonomy'
+import { getCategoryLabel } from '../i18n'
 import { LANGUAGES } from '@/lib/i18n/constants'
 import './FilterBar.css'
 
@@ -12,7 +13,6 @@ interface Props {
   lang: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function FilterBar({ lang }: Props) {
   const { t } = useTranslation('catalog')
   const router = useRouter()
@@ -68,7 +68,7 @@ export function FilterBar({ lang }: Props) {
           <option value="">{t('filters.allCategories')}</option>
           {CATEGORIES.map((cat) => (
             <option key={cat} value={cat}>
-              {t(`categories.${cat}`)}
+              {getCategoryLabel(cat, lang)}
             </option>
           ))}
         </select>

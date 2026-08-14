@@ -46,6 +46,24 @@
             "s2": "Editing a half-angle trigonometry formula in Math on Canvas, with the LaTeX formula editor and the frequently used formulas panel open",
             "s3": "A congruent triangles diagram built in Math on Canvas with angle sectors, side tick marks and the △ABC ≅ △EFG statement",
             "s4": "A math logic puzzle worksheet made in Math on Canvas from images, plus and equals signs on a US Letter page"
+        },
+        "cards": {
+            "s1": {
+                "tag": "Geometry + formulas",
+                "caption": "Angle markers, Greek letters and a live α + β = θ formula, all on one canvas."
+            },
+            "s2": {
+                "tag": "Formula editor",
+                "caption": "Type LaTeX or use the field — the identity updates live."
+            },
+            "s3": {
+                "tag": "Geometry proofs",
+                "caption": "Angle sectors and side ticks, built for a worksheet."
+            },
+            "s4": {
+                "tag": "Print-ready page",
+                "caption": "What actually comes out of the PDF export."
+            }
         }
     },
     "catalogTeaser": {

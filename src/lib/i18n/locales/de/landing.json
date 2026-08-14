@@ -46,6 +46,24 @@
             "s2": "Bearbeiten einer Halbwinkel-Formel in Math on Canvas mit geöffnetem LaTeX-Formel-Editor und dem Panel häufig genutzter Formeln",
             "s3": "Diagramm kongruenter Dreiecke in Math on Canvas mit Winkelsektoren, Seitenmarkierungen und der Aussage △ABC ≅ △EFG",
             "s4": "Ein Mathe-Rätsel-Arbeitsblatt, in Math on Canvas aus Bildern sowie Plus- und Gleichheitszeichen auf einer US-Letter-Seite erstellt"
+        },
+        "cards": {
+            "s1": {
+                "tag": "Geometrie + Formeln",
+                "caption": "Winkelmarkierungen, griechische Buchstaben und eine live berechnete Formel α + β = θ, alles auf einer Fläche."
+            },
+            "s2": {
+                "tag": "Formel-Editor",
+                "caption": "Tippen Sie LaTeX oder nutzen Sie das Feld — die Identität aktualisiert sich live."
+            },
+            "s3": {
+                "tag": "Geometrische Beweise",
+                "caption": "Winkelsektoren und Seitenmarkierungen, bereit für ein Arbeitsblatt."
+            },
+            "s4": {
+                "tag": "Druckfertige Seite",
+                "caption": "Was beim PDF-Export tatsächlich herauskommt."
+            }
         }
     },
     "catalogTeaser": {

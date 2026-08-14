@@ -14,7 +14,7 @@ import commonDE from '@/lib/i18n/locales/de/common.json'
 import { getCatalogStrings, getCategoryLabel } from '@/features/catalog/i18n'
 import { CATEGORIES } from '@/features/catalog/taxonomy'
 import LanguageSwitch from './widgets/LanguageSwitch/LandingLanguageSwitch'
-import { LandingCarousel } from './widgets/LandingCarousel/LandingCarousel'
+import { LandingFilmstrip } from './widgets/LandingFilmstrip/LandingFilmstrip'
 import { LandingSignIn } from './widgets/LandingSignIn/LandingSignIn'
 import { LandingCTALink } from './widgets/LandingCTALink/LandingCTALink'
 import UserMenu from '@/common/widgets/UserMenu/UserMenu'
@@ -26,7 +26,9 @@ import {
     comingKeys,
     faqKeys,
     screenshotKeys,
+    screenshotDimensions,
     outputHighlightKeys,
+    outputScreenshotKeys,
 } from '@/features/landing/keys'
 import './LandingPage.css'
 
@@ -59,9 +61,14 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
     const t = translations[lang]
     const tCommon = commonTranslations[lang]
     const tCatalog = getCatalogStrings(lang)
-    const carouselImages = screenshotKeys.map((key, index) => ({
+    const filmstripImages = screenshotKeys.map((key, index) => ({
         src: `/images/screen${index + 1}.webp`,
         alt: t.preview.shots[key],
+        tag: t.preview.cards[key].tag,
+        caption: t.preview.cards[key].caption,
+        width: screenshotDimensions[key].width,
+        height: screenshotDimensions[key].height,
+        output: outputScreenshotKeys.has(key),
     }))
     const docsLink = (
         <a href={docsUrl} className="landing__doc" target="_blank" rel="noopener noreferrer">
@@ -127,34 +134,19 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                             </LandingCTALink>
                             {docsLink}
                         </div>
-
-                        <div className="landing__features">
-                            <div className="landing__features-title">{t.featuresTitle}</div>
-                            <ul>
-                                {featureKeys.map((key) => (
-                                    <li key={key}>{t.features[key]}</li>
-                                ))}
-                            </ul>
-                        </div>
                     </div>
 
-                    <div className="landing__preview">
-                        <div className="landing__preview-header">
-                            <div className="landing__preview-pips">
-                                <span className="landing__pip landing__pip--red" />
-                                <span className="landing__pip landing__pip--yellow" />
-                                <span className="landing__pip landing__pip--green" />
-                            </div>
-                        </div>
-
-                        <div className="landing__preview-body">
-                            <LandingCarousel
-                                images={carouselImages}
-                                captionText={t.preview.caption}
-                            />
-                        </div>
+                    <div className="landing__features">
+                        <div className="landing__features-title">{t.featuresTitle}</div>
+                        <ul>
+                            {featureKeys.map((key) => (
+                                <li key={key}>{t.features[key]}</li>
+                            ))}
+                        </ul>
                     </div>
                 </section>
+
+                <LandingFilmstrip images={filmstripImages} label={t.preview.caption} />
 
                 {isAdmin(user) && (
                     <section className="landing__catalog">

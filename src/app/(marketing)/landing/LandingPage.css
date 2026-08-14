@@ -127,6 +127,7 @@
     display: grid;
     grid-template-columns: 2fr 2fr;
     gap: 32px;
+    align-items: start;
     width: 100%;
     max-width: 1880px;
     margin: 0 auto;
@@ -247,85 +248,35 @@
     box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.2);
 }
 
+/* Now a peer of .landing__copy, not stacked under its controls — a 2-column
+   list balances its height against the headline instead of towering over it. */
 .landing__features {
-    padding: 16px;
+    padding: 20px 22px;
     border-radius: 16px;
     background: white;
     border: 1px solid #e5e7eb;
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-    font-size: larger;
 }
 
 .landing__features-title {
     font-weight: 700;
-    margin-bottom: 8px;
+    font-size: 15px;
+    color: #0f172a;
+    margin-bottom: 12px;
 }
 
 .landing__features ul {
     margin: 0;
     padding-left: 18px;
     display: grid;
-    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px 20px;
 }
 
 .landing__features li {
     color: #374151;
-}
-
-.landing__preview {
-    background: white;
-    border-radius: 22px;
-    box-shadow: 0 14px 42px rgba(15, 23, 42, 0.12);
-    border: 1px solid #e5e7eb;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    min-height: 500px;
-}
-
-.landing__preview-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 16px;
-    background: #f8fafc;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.landing__preview-pips {
-    display: flex;
-    gap: 6px;
-}
-
-.landing__pip {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-.landing__pip--red {
-    background: #f87171;
-}
-
-.landing__pip--yellow {
-    background: #fbbf24;
-}
-
-.landing__pip--green {
-    background: #34d399;
-}
-
-.landing__preview-title {
-    color: #4b5563;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.landing__preview-body {
-    padding: 32px;
-    display: grid;
-    gap: 16px;
+    font-size: 14px;
+    line-height: 1.45;
 }
 
 .landing__highlights {
@@ -434,119 +385,180 @@
         grid-template-columns: 1fr;
     }
 
+    .landing__features ul {
+        grid-template-columns: 1fr;
+    }
+
     .landing__highlights-grid {
         grid-template-columns: 1fr;
     }
 }
 
-.landing__carousel {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
+/* ---- Screenshot filmstrip ----
+   Full-bleed to the true viewport edge, not boxed to the page's own max-width:
+   the cut-off card at the edge is what signals "keep scrolling," the way the
+   dots and a timer used to have to do by themselves. Each card keeps its own
+   screenshot's real aspect ratio, so there's no shared window ratio left to
+   clip against, and a new shot is one more array entry, not a layout change. */
 
-.landing__carousel-window {
+.landing__filmstrip {
     position: relative;
-    overflow: hidden;
-    border-radius: 16px;
-    border: 1px solid #e5e7eb;
-    background: #ffffff;
-    box-shadow: 0 10px 32px rgba(15, 23, 42, 0.08);
-    /* The screenshots are not all one shape (1.48–1.75), so the window sets a
-       fixed stage close to their average and each shot is fitted inside it. */
-    aspect-ratio: 16 / 10;
+    left: 50%;
+    width: 100vw;
+    margin-left: -50vw;
 }
 
-.landing__carousel-track {
+.landing__filmstrip-lead {
+    max-width: 1880px;
+    margin: 0 auto;
+    padding: 0 32px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.landing__filmstrip-row {
     display: flex;
-    transition: transform 260ms ease;
-    width: 100%;
-    height: 100%;
+    align-items: center;
+    gap: 10px;
+    padding-left: max(32px, calc((100vw - 1880px) / 2 + 32px));
 }
 
-.landing__carousel-slide {
-    width: 100%;
-    flex: 0 0 100%;
+.landing__filmstrip-track {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    flex: 1 1 auto;
     min-width: 0;
-    height: 100%;
-    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 4px 32px 18px 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(15, 23, 42, 0.25) transparent;
 }
 
-/* contain, not auto height: letting the intrinsic ratio drive layout made the
-   tallest loaded screenshot stretch the track and get clipped by the window. */
-.landing__carousel-image {
+.landing__filmstrip-track::-webkit-scrollbar {
+    height: 7px;
+}
+
+.landing__filmstrip-track::-webkit-scrollbar-thumb {
+    background: rgba(15, 23, 42, 0.2);
+    border-radius: 999px;
+}
+
+.landing__filmstrip-track::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.landing__filmstrip-card {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+    width: 340px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+}
+
+.landing__filmstrip-image {
     width: 100%;
-    height: 100%;
-    flex: 0 0 100%;
-    object-fit: contain;
+    height: auto;
     display: block;
 }
 
-.landing__carousel-control {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+.landing__filmstrip-cap {
+    padding: 12px 15px 14px;
+}
+
+.landing__filmstrip-tag {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent-warm);
+    margin-bottom: 4px;
+}
+
+.landing__filmstrip-card--output .landing__filmstrip-tag {
+    color: var(--accent-cool);
+}
+
+.landing__filmstrip-cap p {
+    margin: 0;
+    font-size: 13px;
+    color: #4b5563;
+    line-height: 1.45;
+}
+
+.landing__filmstrip-nav {
+    flex: 0 0 auto;
     width: 38px;
     height: 38px;
-    border-radius: 999px;
+    border-radius: 50%;
     border: 1px solid #e5e7eb;
-    background: rgba(255, 255, 255, 0.96);
+    background: white;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
     color: #111827;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 10px 32px rgba(15, 23, 42, 0.12);
     display: grid;
     place-items: center;
     transition: transform 140ms ease, box-shadow 140ms ease;
 }
 
-.landing__carousel-control:hover {
-    transform: translateY(calc(-50% - 1px));
-    box-shadow: 0 14px 36px rgba(15, 23, 42, 0.18);
+.landing__filmstrip-nav:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 36px rgba(15, 23, 42, 0.14);
 }
 
-.landing__carousel-control--prev {
-    left: 12px;
+.landing__filmstrip-nav--next {
+    margin-right: 12px;
 }
 
-.landing__carousel-control--next {
-    right: 12px;
-}
-
-.landing__carousel-footer {
+.landing__filmstrip-dots {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    color: #4b5563;
-    font-size: 13px;
+    gap: 6px;
+    max-width: 1880px;
+    margin: 0 auto;
+    padding: 0 32px;
 }
 
-.landing__carousel-caption {
-    font-weight: 600;
-}
-
-.landing__carousel-dots {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.landing__carousel-dot {
-    width: 10px;
-    height: 10px;
+.landing__filmstrip-dot {
+    width: 16px;
+    height: 4px;
     border-radius: 999px;
-    border: 1px solid #d1d5db;
     background: #e5e7eb;
+    border: none;
+    padding: 0;
     cursor: pointer;
-    transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+    transition: background 140ms ease, width 140ms ease;
 }
 
-.landing__carousel-dot--active {
-    transform: scale(1.1);
-    background: #f97316;
-    border-color: #fb923c;
+.landing__filmstrip-dot--active {
+    background: var(--accent-warm);
+    width: 26px;
+}
+
+@media (max-width: 720px) {
+    .landing__filmstrip-nav {
+        display: none;
+    }
+
+    .landing__filmstrip-row {
+        padding-left: 18px;
+    }
+
+    .landing__filmstrip-card {
+        width: 78vw;
+        max-width: 320px;
+    }
 }
 
 /* ---- Shared section scaffolding ---- */
