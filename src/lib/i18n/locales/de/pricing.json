@@ -16,7 +16,7 @@
         "free": {
             "name": "Gratis",
             "price": "Kostenlos",
-            "priceNote": "Für immer kostenlos",
+            "priceNote": "",
             "cta": "Registrieren"
         },
         "pro": {

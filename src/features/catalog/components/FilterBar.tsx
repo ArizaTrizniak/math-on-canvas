@@ -68,7 +68,7 @@ export function FilterBar({ lang }: Props) {
           <option value="">{t('filters.allCategories')}</option>
           {CATEGORIES.map((cat) => (
             <option key={cat} value={cat}>
-              {cat}
+              {t(`categories.${cat}`)}
             </option>
           ))}
         </select>

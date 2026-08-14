@@ -16,9 +16,18 @@
   "gateIntro": "Войдите или создайте бесплатную учётную запись",
   "related": "Похожие документы",
   "breadcrumbs": { "home": "Главная", "catalog": "Каталог" },
+  "categories": {
+    "algebra": "Алгебра",
+    "geometry": "Геометрия",
+    "calculus": "Математический анализ",
+    "statistics": "Статистика",
+    "trigonometry": "Тригонометрия",
+    "number-theory": "Теория чисел",
+    "other": "Прочее"
+  },
   "categoryHub": {
     "heading": "Шаблоны: {category}",
-    "metaTitle": "Шаблоны {category} | Math on Canvas",
+    "metaTitle": "Шаблоны: {category} | Math on Canvas",
     "metaDescription": "Готовые диаграммы, фигуры и шаблоны формул по теме «{category}». Откройте любой в редакторе и адаптируйте под себя."
   },
   "tagHub": {

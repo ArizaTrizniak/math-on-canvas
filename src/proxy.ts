@@ -5,6 +5,11 @@ import { normalizeLanguage } from '@/lib/i18n/constants'
 
 const LANG_CODES = ['en', 'ru', 'es', 'de'] as const
 
+// Identity headers that Server Components read via getUserFromHeaders().
+// Only this proxy may set them: anything arriving from the client is stripped
+// first, otherwise a request could simply declare itself an admin.
+const AUTH_HEADERS = ['x-user-id', 'x-user-role', 'x-user-ent'] as const
+
 function clearAccessTokenCookie(response: NextResponse): void {
     response.cookies.set('access_token', '', { maxAge: 0, path: '/' })
 }
@@ -39,6 +44,9 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     // x-pathname: needed by not-found.tsx to detect lang when notFound() is called.
     const lang = langCode ?? getLangFromRequest(request)
     const requestHeaders = new Headers(request.headers)
+    for (const header of AUTH_HEADERS) {
+        requestHeaders.delete(header)
+    }
     requestHeaders.set('x-lang', lang)
     requestHeaders.set('x-pathname', pathname)
 
@@ -50,11 +58,13 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 
     try {
         const user = await verifyAccessToken(token)
-        const response = NextResponse.next({ request: { headers: requestHeaders } })
-        response.headers.set('x-user-id', user.userId)
-        response.headers.set('x-user-role', user.role)
-        response.headers.set('x-user-ent', JSON.stringify(user.entitlements))
-        return response
+        // Must go on the *request* headers: headers() in a Server Component reads
+        // the incoming request, so values set on the response never reach it (and
+        // would leak the user's id, role and entitlements to the browser).
+        requestHeaders.set('x-user-id', user.userId)
+        requestHeaders.set('x-user-role', user.role)
+        requestHeaders.set('x-user-ent', JSON.stringify(user.entitlements))
+        return NextResponse.next({ request: { headers: requestHeaders } })
     } catch {
         const response = NextResponse.next({ request: { headers: requestHeaders } })
         clearAccessTokenCookie(response)

@@ -27,8 +27,8 @@ describe('documentLocalizedMeta', () => {
 describe('hreflangAlternates', () => {
   it('returns all 4 locales plus x-default for a path', () => {
     const alt = hreflangAlternates('/catalog/triangle-poster-d1')
-    expect(alt['en']).toBe('https://math-on-canvas.com/en/catalog/triangle-poster-d1')
-    expect(alt['ru']).toBe('https://math-on-canvas.com/ru/catalog/triangle-poster-d1')
-    expect(alt['x-default']).toBe('https://math-on-canvas.com/en/catalog/triangle-poster-d1')
+    expect(alt['en']).toBe('https://www.math-on-canvas.com/en/catalog/triangle-poster-d1')
+    expect(alt['ru']).toBe('https://www.math-on-canvas.com/ru/catalog/triangle-poster-d1')
+    expect(alt['x-default']).toBe('https://www.math-on-canvas.com/en/catalog/triangle-poster-d1')
   })
 })

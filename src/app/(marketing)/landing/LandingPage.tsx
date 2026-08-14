@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { AuthUser } from '@/lib/auth/types'
+import { isAdmin } from '@/lib/auth/roles'
 import type { LanguageCode } from '@/lib/i18n/constants'
 import landingEN from '@/lib/i18n/locales/en/landing.json'
 import landingRU from '@/lib/i18n/locales/ru/landing.json'
@@ -10,23 +11,27 @@ import commonEN from '@/lib/i18n/locales/en/common.json'
 import commonRU from '@/lib/i18n/locales/ru/common.json'
 import commonES from '@/lib/i18n/locales/es/common.json'
 import commonDE from '@/lib/i18n/locales/de/common.json'
-import { getCatalogStrings } from '@/features/catalog/i18n'
-import { CATEGORIES, humanizeSlug } from '@/features/catalog/taxonomy'
+import { getCatalogStrings, getCategoryLabel } from '@/features/catalog/i18n'
+import { CATEGORIES } from '@/features/catalog/taxonomy'
 import LanguageSwitch from './widgets/LanguageSwitch/LandingLanguageSwitch'
 import { LandingCarousel } from './widgets/LandingCarousel/LandingCarousel'
 import { LandingSignIn } from './widgets/LandingSignIn/LandingSignIn'
 import { LandingCTALink } from './widgets/LandingCTALink/LandingCTALink'
 import UserMenu from '@/common/widgets/UserMenu/UserMenu'
+import {
+    featureKeys,
+    highlightKeys,
+    stepKeys,
+    audienceKeys,
+    comingKeys,
+    faqKeys,
+    screenshotKeys,
+    outputHighlightKeys,
+} from '@/features/landing/keys'
 import './LandingPage.css'
 
 const logo = '/images/logo.svg'
 const docsUrl = process.env.DOCS_URL ?? 'https://docs.math-on-canvas.com/'
-const carouselImages = [
-    '/images/screen1.webp',
-    '/images/screen2.webp',
-    '/images/screen3.webp',
-    '/images/screen4.webp',
-]
 
 const translations = {
     en: landingEN,
@@ -44,9 +49,6 @@ const commonTranslations = {
 
 const TOP_CATEGORIES = CATEGORIES.slice(0, 6)
 
-const featureKeys = ['easy', 'formulas', 'shapes', 'export', 'customize'] as const
-const highlightKeys = ['pdf', 'pages', 'symbols', 'visual', 'library', 'geometry'] as const
-
 interface LandingPageProps {
     lang: LanguageCode
     user?: AuthUser | null
@@ -57,6 +59,10 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
     const t = translations[lang]
     const tCommon = commonTranslations[lang]
     const tCatalog = getCatalogStrings(lang)
+    const carouselImages = screenshotKeys.map((key, index) => ({
+        src: `/images/screen${index + 1}.webp`,
+        alt: t.preview.shots[key],
+    }))
     const docsLink = (
         <a href={docsUrl} className="landing__doc" target="_blank" rel="noopener noreferrer">
             {t.cta.docs}
@@ -82,9 +88,11 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
 
                 <div className="landing__actions">
                     <LanguageSwitch currentLang={lang} />
-                    <Link href={`/${lang}/catalog`} className="landing__ghost">
-                        {tCatalog.nav}
-                    </Link>
+                    {isAdmin(user) && (
+                        <Link href={`/${lang}/catalog`} className="landing__ghost">
+                            {tCatalog.nav}
+                        </Link>
+                    )}
                     <Link href={`/${lang}/pricing`} className="landing__ghost">
                         {t.cta.pricing}
                     </Link>
@@ -105,6 +113,7 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                     <div className="landing__copy">
                         <div className="landing__pill">{t.hero.tag}</div>
                         <h1 className="landing__title">{t.hero.title}</h1>
+                        <p className="landing__subtitle">{t.hero.subtitle}</p>
                         <p className="landing__narrative">{t.hero.narrative}</p>
 
                         <div className="landing__controls">
@@ -147,6 +156,32 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                     </div>
                 </section>
 
+                {isAdmin(user) && (
+                    <section className="landing__catalog">
+                        <div className="landing__catalog-copy">
+                            <h2>{t.catalogTeaser.title}</h2>
+                            <p>{t.catalogTeaser.description}</p>
+                            <Link href={`/${lang}/catalog`} className="landing__catalog-cta">
+                                {t.catalogTeaser.cta}
+                            </Link>
+                        </div>
+                        <div className="landing__catalog-categories">
+                            <div className="landing__catalog-categories-title">
+                                {t.catalogTeaser.categoriesLabel}
+                            </div>
+                            <ul>
+                                {TOP_CATEGORIES.map((category) => (
+                                    <li key={category}>
+                                        <Link href={`/${lang}/catalog/category/${category}`}>
+                                            {getCategoryLabel(category, lang)}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </section>
+                )}
+
                 <section className="landing__highlights">
                     <div className="landing__highlights-header">
                         <h2>{t.highlightsTitle}</h2>
@@ -154,11 +189,80 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                     </div>
                     <div className="landing__highlights-grid">
                         {highlightKeys.map((key) => (
-                            <article className="landing__highlight-card" key={key}>
+                            <article
+                                className={`landing__highlight-card${
+                                    outputHighlightKeys.has(key) ? ' landing__highlight-card--output' : ''
+                                }`}
+                                key={key}
+                            >
                                 <div className="landing__highlight-body">
                                     <h3>{t.highlights[key].title}</h3>
                                     <p>{t.highlights[key].description}</p>
                                 </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="landing__steps">
+                    <div className="landing__section-header">
+                        <h2>{t.steps.title}</h2>
+                        <p>{t.steps.subtitle}</p>
+                    </div>
+                    <ol className="landing__steps-grid">
+                        {stepKeys.map((key, index) => (
+                            <li className="landing__step-card" key={key}>
+                                <span className="landing__step-vertex" aria-hidden="true">
+                                    {index + 1}
+                                </span>
+                                <h3>{t.steps.items[key].title}</h3>
+                                <p>{t.steps.items[key].description}</p>
+                            </li>
+                        ))}
+                    </ol>
+                </section>
+
+                <section className="landing__audience">
+                    <div className="landing__section-header">
+                        <h2>{t.audience.title}</h2>
+                        <p>{t.audience.subtitle}</p>
+                    </div>
+                    <div className="landing__audience-grid">
+                        {audienceKeys.map((key) => (
+                            <article className="landing__audience-card" key={key}>
+                                <h3>{t.audience.items[key].title}</h3>
+                                <p>{t.audience.items[key].description}</p>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="landing__coming">
+                    <div className="landing__section-header">
+                        <h2>{t.coming.title}</h2>
+                        <p>{t.coming.description}</p>
+                    </div>
+                    <div className="landing__coming-card">
+                        <ul className="landing__coming-list">
+                            {comingKeys.map((key) => (
+                                <li key={key}>{t.coming.items[key]}</li>
+                            ))}
+                        </ul>
+                        <Link href={`/${lang}/pricing`} className="landing__coming-cta">
+                            {t.coming.cta}
+                        </Link>
+                    </div>
+                </section>
+
+                <section className="landing__faq">
+                    <div className="landing__section-header">
+                        <h2>{t.faq.title}</h2>
+                    </div>
+                    <div className="landing__faq-grid">
+                        {faqKeys.map((key) => (
+                            <article className="landing__faq-item" key={key}>
+                                <h3>{t.faq.items[key].q}</h3>
+                                <p>{t.faq.items[key].a}</p>
                             </article>
                         ))}
                     </div>
@@ -179,7 +283,7 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                     <span key={c}>
                         <span aria-hidden="true" style={{ margin: '0 0.75em' }}>·</span>
                         <Link href={`/${lang}/catalog/category/${c}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                            {humanizeSlug(c)}
+                            {getCategoryLabel(c, lang)}
                         </Link>
                     </span>
                 ))}

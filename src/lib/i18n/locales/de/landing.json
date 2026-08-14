@@ -1,10 +1,15 @@
 {
+    "meta": {
+        "title": "Mathe-Diagramme und Formeln online erstellen — Math on Canvas",
+        "description": "Zeichnen Sie Geometrie-Figuren, 3D-Körper und LaTeX-Formeln auf einer Fläche und exportieren Sie druckfertige PDF-, SVG- oder PNG-Dateien. Kostenlos im Browser, ohne Konto."
+    },
     "brand": "Math on Canvas",
     "language": "Sprache",
     "hero": {
         "tag": "Für Mathelehrer",
-        "title": "Ihre Mathe-Diagramme: einfacher, schneller, klarer.",
-"narrative": "Es gibt viele fertige Materialien online, aber das Richtige zu finden dauert. Mit MathOnCanvas erstellen Sie genau das, was Ihre Unterrichtsstunde braucht: Ihre eigene Welt der visuellen Mathematik."
+        "title": "Online-Editor für Mathe-Diagramme und Formeln",
+        "subtitle": "Ihre Mathe-Diagramme: einfacher, schneller, klarer.",
+        "narrative": "Bauen Sie Geometrie-Figuren, 3D-Körper und LaTeX-Formeln auf einer Fläche und exportieren Sie ein druckfertiges PDF. Starten Sie mit einem fertigen Diagramm aus dem Katalog und passen Sie es an Ihre Stunde an — oder zeichnen Sie Ihres von Grund auf. Alles läuft im Browser: nichts zu installieren, kein Konto nötig."
     },
     "cta": {
         "loading": "Editor wird vorbereitet...",
@@ -23,42 +28,146 @@
     "sync": "Sprachumschalter synchronisiert mit Editor-Symbolleiste.",
     "featuresTitle": "Was ist drin",
     "features": {
-        "easy": "Leicht zu erlernen mit einer klaren, benutzerfreundlichen Oberfläche.",
-        "formulas": "Formeln mit Live-Vorschau.",
-        "shapes": "Geometrische Formen, Winkel, Markierungen, Raster.",
-        "export": "Export als PDF ohne Qualitätsverlust.",
-        "customize": "Umfangreiche Anpassungsmöglichkeiten für Elemente."
+        "formulas": "Visueller Formel-Editor mit Live-Vorschau — LaTeX-Kenntnisse nicht nötig.",
+        "shapes3d": "3D-Körper: Würfel, Prisma, Pyramide, Kugel, Kegel, Zylinder — mit der Maus drehbar.",
+        "shapes": "13 ebene Figuren: Polygone, Kreise, Sektoren, Winkelmarkierungen, Polylinien.",
+        "symbols": "Palette mathematischer Symbole: neun Kategorien, von griechischen Buchstaben bis Analysis.",
+        "pages": "Mehrseitige Dokumente in A4, US Letter oder Posterformat 11×17.",
+        "export": "Export als PDF, SVG oder PNG — eine Seite, ein Bereich oder das ganze Dokument.",
+        "draw": "Freihandzeichnen mit Stift und Marker über jedem Diagramm.",
+        "tools": "Gruppen, Ebenen, Raster-Einrastung, Rückgängig/Wiederherstellen und Tastenkürzel.",
+        "source": "Quelldatei speichern und später weiterbearbeiten.",
+        "languages": "Oberfläche auf Englisch, Russisch, Spanisch und Deutsch."
     },
     "preview": {
-        "caption": "Arbeitsbereich für visuelle Mathematik"
+        "caption": "Arbeitsbereich für visuelle Mathematik",
+        "shots": {
+            "s1": "Math-on-Canvas-Editor: ein Dreieck mit farbigen Winkelmarkierungen und griechischen Buchstaben neben der hervorgehobenen Formel α + β = θ, mit geöffneten Paletten für ebene Figuren und mathematische Symbole",
+            "s2": "Bearbeiten einer Halbwinkel-Formel in Math on Canvas mit geöffnetem LaTeX-Formel-Editor und dem Panel häufig genutzter Formeln",
+            "s3": "Diagramm kongruenter Dreiecke in Math on Canvas mit Winkelsektoren, Seitenmarkierungen und der Aussage △ABC ≅ △EFG",
+            "s4": "Ein Mathe-Rätsel-Arbeitsblatt, in Math on Canvas aus Bildern sowie Plus- und Gleichheitszeichen auf einer US-Letter-Seite erstellt"
+        }
     },
-    "highlightsTitle": "Warum es hilft",
+    "catalogTeaser": {
+        "title": "Mit einem fertigen Diagramm starten",
+        "description": "Stöbern Sie in Diagrammen, die andere Lehrkräfte geteilt haben, öffnen Sie eines davon im Editor und ändern Sie, was Ihre Stunde braucht: Formulierungen, Zahlen, Figuren. Sie müssen nicht mit einer leeren Fläche anfangen.",
+        "cta": "Katalog ansehen",
+        "categoriesLabel": "Beliebte Kategorien"
+    },
+    "highlightsTitle": "Warum Lehrkräfte damit arbeiten",
     "highlightsSubtitle": "Werkzeuge, die Arbeitsblätter lesbar und druckbar halten, egal in welchem Maßstab.",
     "highlightPlaceholder": "Bildplatzhalter",
     "highlights": {
+        "visual": {
+            "title": "Visueller Formel-Editor",
+            "description": "Keine LaTeX-Kenntnisse erforderlich. Tippen Sie in einem Mathe-Feld mit Live-Vorschau und passen Sie die Formel danach an, drehen und platzieren Sie sie frei auf der Fläche."
+        },
+        "shapes3d": {
+            "title": "3D-Körper zum Drehen",
+            "description": "Würfel, Prisma, Pyramide, Kugel, Kegel und Zylinder drehen sich in Echtzeit mit der Maus. Beschriften Sie Eckpunkte und stellen Sie die Flächendeckkraft ein, damit hintere Kanten sichtbar bleiben."
+        },
+        "geometry": {
+            "title": "Geometrie, die präzise bleibt",
+            "description": "Polygone, Kreise, Sektoren, Polylinien, Winkel- und Seitenmarkierungen — die Raster-Einrastung hält jedes Diagramm beim Arbeiten ausgerichtet."
+        },
         "symbols": {
             "title": "Mathe-Symbole im Text",
-            "description": "Eine spezielle Palette fügt ∑, √ und andere Symbole direkt in den Text ein, ohne Codesuche."
+            "description": "Eine eigene Palette fügt π, ≅, ∈ und Hunderte weitere Symbole direkt in den Text ein — neun Kategorien, keine Codesuche."
         },
         "pdf": {
             "title": "PDF ohne Qualitätsverlust",
-            "description": "Drucken Sie Tafelposter und Schülerkarten aus derselben Quelle. PDF bleibt scharf und einfach zu teilen."
+            "description": "Alles ist vektorbasiert, deshalb drucken Tafelposter und Schülerblatt aus derselben Quelldatei gestochen scharf."
+        },
+        "export": {
+            "title": "PDF, SVG und PNG",
+            "description": "Exportieren Sie das ganze Dokument, einen Seitenbereich oder eine gezielte Auswahl. Mehrere Seiten kommen als ZIP-Archiv zurück."
         },
         "pages": {
             "title": "Mehrseitige Dokumente",
-            "description": "Aufgaben und Antworten in einem Dokument; drucken Sie nur die Seiten, die Sie benötigen."
-        },
-        "visual": {
-            "title": "Visueller Formel-Editor",
-            "description": "Keine LaTeX-Kenntnisse erforderlich. Passen Sie Stil an, drehen und verschieben Sie Formeln mit sofortigem Feedback."
+            "description": "Aufgaben und Lösungen in einer Datei, jede Seite mit eigenem Format und eigener Ausrichtung. Drucken Sie nur die Seiten, die Sie brauchen."
         },
         "library": {
             "title": "Formel-Bibliothek",
-            "description": "Beginnen Sie mit beliebten Formeln und passen Sie sie an, statt bei Null anzufangen."
+            "description": "Vorlagen für Algebra, Geometrie und Trigonometrie — beginnen Sie mit einer gängigen Formel und passen Sie sie an, statt alles neu zu tippen."
+        }
+    },
+    "steps": {
+        "title": "Von der Idee zum Arbeitsblatt in vier Schritten",
+        "subtitle": "Keine Einrichtung, keine Einarbeitung — das erste Diagramm dauert wenige Minuten.",
+        "items": {
+            "open": {
+                "title": "Editor öffnen",
+                "description": "Starten Sie im Browser als Gast. Nichts zu installieren, kein Konto nötig."
+            },
+            "place": {
+                "title": "Figuren platzieren",
+                "description": "Wählen Sie Figuren, 3D-Körper und Formeln aus den Paletten — oder öffnen Sie ein Diagramm aus dem Katalog als Ausgangspunkt."
+            },
+            "adjust": {
+                "title": "Details anpassen",
+                "description": "Farben, Linienarten, Winkelmarkierungen, Eckpunkt-Beschriftungen, Schriften — jedes Element hat sein eigenes Eigenschaften-Panel."
+            },
+            "export": {
+                "title": "Exportieren und drucken",
+                "description": "Speichern Sie ein druckfertiges PDF oder ein SVG bzw. PNG direkt für Ihre Folien."
+            }
+        }
+    },
+    "audience": {
+        "title": "Für wen es gedacht ist",
+        "subtitle": "Eine Arbeitsfläche und drei sehr unterschiedliche Arten, sie zu nutzen.",
+        "items": {
+            "teachers": {
+                "title": "Lehrkräfte an Schulen",
+                "description": "Arbeitsblätter, Tafelposter und Klassenarbeiten mit genau den Figuren und Formulierungen, die Ihre Klasse braucht."
+            },
+            "tutors": {
+                "title": "Nachhilfelehrkräfte",
+                "description": "Schnelle Diagramme für eine einzelne Stunde, als Quelldatei gespeichert und beim nächsten Mal wiederverwendbar."
+            },
+            "students": {
+                "title": "Schüler und Studierende",
+                "description": "Saubere Figuren für Hausarbeiten und Präsentationen, als SVG exportiert und dadurch beliebig skalierbar."
+            }
+        }
+    },
+    "coming": {
+        "title": "Was mit Pro kommt",
+        "description": "Diese Funktionen stecken bereits im Editor und werden mit dem Pro-Tarif freigeschaltet.",
+        "items": {
+            "ai": "KI-Assistent — beschreiben Sie eine Formel oder ein ganzes Dokument in Worten und lassen Sie es erzeugen.",
+            "cloud": "Cloud-Speicher — Ihre Dokumente auf jedem Gerät verfügbar.",
+            "share": "Teilen per Link — schicken Sie Kolleginnen, Kollegen oder Lernenden eine Nur-Lese-Ansicht."
         },
-        "geometry": {
-            "title": "Geometrie",
-            "description": "Linien, Polygone und Winkelmarkierungen: alles, um präzise Diagramme schnell zu erstellen."
+        "cta": "Preise ansehen"
+    },
+    "faq": {
+        "title": "Häufige Fragen",
+        "items": {
+            "account": {
+                "q": "Brauche ich ein Konto?",
+                "a": "Nein. Der Editor startet im Gastmodus und hält Ihre Arbeit im Browser. Ein Konto brauchen Sie nur, um Quelldateien zu speichern, zu denen Sie später zurückkehren wollen."
+            },
+            "latex": {
+                "q": "Muss ich LaTeX können?",
+                "a": "Nein. Formeln werden in einem visuellen Mathe-Feld mit Live-Vorschau getippt, und die Formel-Bibliothek deckt die häufigsten Fälle aus Algebra, Geometrie und Trigonometrie ab. Wer LaTeX kann, bearbeitet den Quelltext direkt."
+            },
+            "poster": {
+                "q": "Kann ich in Postergröße drucken?",
+                "a": "Ja. Wählen Sie das Posterformat 11×17 oder stellen Sie jede Seite auf A4 bzw. US Letter, Hoch- oder Querformat. Alles ist vektorbasiert und bleibt in jeder Größe scharf."
+            },
+            "edit": {
+                "q": "Kann ich ein Diagramm später bearbeiten?",
+                "a": "Ja. Mit einem kostenlosen Konto speichern Sie das Dokument als Quelldatei und importieren es jederzeit wieder in den Editor."
+            },
+            "price": {
+                "q": "Ist es kostenlos?",
+                "a": "Ja. Der vollständige Editor, alle Figuren- und Formelwerkzeuge sowie der Export als PDF, SVG und PNG sind kostenlos. Ein Pro-Tarif mit KI-Generierung, Cloud und Teilen folgt."
+            },
+            "license": {
+                "q": "Darf ich die Diagramme in eigenen Materialien verwenden?",
+                "a": "Ja. Was Sie erstellen, gehört Ihnen — nutzen Sie es in Arbeitsblättern, Folien, Klassenarbeiten und Druckmaterial, in der Schule oder im Privatunterricht."
+            }
         }
     },
     "footer": "Gebaut für Mathematik- und Geometrieprojekte"

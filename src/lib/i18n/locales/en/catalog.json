@@ -16,6 +16,15 @@
   "gateIntro": "Sign in or create a free account",
   "related": "Related documents",
   "breadcrumbs": { "home": "Home", "catalog": "Catalog" },
+  "categories": {
+    "algebra": "Algebra",
+    "geometry": "Geometry",
+    "calculus": "Calculus",
+    "statistics": "Statistics",
+    "trigonometry": "Trigonometry",
+    "number-theory": "Number Theory",
+    "other": "Other"
+  },
   "categoryHub": {
     "heading": "{category} templates",
     "metaTitle": "{category} templates | Math on Canvas",

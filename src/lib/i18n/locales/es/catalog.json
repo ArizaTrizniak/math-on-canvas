@@ -16,6 +16,15 @@
   "gateIntro": "Inicia sesión o crea una cuenta gratuita",
   "related": "Documentos relacionados",
   "breadcrumbs": { "home": "Inicio", "catalog": "Catálogo" },
+  "categories": {
+    "algebra": "Álgebra",
+    "geometry": "Geometría",
+    "calculus": "Cálculo",
+    "statistics": "Estadística",
+    "trigonometry": "Trigonometría",
+    "number-theory": "Teoría de números",
+    "other": "Otros"
+  },
   "categoryHub": {
     "heading": "Plantillas de {category}",
     "metaTitle": "Plantillas de {category} | Math on Canvas",
