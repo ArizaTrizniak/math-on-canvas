@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Image from 'next/image'
+import { createPortal } from 'react-dom'
 
 interface FilmstripImage {
     src: string
@@ -46,6 +47,7 @@ function usePrefersReducedMotion(): boolean {
 export function LandingFilmstrip({ images, label }: LandingFilmstripProps) {
     const trackRef = React.useRef<HTMLDivElement>(null)
     const [activeIndex, setActiveIndex] = React.useState(0)
+    const [zoomedIndex, setZoomedIndex] = React.useState<number | null>(null)
     const prefersReducedMotion = usePrefersReducedMotion()
 
     // Index-based navigation via scrollIntoView, not a hand-computed pixel offset:
@@ -110,6 +112,34 @@ export function LandingFilmstrip({ images, label }: LandingFilmstripProps) {
         }
     }, [images.length])
 
+    // Lightbox: Escape to close, arrow keys to step through, body scroll locked
+    // while it's open so the page behind it can't drift under the overlay.
+    React.useEffect(() => {
+        if (zoomedIndex === null) return undefined
+
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setZoomedIndex(null)
+            } else if (event.key === 'ArrowRight') {
+                setZoomedIndex((current) => (current === null ? current : Math.min(current + 1, images.length - 1)))
+            } else if (event.key === 'ArrowLeft') {
+                setZoomedIndex((current) => (current === null ? current : Math.max(current - 1, 0)))
+            }
+        }
+
+        const previousOverflow = document.body.style.overflow
+        document.body.style.overflow = 'hidden'
+        window.addEventListener('keydown', onKeyDown)
+        return () => {
+            document.body.style.overflow = previousOverflow
+            window.removeEventListener('keydown', onKeyDown)
+        }
+    }, [zoomedIndex, images.length])
+
+    const zoomedImage = zoomedIndex === null ? null : images[zoomedIndex]
+    const hasPrevZoom = zoomedIndex !== null && zoomedIndex > 0
+    const hasNextZoom = zoomedIndex !== null && zoomedIndex < images.length - 1
+
     return (
         <section className="landing__filmstrip">
             <div className="landing__filmstrip-lead">{label}</div>
@@ -134,15 +164,22 @@ export function LandingFilmstrip({ images, label }: LandingFilmstripProps) {
                             className={`landing__filmstrip-card${image.output ? ' landing__filmstrip-card--output' : ''}`}
                             key={image.src}
                         >
-                            <Image
-                                className="landing__filmstrip-image"
-                                src={image.src}
-                                alt={image.alt}
-                                width={image.width}
-                                height={image.height}
-                                priority={index === 0}
-                                loading={index === 0 ? undefined : 'lazy'}
-                            />
+                            <button
+                                type="button"
+                                className="landing__filmstrip-image-button"
+                                onClick={() => setZoomedIndex(index)}
+                                aria-label={`Zoom in on ${image.alt}`}
+                            >
+                                <Image
+                                    className="landing__filmstrip-image"
+                                    src={image.src}
+                                    alt={image.alt}
+                                    width={image.width}
+                                    height={image.height}
+                                    priority={index === 0}
+                                    loading={index === 0 ? undefined : 'lazy'}
+                                />
+                            </button>
                             <div className="landing__filmstrip-cap">
                                 <span className="landing__filmstrip-tag">{image.tag}</span>
                                 <p>{image.caption}</p>
@@ -172,6 +209,51 @@ export function LandingFilmstrip({ images, label }: LandingFilmstripProps) {
                     />
                 ))}
             </div>
+            {zoomedImage &&
+                createPortal(
+                    <div className="landing__filmstrip-lightbox" role="dialog" aria-modal="true" aria-label={zoomedImage.alt}>
+                        <div className="landing__filmstrip-lightbox-backdrop" onClick={() => setZoomedIndex(null)} />
+                        <button
+                            type="button"
+                            className="landing__filmstrip-lightbox-close"
+                            onClick={() => setZoomedIndex(null)}
+                            aria-label="Close"
+                        >
+                            {'×'}
+                        </button>
+                        {hasPrevZoom && (
+                            <button
+                                type="button"
+                                className="landing__filmstrip-lightbox-nav landing__filmstrip-lightbox-nav--prev"
+                                onClick={() => setZoomedIndex((current) => (current === null ? current : current - 1))}
+                                aria-label="Previous screenshot"
+                            >
+                                {'‹'}
+                            </button>
+                        )}
+                        <figure className="landing__filmstrip-lightbox-figure">
+                            <Image
+                                className="landing__filmstrip-lightbox-image"
+                                src={zoomedImage.src}
+                                alt={zoomedImage.alt}
+                                width={zoomedImage.width}
+                                height={zoomedImage.height}
+                            />
+                            <figcaption className="landing__filmstrip-lightbox-caption">{zoomedImage.caption}</figcaption>
+                        </figure>
+                        {hasNextZoom && (
+                            <button
+                                type="button"
+                                className="landing__filmstrip-lightbox-nav landing__filmstrip-lightbox-nav--next"
+                                onClick={() => setZoomedIndex((current) => (current === null ? current : current + 1))}
+                                aria-label="Next screenshot"
+                            >
+                                {'›'}
+                            </button>
+                        )}
+                    </div>,
+                    document.body
+                )}
         </section>
     )
 }

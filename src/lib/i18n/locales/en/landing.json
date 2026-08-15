@@ -42,27 +42,47 @@
     "preview": {
         "caption": "Workspace for visual mathematics",
         "shots": {
-            "s1": "Math on Canvas editor: a triangle with colored angle markers and Greek letters next to a highlighted α + β = θ formula, with the plane shapes and math symbols palettes open",
-            "s2": "Editing a half-angle trigonometry formula in Math on Canvas, with the LaTeX formula editor and the frequently used formulas panel open",
-            "s3": "A congruent triangles diagram built in Math on Canvas with angle sectors, side tick marks and the △ABC ≅ △EFG statement",
-            "s4": "A math logic puzzle worksheet made in Math on Canvas from images, plus and equals signs on a US Letter page"
+            "s1": "A colour-coded reference table in Math on Canvas listing the forms of a line's equation: slope-intercept, point-slope, standard, intercept, horizontal and vertical",
+            "s2": "An angles reference chart in Math on Canvas showing acute, right, obtuse, straight, reflex and full angles, with the plane shapes and mathematical symbols palettes open",
+            "s3": "Editing a half-angle formula in Math on Canvas on a tablet, with the LaTeX formula editor and on-screen math keyboard open",
+            "s4": "A congruent triangles diagram in Math on Canvas with matching angle and side ticks, the △ABC ≅ △EFG statement, and the mathematical symbols palette open",
+            "s5": "A 3D pyramid with labeled vertices in Math on Canvas, with the export menu open showing PDF, SVG and PNG options",
+            "s6": "A fruit picture-equation puzzle being edited in Math on Canvas, with an element's right-click menu open",
+            "s7": "A math review worksheet exported from Math on Canvas as a PDF, showing a grid of algebra and geometry problems",
+            "s8": "The browser print dialog set to poster mode for a Math on Canvas diagram, tiling a perpendicular-bisector construction across 8 pages into a 34 by 22 inch poster"
         },
         "cards": {
             "s1": {
-                "tag": "Geometry + formulas",
-                "caption": "Angle markers, Greek letters and a live α + β = θ formula, all on one canvas."
+                "tag": "Algebra reference",
+                "caption": "Slope-intercept, point-slope, standard and intercept forms, laid out as one color-coded sheet."
             },
             "s2": {
-                "tag": "Formula editor",
-                "caption": "Type LaTeX or use the field — the identity updates live."
+                "tag": "Geometry reference",
+                "caption": "Six angle types with their ranges, built from the plane-shapes and symbol palettes."
             },
             "s3": {
-                "tag": "Geometry proofs",
-                "caption": "Angle sectors and side ticks, built for a worksheet."
+                "tag": "Works on mobile",
+                "caption": "The same LaTeX formula editor, open on a tablet with the on-screen math keyboard."
             },
             "s4": {
+                "tag": "Geometry proofs",
+                "caption": "Angle and side ticks match up as you place them — the symbol palette is one click away."
+            },
+            "s5": {
+                "tag": "3D solids",
+                "caption": "A labeled pyramid, rotated and ready to export to PDF, SVG or PNG."
+            },
+            "s6": {
+                "tag": "Quick puzzles",
+                "caption": "A picture-equation puzzle for younger students, built from images, pluses and equals signs."
+            },
+            "s7": {
                 "tag": "Print-ready page",
-                "caption": "What actually comes out of the PDF export."
+                "caption": "A full review worksheet, exported to a clean PDF grid of problems."
+            },
+            "s8": {
+                "tag": "Poster export",
+                "caption": "One diagram, tiled across 8 pages into a 34×22 inch classroom poster."
             }
         }
     },

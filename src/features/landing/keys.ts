@@ -25,7 +25,7 @@ export const comingKeys = ['ai', 'cloud', 'share'] as const
 
 export const faqKeys = ['account', 'latex', 'poster', 'edit', 'price', 'license'] as const
 
-export const screenshotKeys = ['s1', 's2', 's3', 's4'] as const
+export const screenshotKeys = ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8'] as const
 
 /**
  * Intrinsic pixel size of each screenshot. The filmstrip gives every card its
@@ -34,10 +34,14 @@ export const screenshotKeys = ['s1', 's2', 's3', 's4'] as const
  * actual dimensions per shot rather than one guessed 1600x900 for all four.
  */
 export const screenshotDimensions: Record<(typeof screenshotKeys)[number], { width: number; height: number }> = {
-    s1: { width: 1600, height: 973 },
-    s2: { width: 1600, height: 1083 },
-    s3: { width: 1600, height: 912 },
-    s4: { width: 1600, height: 1044 },
+    s1: { width: 1024, height: 768 },
+    s2: { width: 1024, height: 768 },
+    s3: { width: 1024, height: 768 },
+    s4: { width: 1024, height: 768 },
+    s5: { width: 1024, height: 768 },
+    s6: { width: 1572, height: 1177 },
+    s7: { width: 1024, height: 768 },
+    s8: { width: 1024, height: 768 },
 }
 
 /**
@@ -45,4 +49,4 @@ export const screenshotDimensions: Record<(typeof screenshotKeys)[number], { wid
  * the building of one. Matches the warm/cool split the highlight cards below
  * already use, so the same "build vs. output" grammar carries through the page.
  */
-export const outputScreenshotKeys: ReadonlySet<string> = new Set(['s4'])
+export const outputScreenshotKeys: ReadonlySet<string> = new Set(['s7', 's8'])
