@@ -53,36 +53,36 @@
         },
         "cards": {
             "s1": {
-                "tag": "Referencia de álgebra",
-                "caption": "Pendiente-intersección, punto-pendiente, forma general e intersecciones, en una sola hoja de colores."
+                "tag": "Pósteres de fórmulas",
+                "caption": "Pósteres de fórmulas a color, en cualquier tamaño."
             },
             "s2": {
-                "tag": "Referencia de geometría",
-                "caption": "Seis tipos de ángulo con sus rangos, construidos con las paletas de figuras y símbolos."
+                "tag": "Pósteres de geometría",
+                "caption": "Construcciones geométricas en cualquier tamaño, desde una chuleta hasta un póster."
             },
             "s3": {
-                "tag": "Funciona en móvil",
-                "caption": "El mismo editor de fórmulas LaTeX, en una tableta con teclado matemático en pantalla."
+                "tag": "Fórmulas",
+                "caption": "Un editor de fórmulas LaTeX, además de una biblioteca con las fórmulas más usadas en la escuela."
             },
             "s4": {
-                "tag": "Demostraciones geométricas",
-                "caption": "Las marcas de ángulo y lado coinciden al colocarlas — la paleta de símbolos, a un clic."
+                "tag": "Documentos de varias páginas",
+                "caption": "Fichas, exámenes y hojas de trabajo con distintas orientaciones de página."
             },
             "s5": {
                 "tag": "Sólidos 3D",
-                "caption": "Una pirámide etiquetada, girada y lista para exportar a PDF, SVG o PNG."
+                "caption": "Pirámides, prismas, conos, cilindros y esferas con vértices etiquetados y en cualquier posición."
             },
             "s6": {
-                "tag": "Acertijos rápidos",
-                "caption": "Un acertijo de ecuaciones con imágenes para los más pequeños, con signos de más e igual."
+                "tag": "Acertijos matemáticos para los primeros cursos",
+                "caption": "Combinación de símbolos, imágenes y otros elementos decorativos."
             },
             "s7": {
                 "tag": "Página lista para imprimir",
-                "caption": "Toda una ficha de repaso, exportada como una cuadrícula de problemas en PDF."
+                "caption": "Exportación a PDF, SVG, PNG."
             },
             "s8": {
                 "tag": "Impresión en póster",
-                "caption": "Un diagrama, repartido en 8 páginas — un póster de 34×22 pulgadas para el aula."
+                "caption": "Un proyecto creado con Math on Canvas se puede imprimir como póster."
             }
         }
     },

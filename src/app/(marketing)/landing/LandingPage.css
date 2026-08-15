@@ -251,34 +251,68 @@
 }
 
 /* Now a peer of .landing__copy, not stacked under its controls — a 2-column
-   list balances its height against the headline instead of towering over it. */
+   list balances its height against the headline instead of towering over it.
+   Styled like a print proof rather than another app card: a dashed trim line
+   floating outside the edge — the vocabulary of the posters and PDFs this
+   editor actually exports, not a generic elevated panel. */
 .landing__features {
-    padding: 20px 22px;
-    border-radius: 16px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    position: relative;
+    padding: 24px 26px;
+    border-radius: 6px;
+    background: #fffdf9;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    outline: 1px dashed var(--accent-warm);
+    outline-offset: 7px;
+    box-shadow: 0 22px 44px rgba(15, 23, 42, 0.12);
 }
 
 .landing__features-title {
     font-weight: 700;
-    font-size: 15px;
+    font-size: 20px;
     color: #0f172a;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+}
+
+.landing__features-title-text {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 7px;
+}
+
+.landing__features-title-text::after {
+    content: "";
+    position: absolute;
+    left: -10%;
+    right: -10%;
+    bottom: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent-cool) 25%, var(--accent-cool) 75%, transparent 100%);
 }
 
 .landing__features ul {
     margin: 0;
-    padding-left: 18px;
+    padding-left: 0;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 9px 20px;
 }
 
 .landing__features li {
+    position: relative;
     color: #374151;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.45;
+    list-style: none;
+    padding-left: 22px;
+}
+
+.landing__features li::before {
+    content: "\2726";
+    position: absolute;
+    left: 0;
+    top: 0.05em;
+    color: var(--accent-warm);
+    font-size: 0.85em;
 }
 
 .landing__highlights {
@@ -488,7 +522,7 @@
 .landing__filmstrip-tag {
     display: block;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
+    font-size: 16px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     font-weight: 700;
@@ -533,42 +567,20 @@
     margin-right: 12px;
 }
 
-.landing__filmstrip-dots {
-    display: flex;
-    gap: 6px;
-    max-width: 1880px;
-    margin: 0 auto;
-    padding: 0 32px;
-}
-
-.landing__filmstrip-dot {
-    width: 16px;
-    height: 4px;
-    border-radius: 999px;
-    background: #e5e7eb;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: background 140ms ease, width 140ms ease;
-}
-
-.landing__filmstrip-dot--active {
-    background: var(--accent-warm);
-    width: 26px;
-}
-
+/* position/inset/centering come from the UA's own `dialog:modal` rule and
+   top-layer promotion — only the box itself needs de-chroming, since the
+   global `* { margin: 0 }` reset also strips the centering it depends on. */
 .landing__filmstrip-lightbox {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin: auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    max-width: 100vw;
+    max-height: 100vh;
 }
 
-.landing__filmstrip-lightbox-backdrop {
-    position: absolute;
-    inset: 0;
+.landing__filmstrip-lightbox::backdrop {
     background: rgba(15, 23, 42, 0.82);
 }
 
@@ -893,9 +905,7 @@
     color: #ca8a04;
 }
 
-/* ---- FAQ ----
-   The quietest block on the page: no shadow, no accent headings, questions
-   carried by weight alone so six of them don't shout over the sections above. */
+/* ---- FAQ ---- */
 
 .landing__faq-grid {
     display: grid;
@@ -904,28 +914,29 @@
 }
 
 .landing__faq-item {
-    background: white;
-    border: 1px solid var(--border);
-    border-left: 3px solid #e5e7eb;
+    background: linear-gradient(155deg, #16233a 0%, #0f172a 60%, #0b1220 100%);
+    border: 1px solid rgba(235, 120, 40, 0.25);
+    border-left: 3px solid rgba(235, 120, 40, 0.4);
     border-radius: 12px;
     padding: 16px 18px;
+    box-shadow: 0 24px 60px rgba(8, 15, 25, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
     transition: border-left-color 140ms ease;
 }
 
 .landing__faq-item:hover {
-    border-left-color: rgb(235 120 40);
+    border-left-color: var(--accent-warm);
 }
 
 .landing__faq-item h3 {
     margin: 0 0 6px;
     font-size: 1rem;
     font-weight: 700;
-    color: #0f172a;
+    color: #f8fafc;
 }
 
 .landing__faq-item p {
     margin: 0;
-    color: var(--muted);
+    color: #cbd5e1;
     line-height: 1.5;
 }
 

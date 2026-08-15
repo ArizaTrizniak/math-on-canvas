@@ -53,36 +53,36 @@
         },
         "cards": {
             "s1": {
-                "tag": "Algebra reference",
-                "caption": "Slope-intercept, point-slope, standard and intercept forms, laid out as one color-coded sheet."
+                "tag": "Formula posters",
+                "caption": "Colour-coded formula posters at any size."
             },
             "s2": {
-                "tag": "Geometry reference",
-                "caption": "Six angle types with their ranges, built from the plane-shapes and symbol palettes."
+                "tag": "Geometry posters",
+                "caption": "Geometric constructions at any size — from a cheat sheet to a poster."
             },
             "s3": {
-                "tag": "Works on mobile",
-                "caption": "The same LaTeX formula editor, open on a tablet with the on-screen math keyboard."
+                "tag": "Formulas",
+                "caption": "A LaTeX formula editor, plus a library of the formulas used most often in school."
             },
             "s4": {
-                "tag": "Geometry proofs",
-                "caption": "Angle and side ticks match up as you place them — the symbol palette is one click away."
+                "tag": "Multi-page documents",
+                "caption": "Handouts, tests and worksheets with different page orientations."
             },
             "s5": {
                 "tag": "3D solids",
-                "caption": "A labeled pyramid, rotated and ready to export to PDF, SVG or PNG."
+                "caption": "Pyramids, prisms, cones, cylinders and spheres with labeled vertices, positioned however you like."
             },
             "s6": {
-                "tag": "Quick puzzles",
-                "caption": "A picture-equation puzzle for younger students, built from images, pluses and equals signs."
+                "tag": "Math puzzles for younger students",
+                "caption": "Combining symbols, pictures and other decorative elements."
             },
             "s7": {
                 "tag": "Print-ready page",
-                "caption": "A full review worksheet, exported to a clean PDF grid of problems."
+                "caption": "Export to PDF, SVG, PNG."
             },
             "s8": {
-                "tag": "Poster export",
-                "caption": "One diagram, tiled across 8 pages into a 34×22 inch classroom poster."
+                "tag": "Poster printing",
+                "caption": "A project created with Math on Canvas can be printed as a poster."
             }
         }
     },

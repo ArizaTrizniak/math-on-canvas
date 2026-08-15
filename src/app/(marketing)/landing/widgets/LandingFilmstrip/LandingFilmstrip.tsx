@@ -2,7 +2,6 @@
 
 import React from 'react'
 import Image from 'next/image'
-import { createPortal } from 'react-dom'
 
 interface FilmstripImage {
     src: string
@@ -46,6 +45,7 @@ function usePrefersReducedMotion(): boolean {
  */
 export function LandingFilmstrip({ images, label }: LandingFilmstripProps) {
     const trackRef = React.useRef<HTMLDivElement>(null)
+    const dialogRef = React.useRef<HTMLDialogElement>(null)
     const [activeIndex, setActiveIndex] = React.useState(0)
     const [zoomedIndex, setZoomedIndex] = React.useState<number | null>(null)
     const prefersReducedMotion = usePrefersReducedMotion()
@@ -112,29 +112,58 @@ export function LandingFilmstrip({ images, label }: LandingFilmstripProps) {
         }
     }, [images.length])
 
-    // Lightbox: Escape to close, arrow keys to step through, body scroll locked
-    // while it's open so the page behind it can't drift under the overlay.
+    // Lightbox: a native <dialog> owns top-layer stacking, so it paints above
+    // everything regardless of any z-index/stacking-context quirk elsewhere on
+    // the page — the class of bug a hand-rolled position:fixed overlay is
+    // exposed to. showModal()/close() just mirror React state onto it.
+    React.useEffect(() => {
+        const dialog = dialogRef.current
+        if (!dialog) return
+        if (zoomedIndex !== null && !dialog.open) {
+            dialog.showModal()
+        } else if (zoomedIndex === null && dialog.open) {
+            dialog.close()
+        }
+    }, [zoomedIndex])
+
+    // The dialog can also close itself natively (Escape triggers its 'cancel'
+    // then 'close' events) — mirror that back into React state so the two
+    // never disagree about whether it's open.
+    React.useEffect(() => {
+        const dialog = dialogRef.current
+        if (!dialog) return undefined
+        const onClose = () => setZoomedIndex(null)
+        dialog.addEventListener('close', onClose)
+        return () => dialog.removeEventListener('close', onClose)
+    }, [])
+
+    // Body scroll locked while the lightbox is open so the page behind it
+    // can't drift under the overlay.
     React.useEffect(() => {
         if (zoomedIndex === null) return undefined
-
-        const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                setZoomedIndex(null)
-            } else if (event.key === 'ArrowRight') {
-                setZoomedIndex((current) => (current === null ? current : Math.min(current + 1, images.length - 1)))
-            } else if (event.key === 'ArrowLeft') {
-                setZoomedIndex((current) => (current === null ? current : Math.max(current - 1, 0)))
-            }
-        }
-
         const previousOverflow = document.body.style.overflow
         document.body.style.overflow = 'hidden'
-        window.addEventListener('keydown', onKeyDown)
         return () => {
             document.body.style.overflow = previousOverflow
-            window.removeEventListener('keydown', onKeyDown)
         }
-    }, [zoomedIndex, images.length])
+    }, [zoomedIndex])
+
+    const handleLightboxKeyDown = (event: React.KeyboardEvent<HTMLDialogElement>) => {
+        if (event.key === 'ArrowRight') {
+            setZoomedIndex((current) => (current === null ? current : Math.min(current + 1, images.length - 1)))
+        } else if (event.key === 'ArrowLeft') {
+            setZoomedIndex((current) => (current === null ? current : Math.max(current - 1, 0)))
+        }
+    }
+
+    // Nothing else renders at the dialog's own coordinates, so a click whose
+    // target is the dialog element itself (not a button or the figure) is a
+    // click on its ::backdrop.
+    const handleDialogClick = (event: React.MouseEvent<HTMLDialogElement>) => {
+        if (event.target === event.currentTarget) {
+            setZoomedIndex(null)
+        }
+    }
 
     const zoomedImage = zoomedIndex === null ? null : images[zoomedIndex]
     const hasPrevZoom = zoomedIndex !== null && zoomedIndex > 0
@@ -196,23 +225,15 @@ export function LandingFilmstrip({ images, label }: LandingFilmstripProps) {
                     {'›'}
                 </button>
             </div>
-            <div className="landing__filmstrip-dots" role="tablist" aria-label={label}>
-                {images.map((image, index) => (
-                    <button
-                        type="button"
-                        key={image.src}
-                        className={`landing__filmstrip-dot${index === activeIndex ? ' landing__filmstrip-dot--active' : ''}`}
-                        onClick={() => scrollToIndex(index)}
-                        role="tab"
-                        aria-selected={index === activeIndex}
-                        aria-label={`${label} ${index + 1}`}
-                    />
-                ))}
-            </div>
-            {zoomedImage &&
-                createPortal(
-                    <div className="landing__filmstrip-lightbox" role="dialog" aria-modal="true" aria-label={zoomedImage.alt}>
-                        <div className="landing__filmstrip-lightbox-backdrop" onClick={() => setZoomedIndex(null)} />
+            <dialog
+                ref={dialogRef}
+                className="landing__filmstrip-lightbox"
+                aria-label={zoomedImage?.alt}
+                onClick={handleDialogClick}
+                onKeyDown={handleLightboxKeyDown}
+            >
+                {zoomedImage && (
+                    <>
                         <button
                             type="button"
                             className="landing__filmstrip-lightbox-close"
@@ -251,9 +272,9 @@ export function LandingFilmstrip({ images, label }: LandingFilmstripProps) {
                                 {'›'}
                             </button>
                         )}
-                    </div>,
-                    document.body
+                    </>
                 )}
+            </dialog>
         </section>
     )
 }

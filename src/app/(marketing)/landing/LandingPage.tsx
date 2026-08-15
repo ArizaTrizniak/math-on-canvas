@@ -137,7 +137,9 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
                     </div>
 
                     <div className="landing__features">
-                        <div className="landing__features-title">{t.featuresTitle}</div>
+                        <div className="landing__features-title">
+                            <span className="landing__features-title-text">{t.featuresTitle}</span>
+                        </div>
                         <ul>
                             {featureKeys.map((key) => (
                                 <li key={key}>{t.features[key]}</li>

@@ -39,7 +39,7 @@ export const screenshotDimensions: Record<(typeof screenshotKeys)[number], { wid
     s3: { width: 1024, height: 768 },
     s4: { width: 1024, height: 768 },
     s5: { width: 1024, height: 768 },
-    s6: { width: 1572, height: 1177 },
+    s6: { width: 1024, height: 768 },
     s7: { width: 1024, height: 768 },
     s8: { width: 1024, height: 768 },
 }

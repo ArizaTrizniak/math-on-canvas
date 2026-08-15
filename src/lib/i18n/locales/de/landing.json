@@ -53,36 +53,36 @@
         },
         "cards": {
             "s1": {
-                "tag": "Algebra-Referenz",
-                "caption": "Steigung-Achsenabschnitt, Punkt-Steigung, allgemeine Form und Achsenabschnitte auf einem farbigen Blatt."
+                "tag": "Formel-Poster",
+                "caption": "Farbige Formel-Poster in jeder Größe."
             },
             "s2": {
-                "tag": "Geometrie-Referenz",
-                "caption": "Sechs Winkelarten mit ihren Bereichen, zusammengestellt aus den Figuren- und Symbolpaletten."
+                "tag": "Geometrie-Poster",
+                "caption": "Geometrische Konstruktionen in jeder Größe — von der Karteikarte bis zum Poster."
             },
             "s3": {
-                "tag": "Läuft auf Tablets",
-                "caption": "Derselbe LaTeX-Formel-Editor — auf einem Tablet, mit Bildschirm-Mathetastatur."
+                "tag": "Formeln",
+                "caption": "Ein LaTeX-Formel-Editor sowie eine Bibliothek der in der Schule am häufigsten verwendeten Formeln."
             },
             "s4": {
-                "tag": "Geometrische Beweise",
-                "caption": "Winkel- und Seitenmarkierungen passen beim Platzieren zusammen — die Symbolpalette ist einen Klick entfernt."
+                "tag": "Mehrseitige Dokumente",
+                "caption": "Handzettel, Klassenarbeiten und Arbeitsblätter mit unterschiedlicher Seitenausrichtung."
             },
             "s5": {
                 "tag": "3D-Körper",
-                "caption": "Eine beschriftete Pyramide, gedreht und bereit für den Export als PDF, SVG oder PNG."
+                "caption": "Pyramiden, Prismen, Kegel, Zylinder und Kugeln mit beschrifteten Eckpunkten, frei positionierbar."
             },
             "s6": {
-                "tag": "Schnelle Rätsel",
-                "caption": "Ein Bilder-Gleichungsrätsel für jüngere Schüler, aus Bildern, Plus- und Gleichheitszeichen."
+                "tag": "Mathe-Rätsel für die Unterstufe",
+                "caption": "Kombination aus Symbolen, Bildern und weiteren Dekorelementen."
             },
             "s7": {
                 "tag": "Druckfertige Seite",
-                "caption": "Ein ganzes Übungsblatt, exportiert als sauberes Aufgabenraster im PDF."
+                "caption": "Export als PDF, SVG, PNG."
             },
             "s8": {
                 "tag": "Poster-Druck",
-                "caption": "Ein Diagramm, auf 8 Seiten verteilt — ein 34×22-Zoll-Poster fürs Klassenzimmer."
+                "caption": "Ein mit Math on Canvas erstelltes Projekt lässt sich als Poster ausdrucken."
             }
         }
     },
