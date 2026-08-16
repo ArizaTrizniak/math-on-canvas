@@ -199,14 +199,20 @@ export function LandingFilmstrip({ images, label }: LandingFilmstripProps) {
                                 onClick={() => setZoomedIndex(index)}
                                 aria-label={`Zoom in on ${image.alt}`}
                             >
+                                {/* The first card is the LCP candidate: preload it from
+                                    <head>, load it eagerly and mark it high priority.
+                                    `priority` used to cover all three, but it is
+                                    deprecated since Next 16 and never set
+                                    fetchPriority on the <img> itself. */}
                                 <Image
                                     className="landing__filmstrip-image"
                                     src={image.src}
                                     alt={image.alt}
                                     width={image.width}
                                     height={image.height}
-                                    priority={index === 0}
-                                    loading={index === 0 ? undefined : 'lazy'}
+                                    preload={index === 0}
+                                    loading={index === 0 ? 'eager' : 'lazy'}
+                                    fetchPriority={index === 0 ? 'high' : 'auto'}
                                 />
                             </button>
                             <div className="landing__filmstrip-cap">

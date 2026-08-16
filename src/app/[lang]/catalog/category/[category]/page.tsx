@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { BASE_URL } from '@/lib/site'
+import { BASE_URL, OG_IMAGE } from '@/lib/site'
 import { LANGUAGES } from '@/lib/i18n/constants'
 import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { CatalogGrid } from '@/features/catalog/components/CatalogGrid'
@@ -38,12 +38,7 @@ export async function generateMetadata({
             url: canonical,
             siteName: 'Math on Canvas',
             type: 'website',
-            images: [{
-                url: `${BASE_URL}/images/screen1.webp`,
-                width: 1600,
-                height: 900,
-                alt: 'Math on Canvas — math diagram editor',
-            }],
+            images: [OG_IMAGE],
         },
     }
 }

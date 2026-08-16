@@ -83,7 +83,8 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
             </div>
             <header className="landing__header">
                 <div className="landing__brand">
-                    <Image className="landing__brand-logo" src={logo} alt={t.brand} width={44} height={44} unoptimized />
+                    {/* Above the fold in the header — lazy-loading it only delays it. */}
+                    <Image className="landing__brand-logo" src={logo} alt={t.brand} width={44} height={44} unoptimized loading="eager" />
                     <div>
                         <div className="landing__brand-title">
                             {t.brand}

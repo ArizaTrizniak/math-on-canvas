@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { BASE_URL } from '@/lib/site'
+import { BASE_URL, OG_IMAGE } from '@/lib/site'
 import landingEN from '@/lib/i18n/locales/en/landing.json'
 import landingRU from '@/lib/i18n/locales/ru/landing.json'
 import landingES from '@/lib/i18n/locales/es/landing.json'
@@ -50,18 +50,13 @@ export async function generateMetadata({
             type: 'website',
             locale: ogLocale,
             alternateLocale: Object.values(OG_LOCALES).filter((l) => l !== ogLocale),
-            images: [{
-                url: `${BASE_URL}/images/screen1.webp`,
-                width: 1600,
-                height: 900,
-                alt: 'Math on Canvas — math diagram editor',
-            }],
+            images: [OG_IMAGE],
         },
         twitter: {
             card: 'summary_large_image',
             title: meta.title,
             description: meta.description,
-            images: [`${BASE_URL}/images/screen1.webp`],
+            images: [OG_IMAGE.url],
         },
     }
 }

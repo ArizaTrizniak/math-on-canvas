@@ -1,11 +1,14 @@
 User-agent: *
 Allow: /
-Allow: /catalog
 
-# Disallow common private/system paths (none in this SPA, but keep for clarity)
-Disallow: /api/
-Disallow: /admin/
+# The editor is an app surface, not a document — nothing there to index.
 Disallow: /editor
 Disallow: /editor/
+# Auth callbacks and API routes return no indexable HTML.
+Disallow: /api/
+Disallow: /auth/
+Disallow: /admin/
 
-Sitemap: https://math-on-canvas.com/sitemap.xml
+# Host must match the canonical origin: the bare domain 307-redirects to www,
+# so declaring the bare host here would point crawlers through a redirect.
+Sitemap: https://www.math-on-canvas.com/sitemap.xml

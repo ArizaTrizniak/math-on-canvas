@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
-import { BASE_URL } from '@/lib/site'
+import { BASE_URL, OG_IMAGE } from '@/lib/site'
 import { AnalyticsInit } from '@/common/utils/AnalyticsInit'
 import { AuthProvider } from '@/lib/auth/authContext'
 import { NativeAuthModal } from '@/common/widgets/NativeAuthModal/NativeAuthModal'
@@ -31,12 +31,7 @@ export const metadata: Metadata = {
         url: BASE_URL,
         siteName: "Math on Canvas",
         type: "website",
-        images: [{
-            url: `${BASE_URL}/images/screen1.webp`,
-            width: 1600,
-            height: 900,
-            alt: "Math on Canvas — math diagram editor",
-        }],
+        images: [OG_IMAGE],
     },
 }
 
