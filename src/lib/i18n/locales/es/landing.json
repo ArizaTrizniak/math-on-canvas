@@ -6,7 +6,7 @@
     "brand": "Math on Canvas",
     "language": "Idioma",
     "hero": {
-        "tag": "Para profesores de matemáticas",
+        "tag": "Para quienes enseñan y aprenden matemáticas",
         "title": "Editor online de diagramas y fórmulas matemáticas",
         "subtitle": "Tus diagramas matemáticos: más simples, rápidos y claros.",
         "narrative": "Construye figuras geométricas, cuerpos 3D y fórmulas LaTeX en un mismo lienzo y exporta un PDF listo para imprimir. Parte de un diagrama del catálogo y adáptalo a tu clase, o dibuja el tuyo desde cero. Todo funciona en el navegador: nada que instalar y sin necesidad de cuenta."
@@ -42,27 +42,47 @@
     "preview": {
         "caption": "Espacio de trabajo para matemáticas visuales",
         "shots": {
-            "s1": "Editor Math on Canvas: un triángulo con marcadores de ángulo de colores y letras griegas junto a la fórmula α + β = θ resaltada, con las paletas de figuras planas y símbolos matemáticos abiertas",
-            "s2": "Edición de una fórmula trigonométrica de ángulo mitad en Math on Canvas, con el editor de fórmulas LaTeX y el panel de fórmulas frecuentes abiertos",
-            "s3": "Diagrama de triángulos congruentes creado en Math on Canvas con sectores de ángulo, marcas en los lados y la expresión △ABC ≅ △EFG",
-            "s4": "Ficha de acertijo matemático hecha en Math on Canvas con imágenes y signos de suma e igual en una página US Letter"
+            "s1": "Tabla de referencia a color en Math on Canvas con las formas de la ecuación de una recta: pendiente-intersección, punto-pendiente, forma general, forma de intersecciones, horizontal y vertical",
+            "s2": "Tabla de referencia de ángulos en Math on Canvas: agudo, recto, obtuso, llano, reflejo y completo, con las paletas de figuras planas y símbolos matemáticos abiertas",
+            "s3": "Edición de una fórmula de ángulo mitad en Math on Canvas en una tableta, con el editor de fórmulas LaTeX y el teclado matemático en pantalla abiertos",
+            "s4": "Diagrama de triángulos congruentes en Math on Canvas con marcas de ángulo y lado que coinciden, la expresión △ABC ≅ △EFG y la paleta de símbolos matemáticos abierta",
+            "s5": "Una pirámide 3D con vértices etiquetados en Math on Canvas, con el menú de exportación abierto mostrando las opciones PDF, SVG y PNG",
+            "s6": "Un acertijo de ecuaciones con frutas en edición en Math on Canvas, con el menú contextual de un elemento abierto",
+            "s7": "Una ficha de repaso de matemáticas exportada desde Math on Canvas a PDF, con una cuadrícula de problemas de álgebra y geometría",
+            "s8": "El diálogo de impresión del navegador en modo póster para un diagrama de Math on Canvas: una mediatriz repartida en 8 páginas para un póster de 34×22 pulgadas"
         },
         "cards": {
             "s1": {
-                "tag": "Geometría y fórmulas",
-                "caption": "Marcadores de ángulo, letras griegas y una fórmula α + β = θ en vivo, todo en el mismo lienzo."
+                "tag": "Pósteres de fórmulas",
+                "caption": "Pósteres de fórmulas a color, en cualquier tamaño."
             },
             "s2": {
-                "tag": "Editor de fórmulas",
-                "caption": "Escribe en LaTeX o usa el campo — la identidad se actualiza en vivo."
+                "tag": "Pósteres de geometría",
+                "caption": "Construcciones geométricas en cualquier tamaño, desde una chuleta hasta un póster."
             },
             "s3": {
-                "tag": "Demostraciones geométricas",
-                "caption": "Sectores de ángulo y marcas en los lados, listos para una ficha."
+                "tag": "Fórmulas",
+                "caption": "Un editor de fórmulas LaTeX, además de una biblioteca con las fórmulas más usadas en la escuela."
             },
             "s4": {
+                "tag": "Documentos de varias páginas",
+                "caption": "Fichas, exámenes y hojas de trabajo con distintas orientaciones de página."
+            },
+            "s5": {
+                "tag": "Sólidos 3D",
+                "caption": "Pirámides, prismas, conos, cilindros y esferas con vértices etiquetados y en cualquier posición."
+            },
+            "s6": {
+                "tag": "Acertijos matemáticos para los primeros cursos",
+                "caption": "Combinación de símbolos, imágenes y otros elementos decorativos."
+            },
+            "s7": {
                 "tag": "Página lista para imprimir",
-                "caption": "Lo que realmente sale al exportar a PDF."
+                "caption": "Exportación a PDF, SVG, PNG."
+            },
+            "s8": {
+                "tag": "Impresión en póster",
+                "caption": "Un proyecto creado con Math on Canvas se puede imprimir como póster."
             }
         }
     },

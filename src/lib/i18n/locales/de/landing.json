@@ -6,7 +6,7 @@
     "brand": "Math on Canvas",
     "language": "Sprache",
     "hero": {
-        "tag": "Für Mathelehrer",
+        "tag": "Für alle, die Mathe lehren und lernen",
         "title": "Online-Editor für Mathe-Diagramme und Formeln",
         "subtitle": "Ihre Mathe-Diagramme: einfacher, schneller, klarer.",
         "narrative": "Bauen Sie Geometrie-Figuren, 3D-Körper und LaTeX-Formeln auf einer Fläche und exportieren Sie ein druckfertiges PDF. Starten Sie mit einem fertigen Diagramm aus dem Katalog und passen Sie es an Ihre Stunde an — oder zeichnen Sie Ihres von Grund auf. Alles läuft im Browser: nichts zu installieren, kein Konto nötig."
@@ -42,27 +42,47 @@
     "preview": {
         "caption": "Arbeitsbereich für visuelle Mathematik",
         "shots": {
-            "s1": "Math-on-Canvas-Editor: ein Dreieck mit farbigen Winkelmarkierungen und griechischen Buchstaben neben der hervorgehobenen Formel α + β = θ, mit geöffneten Paletten für ebene Figuren und mathematische Symbole",
-            "s2": "Bearbeiten einer Halbwinkel-Formel in Math on Canvas mit geöffnetem LaTeX-Formel-Editor und dem Panel häufig genutzter Formeln",
-            "s3": "Diagramm kongruenter Dreiecke in Math on Canvas mit Winkelsektoren, Seitenmarkierungen und der Aussage △ABC ≅ △EFG",
-            "s4": "Ein Mathe-Rätsel-Arbeitsblatt, in Math on Canvas aus Bildern sowie Plus- und Gleichheitszeichen auf einer US-Letter-Seite erstellt"
+            "s1": "Eine farbige Referenztabelle in Math on Canvas mit den Formen der Geradengleichung: Steigung-Achsenabschnitt, Punkt-Steigung, allgemeine Form, Achsenabschnittsform, horizontal und vertikal",
+            "s2": "Eine Winkel-Referenztabelle in Math on Canvas: spitzer, rechter, stumpfer, gestreckter, überstumpfer und Vollwinkel, mit geöffneten Paletten für ebene Figuren und mathematische Symbole",
+            "s3": "Bearbeiten einer Halbwinkel-Formel in Math on Canvas auf einem Tablet, mit geöffnetem LaTeX-Formel-Editor und Bildschirm-Mathetastatur",
+            "s4": "Diagramm kongruenter Dreiecke in Math on Canvas mit passenden Winkel- und Seitenmarkierungen, der Aussage △ABC ≅ △EFG und geöffneter Symbolpalette",
+            "s5": "Eine 3D-Pyramide mit beschrifteten Eckpunkten in Math on Canvas, mit geöffnetem Exportmenü und den Optionen PDF, SVG und PNG",
+            "s6": "Ein Obst-Gleichungsrätsel in Bearbeitung in Math on Canvas, mit geöffnetem Kontextmenü eines Elements",
+            "s7": "Ein Mathe-Übungsblatt, aus Math on Canvas als PDF exportiert: ein Raster aus Algebra- und Geometrieaufgaben",
+            "s8": "Der Druckdialog des Browsers im Postermodus für ein Math-on-Canvas-Diagramm: eine Mittelsenkrechte, verteilt auf 8 Seiten für ein 34×22-Zoll-Poster"
         },
         "cards": {
             "s1": {
-                "tag": "Geometrie + Formeln",
-                "caption": "Winkelmarkierungen, griechische Buchstaben und eine live berechnete Formel α + β = θ, alles auf einer Fläche."
+                "tag": "Formel-Poster",
+                "caption": "Farbige Formel-Poster in jeder Größe."
             },
             "s2": {
-                "tag": "Formel-Editor",
-                "caption": "Tippen Sie LaTeX oder nutzen Sie das Feld — die Identität aktualisiert sich live."
+                "tag": "Geometrie-Poster",
+                "caption": "Geometrische Konstruktionen in jeder Größe — von der Karteikarte bis zum Poster."
             },
             "s3": {
-                "tag": "Geometrische Beweise",
-                "caption": "Winkelsektoren und Seitenmarkierungen, bereit für ein Arbeitsblatt."
+                "tag": "Formeln",
+                "caption": "Ein LaTeX-Formel-Editor sowie eine Bibliothek der in der Schule am häufigsten verwendeten Formeln."
             },
             "s4": {
+                "tag": "Mehrseitige Dokumente",
+                "caption": "Handzettel, Klassenarbeiten und Arbeitsblätter mit unterschiedlicher Seitenausrichtung."
+            },
+            "s5": {
+                "tag": "3D-Körper",
+                "caption": "Pyramiden, Prismen, Kegel, Zylinder und Kugeln mit beschrifteten Eckpunkten, frei positionierbar."
+            },
+            "s6": {
+                "tag": "Mathe-Rätsel für die Unterstufe",
+                "caption": "Kombination aus Symbolen, Bildern und weiteren Dekorelementen."
+            },
+            "s7": {
                 "tag": "Druckfertige Seite",
-                "caption": "Was beim PDF-Export tatsächlich herauskommt."
+                "caption": "Export als PDF, SVG, PNG."
+            },
+            "s8": {
+                "tag": "Poster-Druck",
+                "caption": "Ein mit Math on Canvas erstelltes Projekt lässt sich als Poster ausdrucken."
             }
         }
     },

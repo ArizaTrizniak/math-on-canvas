@@ -45,7 +45,9 @@ function usePrefersReducedMotion(): boolean {
  */
 export function LandingFilmstrip({ images, label }: LandingFilmstripProps) {
     const trackRef = React.useRef<HTMLDivElement>(null)
+    const dialogRef = React.useRef<HTMLDialogElement>(null)
     const [activeIndex, setActiveIndex] = React.useState(0)
+    const [zoomedIndex, setZoomedIndex] = React.useState<number | null>(null)
     const prefersReducedMotion = usePrefersReducedMotion()
 
     // Index-based navigation via scrollIntoView, not a hand-computed pixel offset:
@@ -110,6 +112,63 @@ export function LandingFilmstrip({ images, label }: LandingFilmstripProps) {
         }
     }, [images.length])
 
+    // Lightbox: a native <dialog> owns top-layer stacking, so it paints above
+    // everything regardless of any z-index/stacking-context quirk elsewhere on
+    // the page — the class of bug a hand-rolled position:fixed overlay is
+    // exposed to. showModal()/close() just mirror React state onto it.
+    React.useEffect(() => {
+        const dialog = dialogRef.current
+        if (!dialog) return
+        if (zoomedIndex !== null && !dialog.open) {
+            dialog.showModal()
+        } else if (zoomedIndex === null && dialog.open) {
+            dialog.close()
+        }
+    }, [zoomedIndex])
+
+    // The dialog can also close itself natively (Escape triggers its 'cancel'
+    // then 'close' events) — mirror that back into React state so the two
+    // never disagree about whether it's open.
+    React.useEffect(() => {
+        const dialog = dialogRef.current
+        if (!dialog) return undefined
+        const onClose = () => setZoomedIndex(null)
+        dialog.addEventListener('close', onClose)
+        return () => dialog.removeEventListener('close', onClose)
+    }, [])
+
+    // Body scroll locked while the lightbox is open so the page behind it
+    // can't drift under the overlay.
+    React.useEffect(() => {
+        if (zoomedIndex === null) return undefined
+        const previousOverflow = document.body.style.overflow
+        document.body.style.overflow = 'hidden'
+        return () => {
+            document.body.style.overflow = previousOverflow
+        }
+    }, [zoomedIndex])
+
+    const handleLightboxKeyDown = (event: React.KeyboardEvent<HTMLDialogElement>) => {
+        if (event.key === 'ArrowRight') {
+            setZoomedIndex((current) => (current === null ? current : Math.min(current + 1, images.length - 1)))
+        } else if (event.key === 'ArrowLeft') {
+            setZoomedIndex((current) => (current === null ? current : Math.max(current - 1, 0)))
+        }
+    }
+
+    // Nothing else renders at the dialog's own coordinates, so a click whose
+    // target is the dialog element itself (not a button or the figure) is a
+    // click on its ::backdrop.
+    const handleDialogClick = (event: React.MouseEvent<HTMLDialogElement>) => {
+        if (event.target === event.currentTarget) {
+            setZoomedIndex(null)
+        }
+    }
+
+    const zoomedImage = zoomedIndex === null ? null : images[zoomedIndex]
+    const hasPrevZoom = zoomedIndex !== null && zoomedIndex > 0
+    const hasNextZoom = zoomedIndex !== null && zoomedIndex < images.length - 1
+
     return (
         <section className="landing__filmstrip">
             <div className="landing__filmstrip-lead">{label}</div>
@@ -134,15 +193,28 @@ export function LandingFilmstrip({ images, label }: LandingFilmstripProps) {
                             className={`landing__filmstrip-card${image.output ? ' landing__filmstrip-card--output' : ''}`}
                             key={image.src}
                         >
-                            <Image
-                                className="landing__filmstrip-image"
-                                src={image.src}
-                                alt={image.alt}
-                                width={image.width}
-                                height={image.height}
-                                priority={index === 0}
-                                loading={index === 0 ? undefined : 'lazy'}
-                            />
+                            <button
+                                type="button"
+                                className="landing__filmstrip-image-button"
+                                onClick={() => setZoomedIndex(index)}
+                                aria-label={`Zoom in on ${image.alt}`}
+                            >
+                                {/* The first card is the LCP candidate: preload it from
+                                    <head>, load it eagerly and mark it high priority.
+                                    `priority` used to cover all three, but it is
+                                    deprecated since Next 16 and never set
+                                    fetchPriority on the <img> itself. */}
+                                <Image
+                                    className="landing__filmstrip-image"
+                                    src={image.src}
+                                    alt={image.alt}
+                                    width={image.width}
+                                    height={image.height}
+                                    preload={index === 0}
+                                    loading={index === 0 ? 'eager' : 'lazy'}
+                                    fetchPriority={index === 0 ? 'high' : 'auto'}
+                                />
+                            </button>
                             <div className="landing__filmstrip-cap">
                                 <span className="landing__filmstrip-tag">{image.tag}</span>
                                 <p>{image.caption}</p>
@@ -159,19 +231,56 @@ export function LandingFilmstrip({ images, label }: LandingFilmstripProps) {
                     {'›'}
                 </button>
             </div>
-            <div className="landing__filmstrip-dots" role="tablist" aria-label={label}>
-                {images.map((image, index) => (
-                    <button
-                        type="button"
-                        key={image.src}
-                        className={`landing__filmstrip-dot${index === activeIndex ? ' landing__filmstrip-dot--active' : ''}`}
-                        onClick={() => scrollToIndex(index)}
-                        role="tab"
-                        aria-selected={index === activeIndex}
-                        aria-label={`${label} ${index + 1}`}
-                    />
-                ))}
-            </div>
+            <dialog
+                ref={dialogRef}
+                className="landing__filmstrip-lightbox"
+                aria-label={zoomedImage?.alt}
+                onClick={handleDialogClick}
+                onKeyDown={handleLightboxKeyDown}
+            >
+                {zoomedImage && (
+                    <>
+                        <button
+                            type="button"
+                            className="landing__filmstrip-lightbox-close"
+                            onClick={() => setZoomedIndex(null)}
+                            aria-label="Close"
+                        >
+                            {'×'}
+                        </button>
+                        {hasPrevZoom && (
+                            <button
+                                type="button"
+                                className="landing__filmstrip-lightbox-nav landing__filmstrip-lightbox-nav--prev"
+                                onClick={() => setZoomedIndex((current) => (current === null ? current : current - 1))}
+                                aria-label="Previous screenshot"
+                            >
+                                {'‹'}
+                            </button>
+                        )}
+                        <figure className="landing__filmstrip-lightbox-figure">
+                            <Image
+                                className="landing__filmstrip-lightbox-image"
+                                src={zoomedImage.src}
+                                alt={zoomedImage.alt}
+                                width={zoomedImage.width}
+                                height={zoomedImage.height}
+                            />
+                            <figcaption className="landing__filmstrip-lightbox-caption">{zoomedImage.caption}</figcaption>
+                        </figure>
+                        {hasNextZoom && (
+                            <button
+                                type="button"
+                                className="landing__filmstrip-lightbox-nav landing__filmstrip-lightbox-nav--next"
+                                onClick={() => setZoomedIndex((current) => (current === null ? current : current + 1))}
+                                aria-label="Next screenshot"
+                            >
+                                {'›'}
+                            </button>
+                        )}
+                    </>
+                )}
+            </dialog>
         </section>
     )
 }
