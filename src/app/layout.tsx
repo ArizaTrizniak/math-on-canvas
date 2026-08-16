@@ -56,6 +56,7 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <head>
                 <script dangerouslySetInnerHTML={{ __html: SET_LANG_SCRIPT }} />
+                <title>Math on Canvas</title>
             </head>
             <body className={`${geistSans.variable} ${geistMono.variable}`}>
                 <AuthProvider>
