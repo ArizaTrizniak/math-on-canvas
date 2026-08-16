@@ -445,7 +445,10 @@
 }
 
 .landing__filmstrip-lead {
-    max-width: 1880px;
+    /* .landing__filmstrip breaks out to full 100vw, so this has to re-derive
+       the same left edge every other (non-full-bleed) section gets for free
+       from .landing's own 32px padding — hence 1880 + 2*32, not 1880. */
+    max-width: 1944px;
     margin: 0 auto;
     padding: 0 32px 14px;
     font-family: 'JetBrains Mono', monospace;
@@ -459,7 +462,12 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding-left: max(32px, calc((100vw - 1880px) / 2 + 32px));
+    /* Same 1944 = 1880 + 2*32 correction as .landing__filmstrip-lead above —
+       without it this sits a flat 32px right of every other section once the
+       viewport is wide enough for the 1880 max-width to kick in. Both sides
+       need it: the row spans the full 100vw of the breakout, so neither edge
+       gets the centering every other (non-full-bleed) section gets for free. */
+    padding-inline: max(32px, calc((100vw - 1944px) / 2 + 32px));
 }
 
 .landing__filmstrip-track {
