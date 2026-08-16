@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
-import { headers } from "next/headers";
 import { BASE_URL, OG_IMAGE } from '@/lib/site'
 import { AnalyticsInit } from '@/common/utils/AnalyticsInit'
 import { AuthProvider } from '@/lib/auth/authContext'
@@ -38,19 +38,32 @@ export const metadata: Metadata = {
 // Structured data is emitted per route, in the route's own language:
 // the landing builds WebApplication + FAQPage, catalog and pricing build their own.
 
-export default async function RootLayout({
+// `lang` used to come from `headers()` (x-lang, set by the proxy) — a runtime
+// read that pins the whole tree to per-request rendering. The locale is
+// already the URL's own first path segment (/en, /ru, /es, /de), so an
+// inline script can set it client-side before paint instead: same fix as the
+// theme-cookie pattern in the Next docs, but reading the pathname needs no
+// cookie at all. suppressHydrationWarning tells React to accept the DOM
+// value the script wrote over the "en" default baked into the HTML.
+const SET_LANG_SCRIPT = `(function(){try{var m=location.pathname.match(/^\\/(en|ru|es|de)(?:\\/|$)/);if(m)document.documentElement.lang=m[1]}catch(e){}})()`
+
+export default function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const headersList = await headers()
-    const lang = headersList.get('x-lang') ?? 'en'
-
     return (
-        <html lang={lang}>
+        <html lang="en" suppressHydrationWarning>
+            <head>
+                <script dangerouslySetInnerHTML={{ __html: SET_LANG_SCRIPT }} />
+            </head>
             <body className={`${geistSans.variable} ${geistMono.variable}`}>
                 <AuthProvider>
-                    <AnalyticsInit />
+                    {/* useSearchParams() needs request-time data — wrapping it lets the
+                        rest of the tree (now header()-free) still prerender statically. */}
+                    <Suspense fallback={null}>
+                        <AnalyticsInit />
+                    </Suspense>
                     {children}
                     <NativeAuthModal />
                     <SessionExpiredModal />

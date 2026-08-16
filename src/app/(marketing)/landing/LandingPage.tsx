@@ -1,7 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import type { AuthUser } from '@/lib/auth/types'
-import { isAdmin } from '@/lib/auth/roles'
 import type { LanguageCode } from '@/lib/i18n/constants'
 import landingEN from '@/lib/i18n/locales/en/landing.json'
 import landingRU from '@/lib/i18n/locales/ru/landing.json'
@@ -15,9 +13,9 @@ import { getCatalogStrings, getCategoryLabel } from '@/features/catalog/i18n'
 import { CATEGORIES } from '@/features/catalog/taxonomy'
 import LanguageSwitch from './widgets/LanguageSwitch/LandingLanguageSwitch'
 import { LandingFilmstrip } from './widgets/LandingFilmstrip/LandingFilmstrip'
-import { LandingSignIn } from './widgets/LandingSignIn/LandingSignIn'
 import { LandingCTALink } from './widgets/LandingCTALink/LandingCTALink'
-import UserMenu from '@/common/widgets/UserMenu/UserMenu'
+import { LandingAuthSlot } from './widgets/LandingAuthSlot/LandingAuthSlot'
+import { LandingAdminNavLink, LandingAdminCatalogTeaser } from './widgets/LandingAdminOnly/LandingAdminOnly'
 import {
     featureKeys,
     highlightKeys,
@@ -53,14 +51,16 @@ const TOP_CATEGORIES = CATEGORIES.slice(0, 6)
 
 interface LandingPageProps {
     lang: LanguageCode
-    user?: AuthUser | null
-    displayName?: string | null
 }
 
-export function LandingPage({ lang, user, displayName }: LandingPageProps) {
+export function LandingPage({ lang }: LandingPageProps) {
     const t = translations[lang]
     const tCommon = commonTranslations[lang]
     const tCatalog = getCatalogStrings(lang)
+    const topCategoriesWithLabels = TOP_CATEGORIES.map((category) => ({
+        category,
+        label: getCategoryLabel(category, lang),
+    }))
     const filmstripImages = screenshotKeys.map((key, index) => ({
         src: `/images/screen${index + 1}.webp`,
         alt: t.preview.shots[key],
@@ -96,19 +96,11 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
 
                 <div className="landing__actions">
                     <LanguageSwitch currentLang={lang} />
-                    {isAdmin(user) && (
-                        <Link href={`/${lang}/catalog`} className="landing__ghost">
-                            {tCatalog.nav}
-                        </Link>
-                    )}
+                    <LandingAdminNavLink href={`/${lang}/catalog`}>{tCatalog.nav}</LandingAdminNavLink>
                     <Link href={`/${lang}/pricing`} className="landing__ghost">
                         {t.cta.pricing}
                     </Link>
-                    {user && displayName ? (
-                        <UserMenu displayName={displayName} signOutLabel={t.cta.signOut} />
-                    ) : (
-                        <LandingSignIn label={t.cta.signIn} />
-                    )}
+                    <LandingAuthSlot signInLabel={t.cta.signIn} signOutLabel={t.cta.signOut} />
                     {docsLink}
                     <LandingCTALink href="/editor" className="landing__cta" location="header">
                         {t.cta.ready}
@@ -151,31 +143,14 @@ export function LandingPage({ lang, user, displayName }: LandingPageProps) {
 
                 <LandingFilmstrip images={filmstripImages} label={t.preview.caption} />
 
-                {isAdmin(user) && (
-                    <section className="landing__catalog">
-                        <div className="landing__catalog-copy">
-                            <h2>{t.catalogTeaser.title}</h2>
-                            <p>{t.catalogTeaser.description}</p>
-                            <Link href={`/${lang}/catalog`} className="landing__catalog-cta">
-                                {t.catalogTeaser.cta}
-                            </Link>
-                        </div>
-                        <div className="landing__catalog-categories">
-                            <div className="landing__catalog-categories-title">
-                                {t.catalogTeaser.categoriesLabel}
-                            </div>
-                            <ul>
-                                {TOP_CATEGORIES.map((category) => (
-                                    <li key={category}>
-                                        <Link href={`/${lang}/catalog/category/${category}`}>
-                                            {getCategoryLabel(category, lang)}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </section>
-                )}
+                <LandingAdminCatalogTeaser
+                    lang={lang}
+                    title={t.catalogTeaser.title}
+                    description={t.catalogTeaser.description}
+                    cta={t.catalogTeaser.cta}
+                    categoriesLabel={t.catalogTeaser.categoriesLabel}
+                    categories={topCategoriesWithLabels}
+                />
 
                 <section className="landing__highlights">
                     <div className="landing__highlights-header">
