@@ -1,13 +1,15 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { BASE_URL, OG_IMAGE } from '@/lib/site'
-import { LANGUAGES } from '@/lib/i18n/constants'
+import Link from 'next/link'
+import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
 import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { CatalogGrid } from '@/features/catalog/components/CatalogGrid'
 import { buildSlug } from '@/features/catalog/slug'
 import { hreflangAlternates } from '@/features/catalog/seo/metadata'
 import { collectionPage, breadcrumbList } from '@/features/catalog/seo/jsonld'
 import { getCatalogStrings } from '@/features/catalog/i18n'
+import { CatalogShell } from '@/features/catalog/components/CatalogShell'
 
 export const revalidate = 300
 
@@ -89,7 +91,7 @@ export default async function TagHubPage({
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
             />
-            <main>
+            <CatalogShell lang={lang as LanguageCode} pathSuffix={`/catalog/tag/${encodedTag}`}>
                 <nav aria-label="Breadcrumb">
                     <ol>
                         <li><a href={`/${lang}`}>{strings.breadcrumbs.home}</a></li>
@@ -97,9 +99,13 @@ export default async function TagHubPage({
                         <li aria-current="page">{tag}</li>
                     </ol>
                 </nav>
-                <h1>{heading}</h1>
+                <div className="catalog-hub-head">
+                    <span className="catalog-hub-head__glyph" aria-hidden="true">#</span>
+                    <h1 className="catalog-hub-head__title">{heading}</h1>
+                </div>
+                <Link href={`/${lang}/catalog?tags=${encodedTag}`} className="catalog-hub-back">← {strings.breadcrumbs.catalog}</Link>
                 <CatalogGrid documents={documents} lang={lang} empty={{ title: strings.emptyState.title, body: strings.emptyState.body, resetLabel: strings.filters.reset, createLabel: strings.emptyState.create }} />
-            </main>
+            </CatalogShell>
         </>
     )
 }
