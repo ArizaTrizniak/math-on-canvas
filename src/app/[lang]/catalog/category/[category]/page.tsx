@@ -94,7 +94,7 @@ export default async function CategoryHubPage({
                     </ol>
                 </nav>
                 <h1>{heading}</h1>
-                <CatalogGrid documents={documents} lang={lang} emptyLabel={strings.empty} />
+                <CatalogGrid documents={documents} lang={lang} empty={{ title: strings.emptyState.title, body: strings.emptyState.body, resetLabel: strings.filters.reset, createLabel: strings.emptyState.create }} />
             </main>
         </>
     )

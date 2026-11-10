@@ -273,3 +273,23 @@
         background: none;
     }
 }
+
+/* Two-column phone grid: cards are ~165px wide, too narrow for the overlay CTA
+   (the document page carries it) or for stats and sheet label on one line. */
+@media (max-width: 480px) {
+    .catalog-card__veil {
+        display: none;
+    }
+
+    .catalog-card__footer {
+        flex-wrap: wrap;
+    }
+
+    .catalog-card__body {
+        padding: 10px 12px 12px;
+    }
+
+    .catalog-card__link {
+        font-size: 13px;
+    }
+}

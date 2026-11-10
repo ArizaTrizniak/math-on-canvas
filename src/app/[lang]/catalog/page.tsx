@@ -94,14 +94,14 @@ export default async function CatalogHubPage({
 
                 <section>
                     <h2>{strings.popular}</h2>
-                    <CatalogGrid documents={popular} lang={lang} emptyLabel={strings.empty} />
+                    <CatalogGrid documents={popular} lang={lang} empty={{ title: strings.emptyState.title, body: strings.emptyState.body, resetLabel: strings.filters.reset, createLabel: strings.emptyState.create }} />
                 </section>
 
                 <Suspense fallback={<div className="catalog-filter" aria-hidden="true" />}>
                     <FilterBar lang={lang} />
                 </Suspense>
 
-                <CatalogGrid documents={main} lang={lang} emptyLabel={strings.empty} />
+                <CatalogGrid documents={main} lang={lang} empty={{ title: strings.emptyState.title, body: strings.emptyState.body, resetLabel: strings.filters.reset, createLabel: strings.emptyState.create }} />
             </main>
         </>
     )
