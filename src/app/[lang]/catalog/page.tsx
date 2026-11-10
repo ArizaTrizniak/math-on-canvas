@@ -5,7 +5,7 @@ import { BASE_URL, OG_IMAGE } from '@/lib/site'
 import { LANGUAGES } from '@/lib/i18n/constants'
 import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { CatalogGrid } from '@/features/catalog/components/CatalogGrid'
-import { FilterBar } from '@/features/catalog/components/FilterBar'
+import { CatalogFilters } from '@/features/catalog/components/CatalogFilters'
 import { hreflangAlternates } from '@/features/catalog/seo/metadata'
 import { collectionPage } from '@/features/catalog/seo/jsonld'
 import { buildSlug } from '@/features/catalog/slug'
@@ -97,11 +97,11 @@ export default async function CatalogHubPage({
                     <CatalogGrid documents={popular} lang={lang} empty={{ title: strings.emptyState.title, body: strings.emptyState.body, resetLabel: strings.filters.reset, createLabel: strings.emptyState.create }} />
                 </section>
 
-                <Suspense fallback={<div className="catalog-filter" aria-hidden="true" />}>
-                    <FilterBar lang={lang} />
+                <Suspense fallback={<div className="catalog-filters catalog-filters--placeholder" aria-hidden="true" />}>
+                    <CatalogFilters lang={lang}>
+                        <CatalogGrid documents={main} lang={lang} empty={{ title: strings.emptyState.title, body: strings.emptyState.body, resetLabel: strings.filters.reset, createLabel: strings.emptyState.create }} />
+                    </CatalogFilters>
                 </Suspense>
-
-                <CatalogGrid documents={main} lang={lang} empty={{ title: strings.emptyState.title, body: strings.emptyState.body, resetLabel: strings.filters.reset, createLabel: strings.emptyState.create }} />
             </main>
         </>
     )
