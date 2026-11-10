@@ -1,21 +1,16 @@
 import type { DocumentSummary } from '../types'
 import { CatalogCard } from './CatalogCard'
+import { CatalogEmptyState, type CatalogEmptyStateProps } from './CatalogEmptyState'
 import './CatalogGrid.css'
 
 interface Props {
   documents: DocumentSummary[]
   lang: string
-  emptyLabel: string
+  empty: CatalogEmptyStateProps
 }
 
-export function CatalogGrid({ documents, lang, emptyLabel }: Props) {
-  if (documents.length === 0) {
-    return (
-      <div className="catalog-grid__empty">
-        <p className="catalog-grid__empty-label">{emptyLabel}</p>
-      </div>
-    )
-  }
+export function CatalogGrid({ documents, lang, empty }: Props) {
+  if (documents.length === 0) return <CatalogEmptyState {...empty} />
 
   return (
     <div className="catalog-grid">

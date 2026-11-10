@@ -1,7 +1,28 @@
 import { describe, it, expect } from 'vitest'
 import { LANGUAGES } from '@/lib/i18n/constants'
-import { getCategoryLabel, getCategoryLabels } from './i18n'
+import { getCatalogStrings, getCategoryLabel, getCategoryLabels } from './i18n'
 import { CATEGORIES } from './taxonomy'
+
+function keysOf(value: unknown, prefix = ''): string[] {
+  if (typeof value !== 'object' || value === null) return [prefix]
+  return Object.entries(value).flatMap(([k, v]) => keysOf(v, prefix ? `${prefix}.${k}` : k)).sort()
+}
+
+describe('catalog locale files', () => {
+  it('have the same keys in every locale', () => {
+    const en = keysOf(getCatalogStrings('en'))
+    for (const { code } of LANGUAGES) {
+      expect(keysOf(getCatalogStrings(code)), code).toEqual(en)
+    }
+  })
+
+  it('include the redesign strings', () => {
+    const ru = getCatalogStrings('ru')
+    expect(ru.emptyState.title).toBe('Ничего не нашлось')
+    expect(ru.stats.pages).toContain('{count}')
+    expect(ru.hubPill).toContain('{count}')
+  })
+})
 
 describe('getCategoryLabel', () => {
   it('has a label for every category in every locale', () => {

@@ -10,9 +10,10 @@ interface Props {
   thumbnailUrl: string | null
   label: string
   intro: string
+  className?: string
 }
 
-export function OpenInEditorCTA({ documentId, title, thumbnailUrl, label, intro }: Props) {
+export function OpenInEditorCTA({ documentId, title, thumbnailUrl, label, intro, className = 'catalog-cta' }: Props) {
   const { status, openSignUpModal } = useAuthContext()
 
   // After authentication, if this page's intent is stored, open the editor with the document.
@@ -33,7 +34,7 @@ export function OpenInEditorCTA({ documentId, title, thumbnailUrl, label, intro 
   }
 
   return (
-    <button type="button" className="catalog-cta" onClick={onClick}>
+    <button type="button" className={className} onClick={onClick}>
       {label}
     </button>
   )

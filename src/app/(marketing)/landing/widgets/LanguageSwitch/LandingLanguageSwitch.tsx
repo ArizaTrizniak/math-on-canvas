@@ -14,9 +14,11 @@ type MenuPosition = {
 
 interface LandingLanguageSwitchProps {
     currentLang: LanguageCode
+    /** Path after `/${lang}` to stay on when switching, e.g. '/catalog'. */
+    pathSuffix?: string
 }
 
-const LandingLanguageSwitch = ({ currentLang }: LandingLanguageSwitchProps) => {
+const LandingLanguageSwitch = ({ currentLang, pathSuffix = '' }: LandingLanguageSwitchProps) => {
     const router = useRouter()
     const [isOpen, setIsOpen] = useState(false)
     const [menuPosition, setMenuPosition] = useState<MenuPosition>({ top: 0, right: 0 })
@@ -63,7 +65,7 @@ const LandingLanguageSwitch = ({ currentLang }: LandingLanguageSwitchProps) => {
         trackAnalyticsEvent('language_switch', { lang: code })
         document.cookie = `lang=${code};path=/;max-age=31536000`
         setIsOpen(false)
-        router.push(`/${code}`)
+        router.push(`/${code}${pathSuffix}`)
     }
 
     const ariaLabel = `Switch language (current: ${currentLang.toUpperCase()})`

@@ -1,10 +1,12 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { BASE_URL, OG_IMAGE } from '@/lib/site'
-import { LANGUAGES } from '@/lib/i18n/constants'
+import Link from 'next/link'
+import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
 import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { CatalogGrid } from '@/features/catalog/components/CatalogGrid'
-import { isCategory } from '@/features/catalog/taxonomy'
+import { CATEGORIES, categoryGlyph, isCategory } from '@/features/catalog/taxonomy'
+import { CatalogShell } from '@/features/catalog/components/CatalogShell'
 import { buildSlug } from '@/features/catalog/slug'
 import { hreflangAlternates } from '@/features/catalog/seo/metadata'
 import { collectionPage, breadcrumbList } from '@/features/catalog/seo/jsonld'
@@ -85,7 +87,7 @@ export default async function CategoryHubPage({
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
             />
-            <main>
+            <CatalogShell lang={lang as LanguageCode} pathSuffix={`/catalog/category/${category}`}>
                 <nav aria-label="Breadcrumb">
                     <ol>
                         <li><a href={`/${lang}`}>{strings.breadcrumbs.home}</a></li>
@@ -93,9 +95,25 @@ export default async function CategoryHubPage({
                         <li aria-current="page">{categoryLabel}</li>
                     </ol>
                 </nav>
-                <h1>{heading}</h1>
-                <CatalogGrid documents={documents} lang={lang} emptyLabel={strings.empty} />
-            </main>
+                <div className="catalog-hub-head">
+                    <span className="catalog-hub-head__glyph" aria-hidden="true">{categoryGlyph(category)}</span>
+                    <h1 className="catalog-hub-head__title">{heading}</h1>
+                </div>
+                <CatalogGrid documents={documents} lang={lang} empty={{ title: strings.emptyState.title, body: strings.emptyState.body, resetLabel: strings.filters.reset, createLabel: strings.emptyState.create }} />
+                <section className="catalog-hub-more" aria-labelledby="catalog-hub-more-title">
+                    <h2 id="catalog-hub-more-title" className="catalog-hub-more__title">{strings.otherCategories}</h2>
+                    <ul className="catalog-hub-more__list">
+                        {CATEGORIES.filter(c => c !== category).map(c => (
+                            <li key={c}>
+                                <Link href={`/${lang}/catalog/category/${c}`} className="catalog-hub-more__link">
+                                    <span className="catalog-hub-head__glyph-sm" aria-hidden="true">{categoryGlyph(c)}</span>
+                                    {getCategoryLabel(c, lang)}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            </CatalogShell>
         </>
     )
 }
