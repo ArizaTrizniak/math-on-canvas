@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { BASE_URL, OG_IMAGE } from '@/lib/site'
-import { LANGUAGES } from '@/lib/i18n/constants'
+import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
 import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { CatalogGrid } from '@/features/catalog/components/CatalogGrid'
 import { CatalogFilters } from '@/features/catalog/components/CatalogFilters'
@@ -11,6 +11,11 @@ import { collectionPage } from '@/features/catalog/seo/jsonld'
 import { buildSlug } from '@/features/catalog/slug'
 import type { CatalogListParams } from '@/features/catalog/types'
 import { getCatalogStrings } from '@/features/catalog/i18n'
+import { CATEGORIES } from '@/features/catalog/taxonomy'
+import { buildCatalogHref, clearFiltersHref, hasActiveFilters, parseTags } from '@/features/catalog/filterParams'
+import { CatalogShell } from '@/features/catalog/components/CatalogShell'
+import { TopRanked } from '@/features/catalog/components/TopRanked'
+import { CatalogPagination } from '@/features/catalog/components/CatalogPagination'
 
 export const revalidate = 300
 
@@ -41,6 +46,17 @@ export async function generateMetadata({
     }
 }
 
+const SORTS = ['updatedAt', 'likesCount', 'viewsCount'] as const
+
+function toSearchParams(sp: { [key: string]: string | string[] | undefined }): URLSearchParams {
+    const params = new URLSearchParams()
+    for (const [key, value] of Object.entries(sp)) {
+        if (typeof value === 'string') params.set(key, value)
+        else if (Array.isArray(value)) value.forEach((v) => params.append(key, v))
+    }
+    return params
+}
+
 export default async function CatalogHubPage({
     params,
     searchParams,
@@ -48,39 +64,60 @@ export default async function CatalogHubPage({
     params: Promise<{ lang: string }>
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-    const { lang } = await params
-    const isValid = LANGUAGES.some(l => l.code === lang)
-    if (!isValid) notFound()
+    const { lang: rawLang } = await params
+    if (!LANGUAGES.some(l => l.code === rawLang)) notFound()
+    const lang = rawLang as LanguageCode
 
     const sp = await searchParams
+    const current = toSearchParams(sp)
+    const pathname = `/${lang}/catalog`
 
-    const category = typeof sp.category === 'string' ? sp.category : undefined
-    const tagsRaw = typeof sp.tags === 'string'
-        ? sp.tags
-        : Array.isArray(sp.tags) ? sp.tags.join(',') : undefined
-    const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : undefined
-    const language = typeof sp.language === 'string' ? sp.language : undefined
-    const sortRaw = typeof sp.sort === 'string' ? sp.sort : undefined
-    const sort = (sortRaw === 'updatedAt' || sortRaw === 'likesCount' || sortRaw === 'viewsCount')
-        ? sortRaw as CatalogListParams['sort']
-        : undefined
+    const category = current.get('category') || undefined
+    const tags = parseTags(current.getAll('tags'))
+    const language = current.get('language') || undefined
+    const sortRaw = current.get('sort')
+    const sort = SORTS.find((s) => s === sortRaw) as CatalogListParams['sort']
+    const cursor = current.get('cursor') || undefined
+    const filtered = hasActiveFilters(current)
+    const showTop = !filtered && !cursor
 
-    const [mainResult, popularResult] = await Promise.all([
-        listPublicDocuments({ category, tags, language, sort, limit: 24 }),
-        listPublicDocuments({ sort: 'likesCount', limit: 6 }),
+    const [mainResult, topResult] = await Promise.all([
+        listPublicDocuments({ category, tags: tags.length ? tags : undefined, language, sort, cursor, limit: 24 }),
+        showTop ? listPublicDocuments({ sort: 'likesCount', limit: 3 }) : Promise.resolve(null),
     ])
-
     const main = mainResult.documents
-    const popular = popularResult.documents
 
     const strings = getCatalogStrings(lang)
 
-    const pageUrl = `${BASE_URL}/${lang}/catalog`
+    const pageUrl = `${BASE_URL}${pathname}`
     const jsonLd = collectionPage({
         name: strings.hubHeadline,
         url: pageUrl,
         itemUrls: main.map(doc => `${BASE_URL}/${lang}/catalog/${buildSlug(doc.title, doc.documentId)}`),
     })
+
+    const results = (
+        <>
+            <CatalogGrid
+                documents={main}
+                lang={lang}
+                empty={{
+                    title: strings.emptyState.title,
+                    body: strings.emptyState.body,
+                    resetHref: filtered ? clearFiltersHref(pathname, current) : undefined,
+                    resetLabel: strings.filters.reset,
+                    createLabel: strings.emptyState.create,
+                }}
+            />
+            <CatalogPagination
+                nextHref={mainResult.nextCursor ? buildCatalogHref(pathname, current, { cursor: mainResult.nextCursor }) : null}
+                firstHref={cursor ? buildCatalogHref(pathname, current, { cursor: null }) : null}
+                nextLabel={strings.pagination.next}
+                firstLabel={strings.pagination.first}
+                label={strings.pagination.label}
+            />
+        </>
+    )
 
     return (
         <>
@@ -88,21 +125,37 @@ export default async function CatalogHubPage({
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <main>
-                <h1>{strings.hubHeadline}</h1>
-                <p>{strings.hubIntro}</p>
-
-                <section>
-                    <h2>{strings.popular}</h2>
-                    <CatalogGrid documents={popular} lang={lang} empty={{ title: strings.emptyState.title, body: strings.emptyState.body, resetLabel: strings.filters.reset, createLabel: strings.emptyState.create }} />
+            <CatalogShell lang={lang} pathSuffix="/catalog">
+                <section className="catalog-hero">
+                    <span className="catalog-hero__pill">
+                        {strings.hubPill.replace('{count}', String(CATEGORIES.length))}
+                    </span>
+                    <h1 className="catalog-hero__title">{strings.hubHeadline}</h1>
+                    <p className="catalog-hero__intro">{strings.hubIntro}</p>
                 </section>
 
-                <Suspense fallback={<div className="catalog-filters catalog-filters--placeholder" aria-hidden="true" />}>
-                    <CatalogFilters lang={lang}>
-                        <CatalogGrid documents={main} lang={lang} empty={{ title: strings.emptyState.title, body: strings.emptyState.body, resetLabel: strings.filters.reset, createLabel: strings.emptyState.create }} />
-                    </CatalogFilters>
+                {topResult && (
+                    <TopRanked
+                        documents={topResult.documents}
+                        lang={lang}
+                        title={strings.topRanked}
+                        seeAllHref={buildCatalogHref(pathname, current, { sort: 'likesCount' })}
+                        seeAllLabel={strings.seeAll}
+                        likesLabel={strings.stats.likes}
+                    />
+                )}
+
+                <Suspense
+                    fallback={
+                        <>
+                            <div className="catalog-filters catalog-filters--placeholder" aria-hidden="true" />
+                            <div className="catalog-results">{results}</div>
+                        </>
+                    }
+                >
+                    <CatalogFilters lang={lang}>{results}</CatalogFilters>
                 </Suspense>
-            </main>
+            </CatalogShell>
         </>
     )
 }

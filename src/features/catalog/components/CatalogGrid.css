@@ -10,3 +10,28 @@
         gap: 12px;
     }
 }
+
+.catalog-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding-top: 8px;
+}
+
+.catalog-pagination__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: 12px;
+    border: 1px solid var(--c-border-strong, rgba(18, 33, 44, 0.14));
+    background: var(--c-surface, #fff);
+    color: var(--c-ink, #0f172a);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.catalog-pagination__link:hover {
+    border-color: #94a3b8;
+}

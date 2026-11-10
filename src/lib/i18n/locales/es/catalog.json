@@ -22,7 +22,7 @@
   "docLanguage": "Idioma del documento",
   "stats": { "views": "Vistas", "likes": "Me gusta", "pages": "{count} pág." },
   "emptyState": { "title": "No se encontró nada", "body": "Prueba a quitar algunos filtros o elige otro tema.", "create": "Crear tu propia hoja" },
-  "pagination": { "next": "Siguiente →", "first": "← Volver al inicio" },
+  "pagination": { "label": "Paginación", "next": "Siguiente →", "first": "← Volver al inicio" },
   "breadcrumbs": { "home": "Inicio", "catalog": "Catálogo" },
   "categories": {
     "algebra": "Álgebra",

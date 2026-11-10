@@ -22,7 +22,7 @@
   "docLanguage": "Document language",
   "stats": { "views": "Views", "likes": "Likes", "pages": "{count} p." },
   "emptyState": { "title": "Nothing found", "body": "Try removing some filters or pick another topic.", "create": "Create your own sheet" },
-  "pagination": { "next": "Next →", "first": "← Back to start" },
+  "pagination": { "label": "Pagination", "next": "Next →", "first": "← Back to start" },
   "breadcrumbs": { "home": "Home", "catalog": "Catalog" },
   "categories": {
     "algebra": "Algebra",

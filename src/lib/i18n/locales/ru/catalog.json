@@ -22,7 +22,7 @@
   "docLanguage": "Язык документа",
   "stats": { "views": "Просмотры", "likes": "Лайки", "pages": "{count} стр." },
   "emptyState": { "title": "Ничего не нашлось", "body": "Попробуйте убрать часть фильтров или выбрать другую тему.", "create": "Создать свой лист" },
-  "pagination": { "next": "Дальше →", "first": "← К началу" },
+  "pagination": { "label": "Страницы", "next": "Дальше →", "first": "← К началу" },
   "breadcrumbs": { "home": "Главная", "catalog": "Каталог" },
   "categories": {
     "algebra": "Алгебра",
