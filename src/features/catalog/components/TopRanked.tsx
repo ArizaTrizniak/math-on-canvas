@@ -36,7 +36,8 @@ export function TopRanked({ documents, lang, title, seeAllHref, seeAllLabel, lik
                 <span className="catalog-top__name">{doc.title}</span>
                 <span className="catalog-top__meta">
                   {doc.category && <span>{getCategoryLabel(doc.category, lang)}</span>}
-                  <span className="catalog-top__likes" aria-label={`${likesLabel}: ${doc.likesCount}`}>
+                  <span className="catalog-top__likes">
+                    <span className="catalog-sr-only">{`${likesLabel}: ${doc.likesCount}`}</span>
                     <span aria-hidden="true">♥ {formatCompactCount(doc.likesCount, lang)}</span>
                   </span>
                 </span>

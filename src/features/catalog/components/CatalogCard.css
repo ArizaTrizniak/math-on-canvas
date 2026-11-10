@@ -1,3 +1,13 @@
+/* Visually hidden, still announced by screen readers. Shared by catalog components. */
+.catalog-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
 /* Tokens fall back to literal values so the card also renders outside .catalog-shell. */
 
 .catalog-card {
@@ -82,6 +92,8 @@
     font-size: 12px;
     font-weight: 600;
     white-space: nowrap;
+    /* Decorative: clicks fall through to the stretched title link. */
+    pointer-events: none;
 }
 
 .catalog-card__category {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { parseTags, buildCatalogHref, clearFiltersHref, hasActiveFilters } from './filterParams'
+import { parseTags, buildCatalogHref, clearFiltersHref, hasActiveFilters, readFilterState } from './filterParams'
 
 describe('parseTags', () => {
   it('trims, lower-cases, drops empties and duplicates', () => {
@@ -70,5 +70,15 @@ describe('hasActiveFilters', () => {
 
   it('ignores empty values', () => {
     expect(hasActiveFilters(new URLSearchParams('tags=&category='))).toBe(false)
+  })
+})
+
+describe('readFilterState', () => {
+  it('reads every repeated tags value, like the server does', () => {
+    expect(readFilterState(new URLSearchParams('tags=a&tags=b')).tags).toEqual(['a', 'b'])
+  })
+
+  it('defaults sort to updatedAt and empty filters to empty strings', () => {
+    expect(readFilterState(new URLSearchParams())).toEqual({ category: '', language: '', sort: 'updatedAt', tags: [] })
   })
 })

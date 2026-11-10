@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { saveIntent, readIntent, clearIntent } from './intent'
+import { saveIntent, readIntent, clearIntent, INTENT_TTL_MS } from './intent'
 
 beforeEach(() => {
   const store = new Map<string, string>()
@@ -18,6 +18,23 @@ describe('catalog intent', () => {
   })
   it('clears the intent', () => {
     saveIntent('doc-1'); clearIntent()
+    expect(readIntent()).toBeNull()
+  })
+})
+
+describe('catalog intent expiry', () => {
+  it('ignores an intent older than the TTL', () => {
+    saveIntent('doc-1', 1_000)
+    expect(readIntent(1_000 + INTENT_TTL_MS + 1)).toBeNull()
+  })
+
+  it('keeps a fresh intent', () => {
+    saveIntent('doc-1', 1_000)
+    expect(readIntent(1_000 + INTENT_TTL_MS - 1)).toBe('doc-1')
+  })
+
+  it('ignores a legacy plain-string intent', () => {
+    sessionStorage.setItem('catalog:openIntent', 'doc-1')
     expect(readIntent()).toBeNull()
   })
 })

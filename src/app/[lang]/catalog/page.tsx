@@ -145,14 +145,9 @@ export default async function CatalogHubPage({
                     />
                 )}
 
-                <Suspense
-                    fallback={
-                        <>
-                            <div className="catalog-filters catalog-filters--placeholder" aria-hidden="true" />
-                            <div className="catalog-results">{results}</div>
-                        </>
-                    }
-                >
+                {/* The route is dynamic (awaits searchParams), so useSearchParams does not suspend
+                    and this fallback is not expected to render; keep it light. */}
+                <Suspense fallback={<div className="catalog-filters catalog-filters--placeholder" aria-hidden="true" />}>
                     <CatalogFilters lang={lang}>{results}</CatalogFilters>
                 </Suspense>
             </CatalogShell>

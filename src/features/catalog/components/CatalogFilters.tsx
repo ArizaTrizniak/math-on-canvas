@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { LANGUAGES } from '@/lib/i18n/constants'
 import { ALL_GLYPH, CATEGORIES, categoryGlyph } from '../taxonomy'
 import { getCategoryLabel } from '../i18n'
-import { buildCatalogHref, clearFiltersHref, hasActiveFilters, parseTags, type FilterKey } from '../filterParams'
+import { buildCatalogHref, clearFiltersHref, hasActiveFilters, parseTags, readFilterState, type FilterKey } from '../filterParams'
 import './CatalogFilters.css'
 
 const SORTS = [
@@ -23,7 +23,9 @@ interface Props {
 }
 
 export function CatalogFilters({ lang, children }: Props) {
-  const { t } = useTranslation('catalog')
+  // Pin to the route language: the detector-driven i18n language is 'en' during SSR
+  // and only syncs to the URL in an effect, which would render this panel in English.
+  const { t } = useTranslation('catalog', { lng: lang })
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -32,10 +34,7 @@ export function CatalogFilters({ lang, children }: Props) {
   const [optimisticQuery, setOptimisticQuery] = useOptimistic(searchParams.toString())
   const params = new URLSearchParams(optimisticQuery)
 
-  const category = params.get('category') ?? ''
-  const language = params.get('language') ?? ''
-  const sort = params.get('sort') ?? 'updatedAt'
-  const tags = parseTags(params.get('tags'))
+  const { category, language, sort, tags } = readFilterState(params)
 
   function go(href: string) {
     startTransition(() => {

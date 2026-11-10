@@ -46,3 +46,20 @@ export function clearFiltersHref(pathname: string, current: URLSearchParams): st
 export function hasActiveFilters(current: URLSearchParams): boolean {
   return NARROWING_KEYS.some((key) => Boolean(current.get(key)))
 }
+
+export interface FilterState {
+  category: string
+  language: string
+  sort: string
+  tags: string[]
+}
+
+/** Current filter values as the filter panel shows them. Reads repeated `tags` like the server does. */
+export function readFilterState(params: URLSearchParams): FilterState {
+  return {
+    category: params.get('category') ?? '',
+    language: params.get('language') ?? '',
+    sort: params.get('sort') ?? 'updatedAt',
+    tags: parseTags(params.getAll('tags')),
+  }
+}
