@@ -1,312 +1,130 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
-import { Check, Circle, Eye, EyeOff, X } from 'lucide-react'
+import { Check } from 'lucide-react'
 import { useAuthContext } from '@/lib/auth/authContext'
+import type { AuthModalContext, ModalView } from '@/lib/auth/authReducer'
+import { SignInView } from './SignInView'
+import { SignUpView } from './SignUpView'
+import { ConfirmEmailView } from './ConfirmEmailView'
+import { ForgotPasswordView, ResetDoneView, ResetPasswordView } from './RecoveryViews'
 import './NativeAuthModal.css'
 
-type ModalView = 'signIn' | 'signUp' | 'confirmEmail'
-
-interface NativeAuthFormsProps {
-    view: ModalView
-    loading: boolean
-    error: string | null
-    pendingConfirmEmail: string | null
-    onSetView: (view: ModalView) => void
-    onSignIn: (email: string, password: string) => void
-    onSignUp: (email: string, password: string, displayName: string) => void
-    onConfirmEmail: (email: string, code: string) => void
-    onResend: (email: string) => void
+const VIEWS: Record<ModalView, React.ComponentType> = {
+    signIn: SignInView,
+    signUp: SignUpView,
+    confirmEmail: ConfirmEmailView,
+    forgotPassword: ForgotPasswordView,
+    resetPassword: ResetPasswordView,
+    resetDone: ResetDoneView,
 }
 
-function NativeAuthForms({
-    view, loading, error, pendingConfirmEmail,
-    onSetView, onSignIn, onSignUp, onConfirmEmail, onResend,
-}: NativeAuthFormsProps) {
+// Must match the heading ids each view renders.
+const TITLE_IDS: Record<ModalView, string> = {
+    signIn: 'am-signin-title',
+    signUp: 'am-signup-title',
+    confirmEmail: 'am-confirm-title',
+    forgotPassword: 'am-forgot-title',
+    resetPassword: 'am-reset-title',
+    resetDone: 'am-done-title',
+}
+
+const FOCUSABLE = 'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+
+function ContextAside({ context }: { context: AuthModalContext }) {
     const { t } = useTranslation('auth')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [displayName, setDisplayName] = useState('')
-    const [code, setCode] = useState('')
-    const [showPassword, setShowPassword] = useState(false)
-
-    const confirmEmail = pendingConfirmEmail ?? email
-
-    const handleSignIn = (e: React.FormEvent) => {
-        e.preventDefault()
-        onSignIn(email, password)
-    }
-
-    const handleSignUp = (e: React.FormEvent) => {
-        e.preventDefault()
-        onSignUp(email, password, displayName)
-    }
-
-    const handleConfirm = (e: React.FormEvent) => {
-        e.preventDefault()
-        onConfirmEmail(confirmEmail, code)
-    }
-
-    if (view === 'signIn') {
-        return (
-            <form className="auth-modal__form" onSubmit={handleSignIn}>
-                <h2 className="auth-modal__title">{t('signIn.title')}</h2>
-
-                <div className="auth-modal__field">
-                    <label className="auth-modal__label">{t('signIn.emailLabel')}</label>
-                    <input
-                        className="auth-modal__input"
-                        type="email"
-                        autoComplete="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        disabled={loading}
-
-                        autoFocus
-                    />
-                </div>
-
-                <div className="auth-modal__field">
-                    <label className="auth-modal__label">{t('signIn.passwordLabel')}</label>
-                    <div className="auth-modal__password-wrap">
-                        <input
-                            className="auth-modal__input"
-                            type={showPassword ? 'text' : 'password'}
-                            autoComplete="current-password"
-                            required
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            disabled={loading}
-                        />
-                        <button
-                            type="button"
-                            className="auth-modal__eye"
-                            onClick={() => setShowPassword((v) => !v)}
-                            tabIndex={-1}
-                        >
-                            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                        </button>
-                    </div>
-                </div>
-
-                {error && <p className="auth-modal__error">{t(error)}</p>}
-
-                <button type="submit" className="auth-modal__submit" disabled={loading}>
-                    {loading ? '...' : t('signIn.submitButton')}
-                </button>
-
-                <button type="button" className="auth-modal__link" onClick={() => onSetView('signUp')}>
-                    {t('signIn.switchToSignUp')}
-                </button>
-            </form>
-        )
-    }
-
-    if (view === 'signUp') {
-        return (
-            <form className="auth-modal__form" onSubmit={handleSignUp}>
-                <h2 className="auth-modal__title">{t('signUp.title')}</h2>
-
-                <div className="auth-modal__field">
-                    <label className="auth-modal__label">{t('signUp.displayNameLabel')}</label>
-                    <input
-                        className="auth-modal__input"
-                        type="text"
-                        autoComplete="name"
-                        required
-                        value={displayName}
-                        onChange={(e) => setDisplayName(e.target.value)}
-                        disabled={loading}
-
-                        autoFocus
-                    />
-                </div>
-
-                <div className="auth-modal__field">
-                    <label className="auth-modal__label">{t('signUp.emailLabel')}</label>
-                    <input
-                        className="auth-modal__input"
-                        type="email"
-                        autoComplete="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        disabled={loading}
-                    />
-                </div>
-
-                <div className="auth-modal__field">
-                    <label className="auth-modal__label">{t('signUp.passwordLabel')}</label>
-                    <div className="auth-modal__password-wrap">
-                        <input
-                            className="auth-modal__input"
-                            type={showPassword ? 'text' : 'password'}
-                            autoComplete="new-password"
-                            required
-                            minLength={8}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            disabled={loading}
-                        />
-                        <button
-                            type="button"
-                            className="auth-modal__eye"
-                            onClick={() => setShowPassword((v) => !v)}
-                            tabIndex={-1}
-                        >
-                            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                        </button>
-                    </div>
-                    <ul className="auth-modal__req-list">
-                        {[
-                            { key: 'minLength', met: password.length >= 8 },
-                            { key: 'uppercase', met: /[A-Z]/.test(password) },
-                            { key: 'lowercase', met: /[a-z]/.test(password) },
-                            { key: 'number', met: /[0-9]/.test(password) },
-                            { key: 'special', met: /[^A-Za-z0-9]/.test(password) },
-                        ].map(({ key, met }) => (
-                            <li key={key} className={`auth-modal__req-item${met ? ' auth-modal__req-item--met' : ' auth-modal__req-item--unmet'}`}>
-                                {met ? <Check size={12} /> : <Circle size={12} />}
-                                {t(`signUp.passwordReq.${key}`)}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-
-                {error && <p className="auth-modal__error">{t(error)}</p>}
-
-                <button type="submit" className="auth-modal__submit" disabled={loading}>
-                    {loading ? '...' : t('signUp.submitButton')}
-                </button>
-
-                <button type="button" className="auth-modal__link" onClick={() => onSetView('signIn')}>
-                    {t('signUp.switchToSignIn')}
-                </button>
-            </form>
-        )
-    }
-
     return (
-        <form className="auth-modal__form" onSubmit={handleConfirm}>
-            <h2 className="auth-modal__title">{t('confirmEmail.title')}</h2>
-
-            <p className="auth-modal__instructions">
-                {t('confirmEmail.instructions', { email: confirmEmail })}
-            </p>
-
-            <div className="auth-modal__field">
-                <label className="auth-modal__label">{t('confirmEmail.codeLabel')}</label>
-                <input
-                    className="auth-modal__input auth-modal__input--code"
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]{6}"
-                    maxLength={6}
-                    required
-                    value={code}
-                    onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
-                    disabled={loading}
-
-                    autoFocus
-                />
+        <aside className="am-aside">
+            <div className="am-aside__thumb">
+                {context.thumbnailUrl && (
+                    // eslint-disable-next-line @next/next/no-img-element -- thumbnail is an arbitrary external URL; no remotePatterns configured
+                    <img src={context.thumbnailUrl} alt="" />
+                )}
             </div>
-
-            {error && <p className="auth-modal__error">{t(error)}</p>}
-
-            <button type="submit" className="auth-modal__submit" disabled={loading}>
-                {loading ? '...' : t('confirmEmail.submitButton')}
-            </button>
-
-            <button
-                type="button"
-                className="auth-modal__link"
-                onClick={() => onResend(confirmEmail)}
-                disabled={loading}
-            >
-                {t('confirmEmail.resendButton')}
-            </button>
-        </form>
+            <div className="am-aside__text">
+                <p className="am-aside__title">{context.title}</p>
+                <p className="am-aside__intro">{context.intro}</p>
+            </div>
+            <ul className="am-aside__perks">
+                {(['contextFree', 'contextEditable'] as const).map((key) => (
+                    <li key={key}>
+                        <span aria-hidden="true"><Check size={13} strokeWidth={3} /></span>
+                        {t(`signUp.${key}`)}
+                    </li>
+                ))}
+            </ul>
+        </aside>
     )
 }
 
 export function NativeAuthModal() {
     const {
-        nativeAuthModalOpen,
-        nativeAuthModalView,
-        nativeAuthLoading,
-        nativeAuthError,
-        pendingConfirmEmail,
+        nativeAuthModalOpen: open,
+        nativeAuthModalView: view,
+        nativeAuthLoading: loading,
         closeNativeAuthModal,
-        setModalView,
-        submitSignIn,
-        submitSignUp,
-        submitConfirmEmail,
-        resendConfirmCode,
         modalContext,
     } = useAuthContext()
+    const panelRef = useRef<HTMLDivElement>(null)
 
+    // Escape closes (not mid-request); Tab stays inside the dialog.
     useEffect(() => {
-        if (!nativeAuthModalOpen) return
+        if (!open) return
         const handleKey = (e: KeyboardEvent) => {
-            if (e.key === 'Escape' && !nativeAuthLoading) closeNativeAuthModal()
+            if (e.key === 'Escape' && !loading) {
+                closeNativeAuthModal()
+                return
+            }
+            if (e.key !== 'Tab' || !panelRef.current) return
+            const items = Array.from(panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE))
+            if (items.length === 0) return
+            const first = items[0]
+            const last = items[items.length - 1]
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault(); last.focus()
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault(); first.focus()
+            }
         }
         document.addEventListener('keydown', handleKey)
         return () => document.removeEventListener('keydown', handleKey)
-    }, [nativeAuthModalOpen, nativeAuthLoading, closeNativeAuthModal])
+    }, [open, loading, closeNativeAuthModal])
 
-    if (!nativeAuthModalOpen) return null
+    // Lock page scroll and restore focus to whatever opened the modal.
+    useEffect(() => {
+        if (!open) return
+        const opener = document.activeElement as HTMLElement | null
+        const prevOverflow = document.body.style.overflow
+        document.body.style.overflow = 'hidden'
+        return () => {
+            document.body.style.overflow = prevOverflow
+            opener?.focus?.()
+        }
+    }, [open])
+
+    if (!open) return null
+
+    const View = VIEWS[view]
+    const withAside = view === 'signUp' && modalContext !== null
 
     return createPortal(
-        <>
-            <div className="auth-modal__backdrop" />
+        <div className="am-root">
+            <div className="am-backdrop" aria-hidden="true" />
             <div
-                className={`auth-modal__panel${modalContext ? ' auth-modal__with-context' : ''}`}
+                ref={panelRef}
+                className={`am-panel${withAside ? ' am-panel--split' : ''}`}
                 role="dialog"
                 aria-modal="true"
+                aria-labelledby={TITLE_IDS[view]}
+                aria-busy={loading || undefined}
             >
-                <button
-                    type="button"
-                    className="auth-modal__close"
-                    onClick={closeNativeAuthModal}
-                    disabled={nativeAuthLoading}
-                    aria-label="Close"
-                >
-                    <X size={18} />
-                </button>
-
-                {modalContext && (
-                    <div className="auth-modal__context">
-                        {modalContext.thumbnailUrl && (
-                            // eslint-disable-next-line @next/next/no-img-element -- thumbnail is an arbitrary external URL; no remotePatterns configured
-                            <img
-                                className="auth-modal__context-thumb"
-                                src={modalContext.thumbnailUrl}
-                                alt={modalContext.title}
-                            />
-                        )}
-                        <p className="auth-modal__context-heading">{modalContext.title}</p>
-                        <p className="auth-modal__context-intro">{modalContext.intro}</p>
-                    </div>
-                )}
-
-                <NativeAuthForms
-                    key={nativeAuthModalView}
-                    view={nativeAuthModalView}
-                    loading={nativeAuthLoading}
-                    error={nativeAuthError}
-                    pendingConfirmEmail={pendingConfirmEmail}
-                    onSetView={setModalView}
-                    onSignIn={(email, password) => { void submitSignIn(email, password) }}
-                    onSignUp={(email, password, displayName) => { void submitSignUp(email, password, displayName) }}
-                    onConfirmEmail={(email, code) => { void submitConfirmEmail(email, code) }}
-                    onResend={(email) => { void resendConfirmCode(email) }}
-                />
+                {withAside && <ContextAside context={modalContext} />}
+                <View key={view} />
             </div>
-        </>,
-        document.body
+        </div>,
+        document.body,
     )
 }
 

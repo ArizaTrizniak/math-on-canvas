@@ -75,6 +75,18 @@ export const authApiClient = {
         return post<{ sent: boolean }>('/auth/resend-code', { email })
     },
 
+    forgotPassword(email: string, lang: string) {
+        return post<{ sent: boolean }>('/auth/forgot-password', { email, lang })
+    },
+
+    resetPassword(email: string, code: string, newPassword: string) {
+        return post<{ success: boolean; signedIn: boolean }>('/auth/reset-password', {
+            email,
+            code,
+            newPassword,
+        })
+    },
+
     getMe() {
         return get<UserProfile>('/auth/me')
     },

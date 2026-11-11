@@ -100,3 +100,49 @@ describe('authApiClient.signIn — error parsing', () => {
         expect(result).toEqual({ success: true })
     })
 })
+describe('authApiClient password reset', () => {
+    function captureFetch(status: number, body: unknown) {
+        const fetchMock = vi.fn<(url: string, init?: RequestInit) => Promise<Response>>(() => Promise.resolve({
+            ok: status >= 200 && status < 300,
+            status,
+            json: () => Promise.resolve(body),
+        } as Response))
+        vi.stubGlobal('fetch', fetchMock)
+        return fetchMock
+    }
+
+    it('forgotPassword POSTs email and lang to /auth/forgot-password', async () => {
+        const fetchMock = captureFetch(200, { sent: true })
+
+        const res = await authApiClient.forgotPassword('anna@school.ru', 'ru')
+
+        expect(res).toEqual({ sent: true })
+        const [url, init] = fetchMock.mock.calls[0]
+        expect(url).toMatch(/\/auth\/forgot-password$/)
+        expect(init?.method).toBe('POST')
+        expect(init?.credentials).toBe('include')
+        expect(JSON.parse(init?.body as string)).toEqual({ email: 'anna@school.ru', lang: 'ru' })
+    })
+
+    it('resetPassword POSTs email, code and newPassword and returns signedIn', async () => {
+        const fetchMock = captureFetch(200, { success: true, signedIn: true })
+
+        const res = await authApiClient.resetPassword('anna@school.ru', '730926', 'Kvadrat-2026')
+
+        expect(res).toEqual({ success: true, signedIn: true })
+        const [url, init] = fetchMock.mock.calls[0]
+        expect(url).toMatch(/\/auth\/reset-password$/)
+        expect(JSON.parse(init?.body as string)).toEqual({
+            email: 'anna@school.ru', code: '730926', newPassword: 'Kvadrat-2026',
+        })
+    })
+
+    it('resetPassword surfaces invalid_confirmation_code as AuthNativeError', async () => {
+        captureFetch(400, { error: 'invalid_confirmation_code', message: 'bad', request_id: 'r' })
+
+        const err = await authApiClient.resetPassword('a@b.ru', '000000', 'Kvadrat-2026').catch((e) => e)
+
+        expect(err).toBeInstanceOf(AuthNativeError)
+        expect((err as AuthNativeError).code).toBe('invalid_confirmation_code')
+    })
+})
