@@ -358,8 +358,9 @@
 /* Tablet & phone: one column, actions pinned to the bottom of the screen */
 
 @media (max-width: 900px) {
-    .catalog-doc {
-        padding-bottom: calc(96px + env(safe-area-inset-bottom));
+    /* Room for the pinned action bar below the shell footer too, not just the document. */
+    .catalog-shell:has(.catalog-doc) {
+        padding-bottom: calc(80px + env(safe-area-inset-bottom));
     }
 
     .catalog-doc__body {
@@ -428,4 +429,29 @@
     .catalog-related__row > .catalog-card {
         flex-basis: 170px;
     }
+}
+
+/* Breadcrumbs row above the document (page.tsx) */
+
+.catalog-doc-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+    margin-bottom: -8px;
+}
+
+.catalog-doc-nav li[aria-current='page'] {
+    max-width: 36ch;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.catalog-doc-nav__back {
+    color: var(--c-accent, #0a6c78);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
 }
