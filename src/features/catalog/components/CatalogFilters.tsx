@@ -8,6 +8,7 @@ import { LANGUAGES } from '@/lib/i18n/constants'
 import { ALL_GLYPH, CATEGORIES, categoryGlyph } from '../taxonomy'
 import { getCategoryLabel } from '../i18n'
 import { buildCatalogHref, clearFiltersHref, hasActiveFilters, parseTags, readFilterState, type FilterKey } from '../filterParams'
+import { RememberListUrl } from './RememberListUrl'
 import './CatalogFilters.css'
 
 const SORTS = [
@@ -61,6 +62,7 @@ export function CatalogFilters({ lang, children }: Props) {
 
   return (
     <>
+      <RememberListUrl />
       <section className="catalog-filters" aria-label={t('filters.category')}>
         <div className="catalog-filters__chips">
           <button

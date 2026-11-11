@@ -22,6 +22,13 @@ describe('catalog locale files', () => {
     expect(ru.stats.pages).toContain('{count}')
     expect(ru.hubPill).toContain('{count}')
   })
+
+  it('include the document page strings', () => {
+    expect(getCatalogStrings('ru').doc.portrait).toBe('книжная')
+    expect(getCatalogStrings('ru').shareCopied).toBe('Ссылка скопирована')
+    expect(getCatalogStrings('de').doc.allInCategory).toContain('{category}')
+    expect(getCatalogStrings('es').doc.page).toContain('{total}')
+  })
 })
 
 describe('getCategoryLabel', () => {

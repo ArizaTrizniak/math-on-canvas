@@ -7,6 +7,8 @@ import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { CatalogGrid } from '@/features/catalog/components/CatalogGrid'
 import { CATEGORIES, categoryGlyph, isCategory } from '@/features/catalog/taxonomy'
 import { CatalogShell } from '@/features/catalog/components/CatalogShell'
+import { RememberListUrl } from '@/features/catalog/components/RememberListUrl'
+import { Suspense } from 'react'
 import { buildSlug } from '@/features/catalog/slug'
 import { hreflangAlternates } from '@/features/catalog/seo/metadata'
 import { collectionPage, breadcrumbList } from '@/features/catalog/seo/jsonld'
@@ -88,6 +90,7 @@ export default async function CategoryHubPage({
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
             />
             <CatalogShell lang={lang as LanguageCode} pathSuffix={`/catalog/category/${category}`}>
+                <Suspense fallback={null}><RememberListUrl /></Suspense>
                 <nav aria-label="Breadcrumb">
                     <ol>
                         <li><a href={`/${lang}`}>{strings.breadcrumbs.home}</a></li>

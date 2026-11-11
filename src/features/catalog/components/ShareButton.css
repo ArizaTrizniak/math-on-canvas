@@ -1,0 +1,25 @@
+/* Toast shown after the link is copied. */
+
+.catalog-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 32px;
+    z-index: 40;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: #0f172a;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.3);
+}
+
+@media (max-width: 1000px) {
+    .catalog-toast {
+        bottom: calc(96px + env(safe-area-inset-bottom));
+    }
+}

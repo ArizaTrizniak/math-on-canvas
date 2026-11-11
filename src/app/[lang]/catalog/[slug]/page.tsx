@@ -1,14 +1,17 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { BASE_URL } from '@/lib/site'
-import { LANGUAGES } from '@/lib/i18n/constants'
+import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
 import { getPublicDocumentMeta, listPublicDocuments } from '@/features/catalog/serverClient'
 import { parseIdFromSlug } from '@/features/catalog/slug'
 import { DocumentView } from '@/features/catalog/components/DocumentView'
 import { documentLocalizedMeta, hreflangAlternates } from '@/features/catalog/seo/metadata'
 import { creativeWork, breadcrumbList } from '@/features/catalog/seo/jsonld'
 import { buildThumbnailUrl } from '@/features/catalog/thumbnail'
-import { getCatalogStrings } from '@/features/catalog/i18n'
+import { getCatalogStrings, getCategoryLabel } from '@/features/catalog/i18n'
+import { pickRelated } from '@/features/catalog/docPage'
+import { CatalogShell } from '@/features/catalog/components/CatalogShell'
+import { BackToResults } from '@/features/catalog/components/BackToResults'
 
 export const revalidate = 300
 
@@ -67,19 +70,18 @@ export default async function CatalogDocumentPage({
         notFound()
     }
 
-    const relatedResult = await listPublicDocuments({
-        category: doc.category ?? undefined,
-        limit: 6,
-    })
-    const related = relatedResult.documents.filter(d => d.documentId !== doc.documentId)
+    // Same category first; top up by the first tag when the category is thin.
+    const byCategory = doc.category
+        ? (await listPublicDocuments({ category: doc.category, limit: 7 })).documents
+        : []
+    const firstTag = doc.tags?.[0]
+    const needMore = byCategory.filter(d => d.documentId !== doc.documentId).length < 3
+    const byTag = needMore && firstTag
+        ? (await listPublicDocuments({ tags: [firstTag], limit: 7 })).documents
+        : []
+    const related = pickRelated(byCategory, byTag, doc.documentId)
 
     const strings = getCatalogStrings(lang)
-    const docStrings = {
-        open: strings.open,
-        share: strings.share,
-        gateIntro: strings.gateIntro,
-        related: strings.related,
-    }
 
     const { title, description } = documentLocalizedMeta(doc, lang)
     const canonical = `${BASE_URL}/${lang}/catalog/${slug}`
@@ -110,7 +112,22 @@ export default async function CatalogDocumentPage({
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
             />
-            <DocumentView doc={doc} lang={lang} related={related} strings={docStrings} />
+            <CatalogShell lang={lang as LanguageCode} pathSuffix={`/catalog/${slug}`}>
+                <div className="catalog-doc-nav">
+                    <nav aria-label="Breadcrumb">
+                        <ol>
+                            <li><a href={`/${lang}`}>{strings.breadcrumbs.home}</a></li>
+                            <li><a href={`/${lang}/catalog`}>{strings.breadcrumbs.catalog}</a></li>
+                            {doc.category && (
+                                <li><a href={`/${lang}/catalog/category/${doc.category}`}>{getCategoryLabel(doc.category, lang)}</a></li>
+                            )}
+                            <li aria-current="page">{title}</li>
+                        </ol>
+                    </nav>
+                    <BackToResults lang={lang} label={strings.doc.backToResults} className="catalog-doc-nav__back" />
+                </div>
+                <DocumentView doc={doc} lang={lang} related={related} />
+            </CatalogShell>
         </>
     )
 }

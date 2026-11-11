@@ -1,139 +1,156 @@
 import Link from 'next/link'
+import { LANGUAGES } from '@/lib/i18n/constants'
 import type { CatalogDocumentMeta, DocumentSummary } from '../types'
+import { buildThumbnailUrl } from '../thumbnail'
+import { getCatalogStrings, getCategoryLabel } from '../i18n'
+import { categoryGlyph } from '../taxonomy'
+import { formatCompactCount, sheetOrientation } from '../format'
+import { buildPageStrip, formatRelativeDate } from '../docPage'
+import { documentLocalizedMeta } from '../seo/metadata'
 import { OpenInEditorCTA } from './OpenInEditorCTA'
 import { ViewBeacon } from './ViewBeacon'
 import { RelatedRow } from './RelatedRow'
 import { ShareButton } from './ShareButton'
-import { buildThumbnailUrl } from '../thumbnail'
+import { DocumentPreview } from './DocumentPreview'
+import { ExpandableText } from './ExpandableText'
+import { GuestOnly } from './GuestOnly'
 import './DocumentView.css'
-
-interface Strings {
-  open: string
-  share: string
-  gateIntro: string
-  related: string
-}
 
 interface Props {
   doc: CatalogDocumentMeta
   lang: string
   related: DocumentSummary[]
-  strings: Strings
 }
 
-export function DocumentView({ doc, lang, related, strings }: Props) {
+export function DocumentView({ doc, lang, related }: Props) {
+  const strings = getCatalogStrings(lang)
+  const s = strings.doc
+  const { title, description } = documentLocalizedMeta(doc, lang)
+  // documentLocalizedMeta falls back to the title when there is no description.
+  const hasDescription = Boolean(description) && description !== title
   const thumbnailUrl = buildThumbnailUrl(doc.thumbnailS3Key)
-
-  const pageCount = doc.metadata.pageCount
+  const orientation = sheetOrientation(doc.metadata)
+  // Server component: rendered on the server only and never re-rendered on the client, so reading
+  // the clock here cannot cause a render mismatch. Revisit when adopting Cache Components
+  // (Date.now() during prerender is a build error there).
+  // eslint-disable-next-line react-hooks/purity -- see above
+  const updated = formatRelativeDate(doc.updatedAt, Date.now(), lang)
+  const categoryLabel = doc.category ? getCategoryLabel(doc.category, lang) : null
+  const languageLabel = LANGUAGES.find((l) => l.code === doc.language)?.label ?? doc.language
+  const tags = doc.tags ?? []
 
   return (
-    <>
-      <div className="catalog-doc">
-        <h1 className="catalog-doc__title">{doc.title}</h1>
-
-        {/* ── Left column: preview + page strip ── */}
-        <div className="catalog-doc__left">
-          <div className="catalog-doc__preview">
-            {thumbnailUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element -- arbitrary external thumbnail URL; next/image remotePatterns not configured for the documents CDN
-              <img
-                src={thumbnailUrl}
-                alt={doc.title}
-                loading="eager"
-                decoding="async"
-                className="catalog-doc__preview-img"
-              />
-            ) : (
-              <div className="catalog-doc__preview-placeholder" aria-hidden="true" />
-            )}
-          </div>
-
-          {pageCount > 1 && (
-            <div className="catalog-doc__strip" aria-label="Page thumbnails">
-              {/* First page uses the actual thumbnail */}
-              <div className="catalog-doc__strip-cell catalog-doc__strip-cell--first">
-                {thumbnailUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- arbitrary external thumbnail URL; next/image remotePatterns not configured for the documents CDN
-                  <img
-                    src={thumbnailUrl}
-                    alt="Page 1"
-                    className="catalog-doc__strip-img"
-                  />
-                ) : (
-                  <span>1</span>
-                )}
-              </div>
-
-              {/* Remaining pages as numbered placeholder cells */}
-              {Array.from({ length: pageCount - 1 }, (_, i) => (
-                <div key={i + 2} className="catalog-doc__strip-cell">
-                  {i + 2}
-                </div>
-              ))}
-            </div>
+    <article className="catalog-doc">
+      <header className="catalog-doc__head">
+        <div className="catalog-doc__kicker">
+          {doc.category && categoryLabel && (
+            <Link href={`/${lang}/catalog/category/${doc.category}`} className="catalog-doc__category">
+              <span className="catalog-doc__glyph" aria-hidden="true">{categoryGlyph(doc.category)}</span>
+              {categoryLabel}
+            </Link>
           )}
+          {updated && <span className="catalog-doc__updated">{s.updated.replace('{date}', updated)}</span>}
+        </div>
+        <h1 className="catalog-doc__title">{title}</h1>
+        {hasDescription && (
+          <ExpandableText
+            text={description}
+            expandLabel={s.expand}
+            collapseLabel={s.collapse}
+            className="catalog-doc__description"
+          />
+        )}
+      </header>
+
+      <div className="catalog-doc__body">
+        <div className="catalog-doc__main">
+          <DocumentPreview
+            pages={buildPageStrip(doc)}
+            alt={title}
+            orientation={orientation}
+            category={doc.category}
+            labels={{
+              region: s.previewLabel,
+              fullscreen: s.fullscreen,
+              close: s.closeFullscreen,
+              strip: s.strip,
+              page: s.page,
+              prev: s.prev,
+              next: s.next,
+            }}
+          />
         </div>
 
-        {/* ── Right sticky rail ── */}
         <aside className="catalog-doc__rail">
-          {/* Badges */}
-          <div className="catalog-doc__badges">
-            {doc.category && (
-              <Link
-                href={`/${lang}/catalog/category/${doc.category}`}
-                className="catalog-doc__badge catalog-doc__badge--category"
-              >
-                {doc.category}
-              </Link>
-            )}
-            <span className="catalog-doc__badge catalog-doc__badge--lang">{doc.language}</span>
+          <div className="catalog-doc__actions">
+            <OpenInEditorCTA
+              className="catalog-doc__cta"
+              documentId={doc.documentId}
+              title={title}
+              thumbnailUrl={thumbnailUrl}
+              label={strings.open}
+              intro={strings.gateIntro}
+            />
+            <ShareButton label={strings.share} copiedLabel={strings.shareCopied} className="catalog-doc__share" />
           </div>
+          <GuestOnly>
+            <p className="catalog-doc__free">{s.freeNote}</p>
+          </GuestOnly>
 
-          {/* Metadata */}
-          <dl className="catalog-doc__meta">
-            <div className="catalog-doc__meta-row">
-              <dt className="catalog-doc__meta-label">Orientation</dt>
-              <dd className="catalog-doc__meta-value">{doc.metadata.orientation}</dd>
+          <dl className="catalog-doc__facts">
+            <div>
+              <dt>{s.format}</dt>
+              <dd>{orientation === 'portrait' ? `A4 ▯ ${s.portrait}` : `A4 ▭ ${s.landscape}`}</dd>
             </div>
-            <div className="catalog-doc__meta-row">
-              <dt className="catalog-doc__meta-label">Pages</dt>
-              <dd className="catalog-doc__meta-value">{doc.metadata.pageCount}</dd>
+            {doc.metadata?.pageCount ? (
+              <div>
+                <dt>{s.pages}</dt>
+                <dd>{doc.metadata.pageCount}</dd>
+              </div>
+            ) : null}
+            <div>
+              <dt>{s.views}</dt>
+              <dd>{formatCompactCount(doc.viewsCount, lang)}</dd>
             </div>
-            <div className="catalog-doc__meta-row">
-              <dt className="catalog-doc__meta-label">Views</dt>
-              <dd className="catalog-doc__meta-value">{doc.viewsCount.toLocaleString()}</dd>
-            </div>
-            <div className="catalog-doc__meta-row">
-              <dt className="catalog-doc__meta-label">Likes</dt>
-              <dd className="catalog-doc__meta-value">{doc.likesCount.toLocaleString()}</dd>
+            <div>
+              <dt>{s.language}</dt>
+              <dd>{languageLabel}</dd>
             </div>
           </dl>
 
-          {/* Open in editor CTA (client island) */}
-          <OpenInEditorCTA
-            documentId={doc.documentId}
-            title={doc.title}
-            thumbnailUrl={thumbnailUrl}
-            label={strings.open}
-            intro={strings.gateIntro}
-          />
-
-          {/* Share button — client island: copies URL or uses native share sheet */}
-          <ShareButton label={strings.share} className="catalog-doc__share" />
-        </aside>
-
-        {/* ── Below both columns ── */}
-        <div className="catalog-doc__below">
-          {doc.description && (
-            <p className="catalog-doc__description">{doc.description}</p>
+          {tags.length > 0 && (
+            <div className="catalog-doc__tags">
+              <span className="catalog-doc__label">{s.tags}</span>
+              <ul>
+                {tags.map((tag) => (
+                  <li key={tag}>
+                    <Link href={`/${lang}/catalog/tag/${encodeURIComponent(tag)}`}>#{tag}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
 
-          <RelatedRow documents={related} lang={lang} label={strings.related} />
-        </div>
+          <section className="catalog-doc__howto" aria-labelledby="catalog-doc-howto">
+            <h2 id="catalog-doc-howto">{s.howTo.title}</h2>
+            <ol>
+              <li>{s.howTo.step1}</li>
+              <li>{s.howTo.step2}</li>
+              <li>{s.howTo.step3}</li>
+            </ol>
+          </section>
+        </aside>
       </div>
 
-      {/* View beacon — renders null, records view on mount */}
+      <RelatedRow
+        documents={related}
+        lang={lang}
+        label={s.relatedTitle}
+        moreHref={doc.category ? `/${lang}/catalog/category/${doc.category}` : undefined}
+        moreLabel={categoryLabel ? s.allInCategory.replace('{category}', categoryLabel) : undefined}
+      />
+
       <ViewBeacon documentId={doc.documentId} />
-    </>
+    </article>
   )
 }
