@@ -110,7 +110,7 @@ export default async function CatalogDocumentPage({
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
             />
-            <DocumentView doc={doc} lang={lang} related={related} strings={docStrings} />
+            <DocumentView doc={doc} lang={lang} related={related} />
         </>
     )
 }
