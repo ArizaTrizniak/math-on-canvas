@@ -19,11 +19,22 @@ export interface DocumentSummary {
   updatedAt: string
 }
 
+/** Preview of one sheet (API-1 in docs/superpowers/plans/2026-11-10-catalog-api-requirements.md). */
+export interface PageThumbnail {
+  index: number
+  s3Key: string
+  smallS3Key: string
+  width: number
+  height: number
+}
+
 export interface CatalogDocumentMeta extends DocumentSummary {
   description: string | null
   titleI18n: Record<string, string> | null
   descriptionI18n: Record<string, string> | null
   visibility: 'private' | 'public' | 'unlisted'
+  /** Not returned by the API yet; null or absent while previews are pending. */
+  pageThumbnails?: PageThumbnail[] | null
 }
 
 export interface CatalogListResult {
