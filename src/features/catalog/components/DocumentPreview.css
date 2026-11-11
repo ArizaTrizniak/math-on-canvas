@@ -184,7 +184,7 @@
 
 .catalog-preview__dialog {
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     max-width: none;
     max-height: none;
     margin: 0;
@@ -212,13 +212,11 @@
 }
 
 .catalog-preview__dialog .catalog-preview__sheet--portrait {
-    height: 92vh;
-    max-width: 92vw;
+    height: min(92dvh, calc(92vw * 297 / 210));
 }
 
 .catalog-preview__dialog .catalog-preview__sheet--landscape {
-    width: 92vw;
-    max-height: 92vh;
+    width: min(92vw, calc(92dvh * 297 / 210));
 }
 
 .catalog-preview__dialog .catalog-preview__icon {

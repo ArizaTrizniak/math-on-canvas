@@ -92,3 +92,8 @@ export function buildPageStrip(
     return { index, src: fallback, smallSrc: fallback, width: null, height: null }
   })
 }
+
+/** Sheet to show first: the first one with an image, or sheet 1 when none has one. */
+export function firstSheetWithImage(pages: PageStripItem[]): number {
+  return pages.find((p) => p.src)?.index ?? 1
+}

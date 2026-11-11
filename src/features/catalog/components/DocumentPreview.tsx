@@ -2,7 +2,7 @@
 
 import { useRef, useState, type MouseEvent } from 'react'
 import { categoryGlyph } from '../taxonomy'
-import type { PageStripItem } from '../docPage'
+import { firstSheetWithImage, type PageStripItem } from '../docPage'
 import './DocumentPreview.css'
 
 interface Labels {
@@ -25,7 +25,7 @@ interface Props {
 }
 
 export function DocumentPreview({ pages, alt, orientation, category, labels }: Props) {
-  const [current, setCurrent] = useState(1)
+  const [current, setCurrent] = useState(() => firstSheetWithImage(pages))
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   const withImage = pages.filter((p) => p.src).map((p) => p.index)

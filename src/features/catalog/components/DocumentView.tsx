@@ -30,8 +30,10 @@ export function DocumentView({ doc, lang, related }: Props) {
   const hasDescription = Boolean(description) && description !== title
   const thumbnailUrl = buildThumbnailUrl(doc.thumbnailS3Key)
   const orientation = sheetOrientation(doc.metadata)
-  // Server component: rendered once per ISR revalidation (300 s) and never re-rendered on the client.
-  // eslint-disable-next-line react-hooks/purity -- see above; staleness of a few minutes is acceptable
+  // Server component: rendered on the server only and never re-rendered on the client, so reading
+  // the clock here cannot cause a render mismatch. Revisit when adopting Cache Components
+  // (Date.now() during prerender is a build error there).
+  // eslint-disable-next-line react-hooks/purity -- see above
   const updated = formatRelativeDate(doc.updatedAt, Date.now(), lang)
   const categoryLabel = doc.category ? getCategoryLabel(doc.category, lang) : null
   const languageLabel = LANGUAGES.find((l) => l.code === doc.language)?.label ?? doc.language

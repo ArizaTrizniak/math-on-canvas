@@ -357,7 +357,8 @@
 
 /* Tablet & phone: one column, actions pinned to the bottom of the screen */
 
-@media (max-width: 900px) {
+/* Two columns need 560 + 320 + 40 px inside the shell padding (~984 px viewport). */
+@media (max-width: 1000px) {
     /* Room for the pinned action bar below the shell footer too, not just the document. */
     .catalog-shell:has(.catalog-doc) {
         padding-bottom: calc(80px + env(safe-area-inset-bottom));

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { formatRelativeDate, pickRelated, resolveBackHref, buildPageStrip } from './docPage'
+import { formatRelativeDate, pickRelated, resolveBackHref, buildPageStrip, firstSheetWithImage } from './docPage'
 import type { DocumentSummary } from './types'
 
 const NOW = Date.parse('2026-11-10T12:00:00Z')
@@ -93,5 +93,28 @@ describe('buildPageStrip', () => {
   it('returns a single empty sheet without metadata or thumbnail', () => {
     expect(buildPageStrip({ thumbnailS3Key: null, metadata: undefined as never }))
       .toEqual([{ index: 1, src: null, smallSrc: null, width: null, height: null }])
+  })
+})
+
+describe('firstSheetWithImage', () => {
+  const item = (index: number, src: string | null) => ({ index, src, smallSrc: src, width: null, height: null })
+
+  it('starts on the first sheet that has an image', () => {
+    expect(firstSheetWithImage([item(1, null), item(2, 'b'), item(3, 'c')])).toBe(2)
+  })
+
+  it('defaults to the first sheet when none has an image', () => {
+    expect(firstSheetWithImage([item(1, null), item(2, null)])).toBe(1)
+  })
+})
+
+describe('buildPageStrip first-sheet fallback', () => {
+  beforeEach(() => { vi.stubEnv('NEXT_PUBLIC_DOCUMENTS_CDN_BASE_URL', 'https://cdn') })
+  afterEach(() => { vi.unstubAllEnvs() })
+
+  it('falls back to the document thumbnail when per-page thumbnails skip sheet 1', () => {
+    const p2 = { index: 2, s3Key: 'p2', smallS3Key: 's2', width: 1600, height: 1131 }
+    expect(buildPageStrip({ thumbnailS3Key: 't', metadata: { orientation: 'portrait', pageCount: 2 }, pageThumbnails: [p2] })[0].src)
+      .toBe('https://cdn/t')
   })
 })

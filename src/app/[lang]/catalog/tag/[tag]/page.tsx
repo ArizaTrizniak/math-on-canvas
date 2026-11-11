@@ -10,6 +10,8 @@ import { hreflangAlternates } from '@/features/catalog/seo/metadata'
 import { collectionPage, breadcrumbList } from '@/features/catalog/seo/jsonld'
 import { getCatalogStrings } from '@/features/catalog/i18n'
 import { CatalogShell } from '@/features/catalog/components/CatalogShell'
+import { RememberListUrl } from '@/features/catalog/components/RememberListUrl'
+import { Suspense } from 'react'
 
 export const revalidate = 300
 
@@ -92,6 +94,7 @@ export default async function TagHubPage({
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
             />
             <CatalogShell lang={lang as LanguageCode} pathSuffix={`/catalog/tag/${encodedTag}`}>
+                <Suspense fallback={null}><RememberListUrl /></Suspense>
                 <nav aria-label="Breadcrumb">
                     <ol>
                         <li><a href={`/${lang}`}>{strings.breadcrumbs.home}</a></li>
