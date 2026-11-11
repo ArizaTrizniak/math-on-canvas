@@ -5,6 +5,7 @@ import { ViewBeacon } from './ViewBeacon'
 import { RelatedRow } from './RelatedRow'
 import { ShareButton } from './ShareButton'
 import { buildThumbnailUrl } from '../thumbnail'
+import { getCatalogStrings } from '../i18n'
 import './DocumentView.css'
 
 interface Strings {
@@ -119,7 +120,7 @@ export function DocumentView({ doc, lang, related, strings }: Props) {
           />
 
           {/* Share button — client island: copies URL or uses native share sheet */}
-          <ShareButton label={strings.share} className="catalog-doc__share" />
+          <ShareButton label={strings.share} copiedLabel={getCatalogStrings(lang).shareCopied} className="catalog-doc__share" />
         </aside>
 
         {/* ── Below both columns ── */}

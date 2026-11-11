@@ -1,13 +1,14 @@
 'use client'
 
 import '@/lib/i18n'
-import { useOptimistic, useState, useTransition, type KeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useOptimistic, useState, useTransition, type KeyboardEvent, type ReactNode } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { LANGUAGES } from '@/lib/i18n/constants'
 import { ALL_GLYPH, CATEGORIES, categoryGlyph } from '../taxonomy'
 import { getCategoryLabel } from '../i18n'
 import { buildCatalogHref, clearFiltersHref, hasActiveFilters, parseTags, readFilterState, type FilterKey } from '../filterParams'
+import { LIST_URL_KEY } from '../docPage'
 import './CatalogFilters.css'
 
 const SORTS = [
@@ -29,6 +30,14 @@ export function CatalogFilters({ lang, children }: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const query = searchParams.toString()
+
+  // Remember the list (with filters) so a document page can link back to it.
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(LIST_URL_KEY, query ? `${pathname}?${query}` : pathname)
+    } catch { /* storage unavailable */ }
+  }, [pathname, query])
   const [isPending, startTransition] = useTransition()
   // Show the new selection immediately; the URL catches up when the navigation lands.
   const [optimisticQuery, setOptimisticQuery] = useOptimistic(searchParams.toString())
