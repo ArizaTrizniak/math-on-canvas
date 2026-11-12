@@ -1,6 +1,16 @@
 import { AuthRefreshFailedError } from './authTypes'
 
-const SKIP_PATHS = ['/auth/refresh', '/auth/signin', '/auth/logout']
+// Credential endpoints: a 401 there is a wrong answer from the user, not an expired session.
+const SKIP_PATHS = [
+    '/auth/refresh',
+    '/auth/signin',
+    '/auth/signup',
+    '/auth/confirm-signup',
+    '/auth/resend-code',
+    '/auth/forgot-password',
+    '/auth/reset-password',
+    '/auth/logout',
+]
 
 let originalFetch: typeof globalThis.fetch | null = null
 let installed = false
