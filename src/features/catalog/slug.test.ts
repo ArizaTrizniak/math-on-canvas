@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildSlug, parseIdFromSlug } from './slug'
+import { buildSlug, isDocumentSlug, parseIdFromSlug } from './slug'
 
 // Real document ids are UUIDs (node:crypto randomUUID) — they CONTAIN dashes,
 // so the slug round-trip must recover the full UUID, not just the last segment.
@@ -23,5 +23,14 @@ describe('catalog slug', () => {
     for (const title of ['Pythagorean Theorem Poster!', 'Картинки', '   ', 'a/b c']) {
       expect(parseIdFromSlug(buildSlug(title, ID))).toBe(ID)
     }
+  })
+  it('isDocumentSlug is true for a title+uuid slug and a bare uuid', () => {
+    expect(isDocumentSlug(`right-triangles-${ID}`)).toBe(true)
+    expect(isDocumentSlug(ID)).toBe(true)
+  })
+  it('isDocumentSlug is false for hub slugs and slugs without a uuid', () => {
+    expect(isDocumentSlug('geometry')).toBe(false)
+    expect(isDocumentSlug('right-triangles-1234')).toBe(false)
+    expect(isDocumentSlug(`${ID}-extra`)).toBe(false)
   })
 })

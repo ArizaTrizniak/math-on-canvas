@@ -1,9 +1,9 @@
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { BASE_URL } from '@/lib/site'
 import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
 import { getPublicDocumentMeta, listPublicDocuments } from '@/features/catalog/serverClient'
-import { parseIdFromSlug } from '@/features/catalog/slug'
+import { isDocumentSlug, parseIdFromSlug } from '@/features/catalog/slug'
 import { DocumentView } from '@/features/catalog/components/DocumentView'
 import { documentLocalizedMeta, hreflangAlternates } from '@/features/catalog/seo/metadata'
 import { creativeWork, breadcrumbList } from '@/features/catalog/seo/jsonld'
@@ -67,6 +67,8 @@ export default async function CatalogDocumentPage({
     const doc = await getPublicDocumentMeta(id)
 
     if (!doc || doc.visibility !== 'public') {
+        // A document that left the public catalog (e.g. moved to unlisted) keeps its link equity.
+        if (isDocumentSlug(slug)) permanentRedirect(`/${lang}/catalog`)
         notFound()
     }
 
