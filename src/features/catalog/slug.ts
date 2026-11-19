@@ -23,3 +23,8 @@ const TRAILING_UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
 export function parseIdFromSlug(slug: string): string {
   return slug.match(TRAILING_UUID)?.[0] ?? slug
 }
+
+/** True when the slug ends in a document UUID (as opposed to a topic/subject hub slug like "geometry"). */
+export function isDocumentSlug(slug: string): boolean {
+  return TRAILING_UUID.test(slug)
+}

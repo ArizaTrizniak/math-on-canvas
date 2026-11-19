@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { listPublicDocuments, getPublicDocumentMeta } from './serverClient'
+import { listPublicDocuments, getPublicDocumentMeta, CatalogUnavailableError } from './serverClient'
 
 const fetchMock = vi.fn()
 
@@ -46,14 +46,26 @@ describe('serverClient.getPublicDocumentMeta', () => {
     fetchMock.mockReturnValue(Promise.resolve({ ok: false, status: 404 } as Response))
     expect(await getPublicDocumentMeta('missing')).toBeNull()
   })
+  it('returns null when the document is not public', async () => {
+    fetchMock.mockReturnValue(ok({ documentId: 'd1', visibility: 'unlisted' }))
+    expect(await getPublicDocumentMeta('d1')).toBeNull()
+  })
+  it('throws CatalogUnavailableError on 5xx', async () => {
+    fetchMock.mockReturnValue(Promise.resolve({ ok: false, status: 500 } as Response))
+    await expect(getPublicDocumentMeta('d1')).rejects.toBeInstanceOf(CatalogUnavailableError)
+  })
+  it('throws CatalogUnavailableError on a network failure', async () => {
+    fetchMock.mockReturnValue(Promise.reject(new Error('ECONNREFUSED')))
+    await expect(getPublicDocumentMeta('d1')).rejects.toBeInstanceOf(CatalogUnavailableError)
+  })
   it('returns the parsed meta on success', async () => {
-    fetchMock.mockReturnValue(ok({ documentId: 'd1', title: 'T' }))
+    fetchMock.mockReturnValue(ok({ documentId: 'd1', title: 'T', visibility: 'public' }))
     const meta = await getPublicDocumentMeta('d1')
     expect(meta?.documentId).toBe('d1')
   })
 
   it('encodes the documentId and appends /meta in the URL', async () => {
-    fetchMock.mockReturnValue(ok({ documentId: 'x' }))
+    fetchMock.mockReturnValue(ok({ documentId: 'x', visibility: 'public' }))
     await getPublicDocumentMeta('a/b c')
     const url = fetchMock.mock.calls[0]![0] as string
     expect(url).toContain('/catalog/documents/a%2Fb%20c/meta')
