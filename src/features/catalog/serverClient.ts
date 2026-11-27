@@ -6,6 +6,7 @@ function buildQuery(params: CatalogListParams): string {
   if (params.limit) q.set('limit', String(params.limit))
   if (params.cursor) q.set('cursor', params.cursor)
   if (params.category) q.set('category', params.category)
+  if (params.subjects && params.subjects.length) q.set('subjects', params.subjects.join(','))
   if (params.tags && params.tags.length) q.set('tags', params.tags.join(','))
   if (params.language) q.set('language', params.language)
   if (params.sort) q.set('sort', params.sort)

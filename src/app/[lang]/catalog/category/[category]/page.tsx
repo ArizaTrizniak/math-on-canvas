@@ -29,9 +29,16 @@ export async function generateMetadata({
     const title = strings.categoryHub.metaTitle.replaceAll('{category}', categoryLabel)
     const description = strings.categoryHub.metaDescription.replaceAll('{category}', categoryLabel)
 
+    // Deduped with the page's identical fetch by Next.js request memoization (same URL + options).
+    const result = isCategory(category)
+        ? await listPublicDocuments({ subjects: [category], limit: 24 })
+        : { documents: [], nextCursor: null }
+    const isEmpty = result.documents.length === 0
+
     return {
         title,
         description,
+        ...(isEmpty ? { robots: { index: false } } : {}),
         alternates: {
             canonical,
             languages: hreflangAlternates(`/catalog/category/${category}`),
@@ -58,7 +65,7 @@ export default async function CategoryHubPage({
     if (!isValidLang) notFound()
     if (!isCategory(category)) notFound()
 
-    const result = await listPublicDocuments({ category, limit: 24 })
+    const result = await listPublicDocuments({ subjects: [category], limit: 24 })
     const documents = result.documents
 
     const strings = getCatalogStrings(lang)

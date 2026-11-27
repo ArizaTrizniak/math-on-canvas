@@ -4,7 +4,7 @@ import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { catalogSitemapEntries } from '@/features/catalog/sitemap'
 import type { DocumentSummary } from '@/features/catalog/types'
 import { LANGUAGES } from '@/lib/i18n/constants'
-import { CATEGORIES } from '@/features/catalog/taxonomy'
+import { activeCategories } from '@/features/catalog/taxonomy'
 
 const MAX_PAGES = 10
 const PAGE_SIZE = 100
@@ -48,22 +48,20 @@ function localeEntries(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    // Static routes that exist regardless of whether the catalog API answers:
-    // the landing, pricing, and one hub per category (all linked from the
-    // landing footer, so they must be discoverable here too).
+    // Static routes that exist regardless of whether the catalog API answers.
     const staticEntries: MetadataRoute.Sitemap = [
         ...localeEntries('', { priority: 1.0 }),
         ...localeEntries('/pricing', { priority: 0.8 }),
-        ...CATEGORIES.flatMap((category) =>
-            localeEntries(`/catalog/category/${category}`, { priority: 0.7 }),
-        ),
     ]
 
     try {
         const allDocs = await fetchAllCatalogDocuments()
+        const categoryEntries = activeCategories(allDocs).flatMap((category) =>
+            localeEntries(`/catalog/category/${category}`, { priority: 0.7 }),
+        )
         const indexableDocs = allDocs.filter((d) => d.thumbnailS3Key)
         const catalogEntries = catalogSitemapEntries(indexableDocs)
-        return [...staticEntries, ...catalogEntries]
+        return [...staticEntries, ...categoryEntries, ...catalogEntries]
     } catch {
         return staticEntries
     }

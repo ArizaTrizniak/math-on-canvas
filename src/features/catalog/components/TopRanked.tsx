@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { buildSlug } from '../slug'
 import { getCategoryLabel } from '../i18n'
+import { resolveDocumentCategory } from '../taxonomy'
 import { formatCompactCount } from '../format'
 import type { DocumentSummary } from '../types'
 import './TopRanked.css'
@@ -28,23 +29,26 @@ export function TopRanked({ documents, lang, title, seeAllHref, seeAllLabel, lik
         <Link href={seeAllHref} className="catalog-top__all">{seeAllLabel} →</Link>
       </div>
       <ol className="catalog-top__list">
-        {top.map((doc, i) => (
-          <li key={doc.documentId}>
-            <Link href={`/${lang}/catalog/${buildSlug(doc.title, doc.documentId)}`} className="catalog-top__item">
-              <span className="catalog-top__rank" aria-hidden="true">{i + 1}</span>
-              <span className="catalog-top__text">
-                <span className="catalog-top__name">{doc.title}</span>
-                <span className="catalog-top__meta">
-                  {doc.category && <span>{getCategoryLabel(doc.category, lang)}</span>}
-                  <span className="catalog-top__likes">
-                    <span className="catalog-sr-only">{`${likesLabel}: ${doc.likesCount}`}</span>
-                    <span aria-hidden="true">♥ {formatCompactCount(doc.likesCount, lang)}</span>
+        {top.map((doc, i) => {
+          const category = resolveDocumentCategory(doc)
+          return (
+            <li key={doc.documentId}>
+              <Link href={`/${lang}/catalog/${buildSlug(doc.title, doc.documentId)}`} className="catalog-top__item">
+                <span className="catalog-top__rank" aria-hidden="true">{i + 1}</span>
+                <span className="catalog-top__text">
+                  <span className="catalog-top__name">{doc.title}</span>
+                  <span className="catalog-top__meta">
+                    {category && <span>{getCategoryLabel(category, lang)}</span>}
+                    <span className="catalog-top__likes">
+                      <span className="catalog-sr-only">{`${likesLabel}: ${doc.likesCount}`}</span>
+                      <span aria-hidden="true">♥ {formatCompactCount(doc.likesCount, lang)}</span>
+                    </span>
                   </span>
                 </span>
-              </span>
-            </Link>
-          </li>
-        ))}
+              </Link>
+            </li>
+          )
+        })}
       </ol>
     </section>
   )

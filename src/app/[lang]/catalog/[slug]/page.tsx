@@ -9,6 +9,7 @@ import { documentLocalizedMeta, hreflangAlternates } from '@/features/catalog/se
 import { creativeWork, breadcrumbList } from '@/features/catalog/seo/jsonld'
 import { buildThumbnailUrl } from '@/features/catalog/thumbnail'
 import { getCatalogStrings, getCategoryLabel } from '@/features/catalog/i18n'
+import { resolveDocumentCategory } from '@/features/catalog/taxonomy'
 import { pickRelated } from '@/features/catalog/docPage'
 import { CatalogShell } from '@/features/catalog/components/CatalogShell'
 import { BackToResults } from '@/features/catalog/components/BackToResults'
@@ -72,9 +73,10 @@ export default async function CatalogDocumentPage({
         notFound()
     }
 
-    // Same category first; top up by the first tag when the category is thin.
-    const byCategory = doc.category
-        ? (await listPublicDocuments({ category: doc.category, limit: 7 })).documents
+    // Same subject/category first; top up by the first tag when the category is thin.
+    const primaryCategory = resolveDocumentCategory(doc)
+    const byCategory = primaryCategory
+        ? (await listPublicDocuments({ subjects: [primaryCategory], limit: 7 })).documents
         : []
     const firstTag = doc.tags?.[0]
     const needMore = byCategory.filter(d => d.documentId !== doc.documentId).length < 3
@@ -120,8 +122,8 @@ export default async function CatalogDocumentPage({
                         <ol>
                             <li><a href={`/${lang}`}>{strings.breadcrumbs.home}</a></li>
                             <li><a href={`/${lang}/catalog`}>{strings.breadcrumbs.catalog}</a></li>
-                            {doc.category && (
-                                <li><a href={`/${lang}/catalog/category/${doc.category}`}>{getCategoryLabel(doc.category, lang)}</a></li>
+                            {primaryCategory && (
+                                <li><a href={`/${lang}/catalog/category/${primaryCategory}`}>{getCategoryLabel(primaryCategory, lang)}</a></li>
                             )}
                             <li aria-current="page">{title}</li>
                         </ol>

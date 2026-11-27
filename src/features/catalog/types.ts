@@ -9,6 +9,7 @@ export interface DocumentSummary {
   title: string
   tags: string[]
   category: string | null
+  subjects?: string[]
   language: string
   thumbnailS3Key: string | null
   likesCount: number
@@ -46,6 +47,7 @@ export interface CatalogListParams {
   limit?: number
   cursor?: string
   category?: string
+  subjects?: string[]
   tags?: string[]
   language?: string
   sort?: 'updatedAt' | 'likesCount' | 'viewsCount'

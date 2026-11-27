@@ -15,12 +15,13 @@ function ok(body: unknown) {
 }
 
 describe('serverClient.listPublicDocuments', () => {
-  it('builds the query string from params (tags joined by comma)', async () => {
+  it('builds the query string from params (subjects and tags joined by comma)', async () => {
     fetchMock.mockReturnValue(ok({ documents: [], nextCursor: null }))
-    await listPublicDocuments({ category: 'geometry', tags: ['a', 'b'], language: 'en', sort: 'likesCount', limit: 12 })
+    await listPublicDocuments({ category: 'geometry', subjects: ['algebra', 'geometry'], tags: ['a', 'b'], language: 'en', sort: 'likesCount', limit: 12 })
     const url = fetchMock.mock.calls[0]![0] as string
     expect(url).toContain('/catalog/documents?')
     expect(url).toContain('category=geometry')
+    expect(url).toContain('subjects=algebra%2Cgeometry')
     expect(url).toContain('tags=a%2Cb')
     expect(url).toContain('language=en')
     expect(url).toContain('sort=likesCount')
