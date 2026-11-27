@@ -15,7 +15,7 @@ export function SignUpButton({ label }: SignUpButtonProps) {
     const btnRef = useRef<HTMLButtonElement>(null)
 
     const handleClick = () => {
-        trackAnalyticsEvent('sign_up', { source: 'pricing' })
+        trackAnalyticsEvent('sign_up', { location: 'pricing' })
         if (btnRef.current) {
             const rect = btnRef.current.getBoundingClientRect()
             setAnchorRect({ bottom: rect.bottom, left: rect.left, width: rect.width })
