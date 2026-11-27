@@ -59,6 +59,7 @@ export type AuthAction =
     | { type: 'SET_ERROR'; error: string | null }
     | { type: 'SET_NOTICE'; notice: string | null }
     | { type: 'OPEN_MODAL'; view: ModalView; context?: AuthModalContext | null }
+    | { type: 'OPEN_OAUTH_ERROR'; error: string | null; notice: string | null }
     | { type: 'CLOSE_MODAL' }
     | { type: 'SET_VIEW'; view: ModalView; prefillEmail?: string }
     | { type: 'SET_PENDING_EMAIL'; email: string | null }
@@ -95,6 +96,16 @@ export function authReducer(state: AuthState, action: AuthAction): AuthState {
                 nativeAuthModalOpen: true,
                 nativeAuthModalView: action.view,
                 modalContext: action.context ?? null,
+            }
+        case 'OPEN_OAUTH_ERROR':
+            return {
+                ...state,
+                ...clearedFlow,
+                nativeAuthModalOpen: true,
+                nativeAuthModalView: 'signIn',
+                nativeAuthError: action.error,
+                nativeAuthNotice: action.notice,
+                modalContext: null,
             }
         case 'CLOSE_MODAL':
             return { ...state, ...clearedFlow, nativeAuthModalOpen: false, modalContext: null }
