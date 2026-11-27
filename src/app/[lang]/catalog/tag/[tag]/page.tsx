@@ -32,7 +32,8 @@ export async function generateMetadata({
 
     // Deduped with the page's identical fetch by Next.js request memoization (same URL + options).
     const result = await listPublicDocuments({ tags: [tag], limit: 24 })
-    const thinTag = result.documents.length < TAG_INDEX_MIN
+    // Do not mark a tag page noindex on transient API failures.
+    const thinTag = !result.degraded && result.documents.length < TAG_INDEX_MIN
 
     return {
         title,
