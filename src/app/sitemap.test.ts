@@ -32,11 +32,37 @@ beforeEach(() => {
 })
 
 describe('sitemap', () => {
-  it('includes only non-empty categories derived from subjects and excludes empty ones', async () => {
+  it('uses facets.subjects when available so categories beyond the 1000-doc window are still included', async () => {
+    listPublicDocumentsMock.mockResolvedValue({
+      documents: [doc('g1', { subjects: ['geometry'] })],
+      facets: {
+        subjects: [
+          { id: 'geometry', count: 7 },
+          { id: 'algebra', count: 2 },
+          { id: 'statistics', count: 1 },
+          { id: 'calculus', count: 0 },
+          { id: 'math', count: 1 },
+        ],
+      },
+      nextCursor: null,
+    })
+
+    const entries = await sitemap()
+    const urls = entries.map((e) => e.url)
+
+    expect(urls).toContain('https://www.math-on-canvas.com/en/catalog/category/algebra')
+    expect(urls).toContain('https://www.math-on-canvas.com/en/catalog/category/geometry')
+    expect(urls).toContain('https://www.math-on-canvas.com/en/catalog/category/statistics')
+    expect(urls).not.toContain('https://www.math-on-canvas.com/en/catalog/category/calculus')
+    expect(urls).not.toContain('https://www.math-on-canvas.com/en/catalog/category/math')
+  })
+
+  it('falls back to document subjects when facets are absent and ignores legacy category', async () => {
     listPublicDocumentsMock.mockResolvedValue({
       documents: [
         doc('g1', { subjects: ['geometry'] }),
         doc('a1', { subjects: ['algebra', 'math'] }),
+        doc('legacy', { category: 'calculus', subjects: [] }),
       ],
       nextCursor: null,
     })
@@ -47,22 +73,21 @@ describe('sitemap', () => {
     expect(urls).toContain('https://www.math-on-canvas.com/en/catalog/category/algebra')
     expect(urls).toContain('https://www.math-on-canvas.com/en/catalog/category/geometry')
     expect(urls).not.toContain('https://www.math-on-canvas.com/en/catalog/category/calculus')
-    expect(urls).not.toContain('https://www.math-on-canvas.com/en/catalog/category/statistics')
-    expect(urls).not.toContain('https://www.math-on-canvas.com/en/catalog/category/trigonometry')
-    expect(urls).not.toContain('https://www.math-on-canvas.com/en/catalog/category/number-theory')
-    expect(urls).not.toContain('https://www.math-on-canvas.com/en/catalog/category/other')
     expect(urls).not.toContain('https://www.math-on-canvas.com/en/catalog/category/official-template')
-    expect(urls).not.toContain('https://www.math-on-canvas.com/en/catalog/category/math')
   })
 
-  it('degrades to landing and pricing without empty category hubs when catalog fetch fails', async () => {
-    listPublicDocumentsMock.mockRejectedValue(new Error('boom'))
+  it('degrades to landing and pricing without catalog entries when API returns degraded', async () => {
+    listPublicDocumentsMock.mockResolvedValue({
+      documents: [],
+      nextCursor: null,
+      degraded: true,
+    })
 
     const entries = await sitemap()
     const urls = entries.map((e) => e.url)
 
     expect(urls).toContain('https://www.math-on-canvas.com/en')
     expect(urls).toContain('https://www.math-on-canvas.com/en/pricing')
-    expect(urls.some((u) => u.includes('/catalog/category/'))).toBe(false)
+    expect(urls.some((u) => u.includes('/catalog'))).toBe(false)
   })
 })

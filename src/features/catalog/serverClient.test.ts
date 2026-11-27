@@ -29,16 +29,16 @@ describe('serverClient.listPublicDocuments', () => {
     expect(fetchMock.mock.calls[0]![1]).toEqual({ next: { revalidate: 300, tags: ['catalog'] } })
   })
 
-  it('returns an empty result on a non-ok response (degrade, never throw)', async () => {
+  it('returns a degraded empty result on a non-ok response (degrade, never throw)', async () => {
     fetchMock.mockReturnValue(Promise.resolve({ ok: false, status: 500 } as Response))
     const res = await listPublicDocuments({})
-    expect(res).toEqual({ documents: [], nextCursor: null })
+    expect(res).toEqual({ documents: [], nextCursor: null, degraded: true })
   })
 
-  it('returns a fresh empty result when fetch rejects (network failure, never throw)', async () => {
+  it('returns a degraded empty result when fetch rejects (network failure, never throw)', async () => {
     fetchMock.mockRejectedValue(new Error('network'))
     const res = await listPublicDocuments({})
-    expect(res).toEqual({ documents: [], nextCursor: null })
+    expect(res).toEqual({ documents: [], nextCursor: null, degraded: true })
   })
 })
 

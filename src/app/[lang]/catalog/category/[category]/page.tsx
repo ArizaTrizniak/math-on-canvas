@@ -33,7 +33,8 @@ export async function generateMetadata({
     const result = isCategory(category)
         ? await listPublicDocuments({ subjects: [category], limit: 24 })
         : { documents: [], nextCursor: null }
-    const isEmpty = result.documents.length === 0
+    // Do not mark a category noindex on transient API failures.
+    const isEmpty = !result.degraded && result.documents.length === 0
 
     return {
         title,

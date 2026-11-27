@@ -36,4 +36,16 @@ describe('CategoryHubPage generateMetadata', () => {
     expect(listPublicDocumentsMock).toHaveBeenCalledWith({ subjects: ['calculus'], limit: 24 })
     expect(meta.robots).toEqual({ index: false })
   })
+
+  it('keeps category indexable when API call is degraded', async () => {
+    listPublicDocumentsMock.mockResolvedValue({
+      documents: [],
+      nextCursor: null,
+      degraded: true,
+    })
+
+    const meta = await generateMetadata({ params: Promise.resolve({ lang: 'en', category: 'geometry' }) })
+
+    expect(meta.robots).toBeUndefined()
+  })
 })

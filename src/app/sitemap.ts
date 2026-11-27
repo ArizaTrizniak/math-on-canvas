@@ -2,23 +2,30 @@ import type { MetadataRoute } from 'next'
 import { BASE_URL } from '@/lib/site'
 import { listPublicDocuments } from '@/features/catalog/serverClient'
 import { catalogSitemapEntries } from '@/features/catalog/sitemap'
-import type { DocumentSummary } from '@/features/catalog/types'
+import type { CatalogFacets, DocumentSummary } from '@/features/catalog/types'
 import { LANGUAGES } from '@/lib/i18n/constants'
-import { activeCategories } from '@/features/catalog/taxonomy'
+import { activeCategories, activeCategoriesFromFacets } from '@/features/catalog/taxonomy'
 
 const MAX_PAGES = 10
 const PAGE_SIZE = 100
 
-async function fetchAllCatalogDocuments(): Promise<DocumentSummary[]> {
+async function fetchAllCatalogDocuments(): Promise<{
+    documents: DocumentSummary[]
+    facets: CatalogFacets | null
+    degraded: boolean
+}> {
     const all: DocumentSummary[] = []
+    let facets: CatalogFacets | null = null
     let cursor: string | undefined = undefined
     for (let page = 0; page < MAX_PAGES; page++) {
         const result = await listPublicDocuments({ limit: PAGE_SIZE, cursor })
+        if (result.degraded) return { documents: [], facets: null, degraded: true }
+        if (page === 0) facets = result.facets ?? null
         all.push(...result.documents)
         if (!result.nextCursor) break
         cursor = result.nextCursor
     }
-    return all
+    return { documents: all, facets, degraded: false }
 }
 
 /**
@@ -55,8 +62,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ]
 
     try {
-        const allDocs = await fetchAllCatalogDocuments()
-        const categoryEntries = activeCategories(allDocs).flatMap((category) =>
+        const { documents: allDocs, facets, degraded } = await fetchAllCatalogDocuments()
+        if (degraded) return staticEntries
+        const categories = activeCategoriesFromFacets(facets) ?? activeCategories(allDocs)
+        const categoryEntries = categories.flatMap((category) =>
             localeEntries(`/catalog/category/${category}`, { priority: 0.7 }),
         )
         const indexableDocs = allDocs.filter((d) => d.thumbnailS3Key)

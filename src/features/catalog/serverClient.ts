@@ -20,10 +20,10 @@ export async function listPublicDocuments(params: CatalogListParams): Promise<Ca
     const res = await fetch(`${documentsApiBaseUrl()}/catalog/documents${qs ? `?${qs}` : ''}`, {
       next: { revalidate: 300, tags: ['catalog'] },
     })
-    if (!res.ok) return { documents: [], nextCursor: null }
+    if (!res.ok) return { documents: [], nextCursor: null, degraded: true }
     return (await res.json()) as CatalogListResult
   } catch {
-    return { documents: [], nextCursor: null }
+    return { documents: [], nextCursor: null, degraded: true }
   }
 }
 

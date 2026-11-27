@@ -38,9 +38,21 @@ export interface CatalogDocumentMeta extends DocumentSummary {
   pageThumbnails?: PageThumbnail[] | null
 }
 
+export interface CatalogFacetCount {
+  id: string
+  count: number
+}
+
+export interface CatalogFacets {
+  subjects?: CatalogFacetCount[]
+}
+
 export interface CatalogListResult {
   documents: DocumentSummary[]
   nextCursor: string | null
+  facets?: CatalogFacets | null
+  /** True when the documents API could not be reached or returned a non-2xx status. */
+  degraded?: boolean
 }
 
 export interface CatalogListParams {
