@@ -77,7 +77,7 @@ function GoogleIcon() {
 export function GoogleButton({ disabled }: { disabled?: boolean }) {
     const { t } = useTranslation('auth')
     return (
-        <button type="button" className="am-google" onClick={startGoogleSignIn} disabled={disabled}>
+        <button type="button" className="am-google" onClick={() => startGoogleSignIn()} disabled={disabled}>
             <GoogleIcon />
             {t('common.google')}
         </button>

@@ -65,7 +65,7 @@ export function ForgotPasswordView() {
                 <Info size={18} aria-hidden="true" />
                 <span>
                     {t('forgotPassword.googleHint')}{' '}
-                    <button type="button" className="am-link" onClick={startGoogleSignIn} disabled={loading}>
+                    <button type="button" className="am-link" onClick={() => startGoogleSignIn()} disabled={loading}>
                         {t('forgotPassword.googleLink')}
                     </button>.
                 </span>
