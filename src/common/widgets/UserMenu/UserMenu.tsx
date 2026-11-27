@@ -3,7 +3,7 @@
 import React from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
-import { trackAnalyticsEvent } from '@/common/utils/analytics'
+import { track } from '@/common/analytics/track'
 import { useAuthContext } from '@/lib/auth/authContext'
 import './UserMenu.css'
 
@@ -45,7 +45,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ displayName: serverDisplayNa
 
     const handleSignOut = () => {
         setOpen(false)
-        trackAnalyticsEvent('sign_out')
+        track({ name: 'sign_out' })
         void signOut()
     }
 

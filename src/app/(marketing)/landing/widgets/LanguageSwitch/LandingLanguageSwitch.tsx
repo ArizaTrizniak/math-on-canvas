@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { LANGUAGES, type LanguageCode } from '@/lib/i18n/constants'
 import { LanguageSwitchView } from '@/common/widgets/LanguageSwitch/LanguageSwitchView'
-import { trackAnalyticsEvent } from '@/common/utils/analytics'
+import { track } from '@/common/analytics/track'
 import './LandingLanguageSwitch.css'
 
 type MenuPosition = {
@@ -62,7 +62,7 @@ const LandingLanguageSwitch = ({ currentLang, pathSuffix = '' }: LandingLanguage
     const toggle = () => setIsOpen((open) => !open)
 
     const selectLanguage = (code: LanguageCode) => {
-        trackAnalyticsEvent('language_switch', { lang: code })
+        track({ name: 'language_switch', lang: code })
         document.cookie = `lang=${code};path=/;max-age=31536000`
         setIsOpen(false)
         router.push(`/${code}${pathSuffix}`)
