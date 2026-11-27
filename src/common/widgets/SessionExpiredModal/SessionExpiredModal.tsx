@@ -23,7 +23,7 @@ export function SessionExpiredModal() {
 
     const handleSignIn = () => {
         closeSessionExpiredModal()
-        openSignInModal()
+        openSignInModal('session_expired')
     }
 
     return createPortal(

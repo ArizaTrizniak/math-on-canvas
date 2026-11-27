@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuthContext } from '@/lib/auth/authContext'
 import { startGoogleSignIn } from '@/lib/auth/googleSignIn'
+import type { AuthModalTrigger } from '@/common/analytics/events'
 import './AuthDropdown.css'
 
 interface AnchorRect {
@@ -18,6 +19,8 @@ interface AuthDropdownProps {
     open: boolean
     onClose: () => void
     defaultView?: 'signIn' | 'signUp'
+    /** Where the menu was opened from; the opener sends auth_modal_opened when it shows the menu. */
+    trigger: AuthModalTrigger
 }
 
 function GoogleIcon() {
@@ -40,7 +43,7 @@ function EmailIcon() {
     )
 }
 
-export function AuthDropdown({ anchorRect, open, onClose, defaultView = 'signIn' }: AuthDropdownProps) {
+export function AuthDropdown({ anchorRect, open, onClose, defaultView = 'signIn', trigger }: AuthDropdownProps) {
     const { t } = useTranslation('auth')
     const { openSignInModal, openSignUpModal } = useAuthContext()
 
@@ -55,15 +58,16 @@ export function AuthDropdown({ anchorRect, open, onClose, defaultView = 'signIn'
 
     const handleGoogle = () => {
         onClose()
-        startGoogleSignIn()
+        startGoogleSignIn(trigger)
     }
 
     const handleEmail = () => {
         onClose()
+        // The menu itself was the prompt: no second auth_modal_opened for the modal.
         if (defaultView === 'signUp') {
-            openSignUpModal()
+            openSignUpModal(trigger, { silent: true })
         } else {
-            openSignInModal()
+            openSignInModal(trigger, { silent: true })
         }
     }
 

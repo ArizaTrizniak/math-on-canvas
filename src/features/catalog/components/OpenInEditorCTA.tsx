@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { useAuthContext } from '@/lib/auth/authContext'
+import { flushAnalytics } from '@/common/utils/analytics'
 import { saveIntent, readIntent, clearIntent } from '../intent'
 
 interface Props {
@@ -21,7 +22,8 @@ export function OpenInEditorCTA({ documentId, title, thumbnailUrl, label, intro,
     if (status !== 'authenticated') return
     if (readIntent() !== documentId) return
     clearIntent()
-    window.location.assign(`/editor?doc=${encodeURIComponent(documentId)}`)
+    // The sign-in events were queued just now: let gtag send them before leaving the page.
+    void flushAnalytics().then(() => window.location.assign(`/editor?doc=${encodeURIComponent(documentId)}`))
   }, [status, documentId])
 
   const onClick = () => {
@@ -30,7 +32,7 @@ export function OpenInEditorCTA({ documentId, title, thumbnailUrl, label, intro,
       return
     }
     saveIntent(documentId)
-    openSignUpModal({ kind: 'catalogOpen', title, thumbnailUrl, intro })
+    openSignUpModal('catalog', { context: { kind: 'catalogOpen', title, thumbnailUrl, intro } })
   }
 
   return (
