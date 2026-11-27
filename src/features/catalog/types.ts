@@ -9,6 +9,7 @@ export interface DocumentSummary {
   title: string
   tags: string[]
   category: string | null
+  subjects?: string[]
   language: string
   thumbnailS3Key: string | null
   likesCount: number
@@ -37,15 +38,28 @@ export interface CatalogDocumentMeta extends DocumentSummary {
   pageThumbnails?: PageThumbnail[] | null
 }
 
+export interface CatalogFacetCount {
+  id: string
+  count: number
+}
+
+export interface CatalogFacets {
+  subjects?: CatalogFacetCount[]
+}
+
 export interface CatalogListResult {
   documents: DocumentSummary[]
   nextCursor: string | null
+  facets?: CatalogFacets | null
+  /** True when the documents API could not be reached or returned a non-2xx status. */
+  degraded?: boolean
 }
 
 export interface CatalogListParams {
   limit?: number
   cursor?: string
   category?: string
+  subjects?: string[]
   tags?: string[]
   language?: string
   sort?: 'updatedAt' | 'likesCount' | 'viewsCount'
