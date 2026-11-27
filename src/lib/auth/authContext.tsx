@@ -14,6 +14,7 @@ import { normalizeLanguage } from '@/lib/i18n/constants'
 import { authApiClient } from './authApiClient'
 import { installAuthInterceptor, uninstallAuthInterceptor } from './authInterceptor'
 import { mapNativeAuthError } from './mapAuthError'
+import { consumeAuthErrorMarker, mapOAuthErrorToBanner } from './authErrorMarker'
 import { AuthNativeError } from './authTypes'
 import {
     authReducer,
@@ -80,9 +81,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Auth init on mount
     useEffect(() => {
         let cancelled = false
+        const authError = consumeAuthErrorMarker()
         authApiClient.getMe().then(
             (user) => { if (!cancelled) dispatch({ type: 'AUTH_INIT_DONE', user }) },
-            () => { if (!cancelled) dispatch({ type: 'AUTH_INIT_DONE', user: null }) },
+            () => {
+                if (cancelled) return
+                dispatch({ type: 'AUTH_INIT_DONE', user: null })
+                if (authError) {
+                    const banner = mapOAuthErrorToBanner(authError)
+                    dispatch({ type: 'OPEN_OAUTH_ERROR', error: banner.error, notice: banner.notice })
+                }
+            },
         )
         return () => { cancelled = true }
     }, [])
