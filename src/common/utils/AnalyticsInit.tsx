@@ -1,13 +1,12 @@
 'use client'
 
 import { useEffect } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { initAnalytics, syncInternalFromRole, trackPageView } from '@/common/utils/analytics'
 import { useAuthContext } from '@/lib/auth/authContext'
 
 export function AnalyticsInit() {
     const pathname = usePathname()
-    const searchParams = useSearchParams()
     const { user } = useAuthContext()
 
     useEffect(() => { initAnalytics() }, [])
@@ -18,10 +17,11 @@ export function AnalyticsInit() {
         }
     }, [user?.role])
 
+    // One page_view per pathname change. The query is not tracked: it would turn one-shot
+    // markers (?auth_result, ?auth_error) into extra page views (BL-0009).
     useEffect(() => {
-        const search = searchParams.toString()
-        trackPageView(pathname + (search ? `?${search}` : ''))
-    }, [pathname, searchParams])
+        trackPageView(pathname)
+    }, [pathname])
 
     return null
 }

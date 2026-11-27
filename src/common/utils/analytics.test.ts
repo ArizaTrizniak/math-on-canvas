@@ -122,15 +122,20 @@ describe('analytics', () => {
 
             initAnalytics()
 
-            expect(initialize).toHaveBeenCalledWith('G-TEST123')
+            expect(initialize).toHaveBeenCalledWith('G-TEST123', {
+                gtagOptions: { send_page_view: false, page_location: 'https://www.math-on-canvas.com/en' }
+            })
             expect(gtag).toHaveBeenCalledWith('set', 'user_properties', { internal: false })
-            expect(send).toHaveBeenCalledWith({ hitType: 'pageview', page: '/en' })
+            expect(send).not.toHaveBeenCalled()
 
             trackAnalyticsEvent('cta_click', { location: 'hero' })
             trackPageView('/en/pricing')
 
             expect(event).toHaveBeenCalledWith('cta_click', { location: 'hero' })
-            expect(send).toHaveBeenCalledWith({ hitType: 'pageview', page: '/en/pricing' })
+            expect(gtag).toHaveBeenCalledWith('event', 'page_view', {
+                page_path: '/en/pricing',
+                page_location: 'https://www.math-on-canvas.com/en/pricing'
+            })
         })
 
         it('initializes on apex domain math-on-canvas.com', async () => {
@@ -139,8 +144,90 @@ describe('analytics', () => {
 
             initAnalytics()
 
-            expect(initialize).toHaveBeenCalledWith('G-TEST123')
+            expect(initialize).toHaveBeenCalledWith('G-TEST123', {
+                gtagOptions: { send_page_view: false, page_location: 'https://math-on-canvas.com/en' }
+            })
             expect(gtag).toHaveBeenCalledWith('set', 'user_properties', { internal: false })
+        })
+    })
+
+    describe('page_view', () => {
+        it('initAnalytics keeps auth markers and other query out of the config page_location and sends no page_view', async () => {
+            stubBrowser({ search: '?auth_result=signup', href: 'https://www.math-on-canvas.com/en?auth_result=signup' })
+            const { initAnalytics } = await import('./analytics')
+
+            initAnalytics()
+
+            expect(initialize).toHaveBeenCalledWith('G-TEST123', {
+                gtagOptions: { send_page_view: false, page_location: 'https://www.math-on-canvas.com/en' }
+            })
+            expect(send).not.toHaveBeenCalled()
+            expect(gtag).not.toHaveBeenCalledWith('event', 'page_view', expect.anything())
+        })
+
+        it('trackPageView sets page_location before sending page_view with the pathname only', async () => {
+            const { initAnalytics, trackPageView } = await import('./analytics')
+            initAnalytics()
+            gtag.mockClear()
+
+            trackPageView('/en/catalog')
+
+            expect(gtag.mock.calls).toEqual([
+                ['set', { page_location: 'https://www.math-on-canvas.com/en/catalog' }],
+                ['event', 'page_view', {
+                    page_path: '/en/catalog',
+                    page_location: 'https://www.math-on-canvas.com/en/catalog'
+                }]
+            ])
+        })
+    })
+
+    describe('flushAnalytics', () => {
+        it('resolves immediately without calling gtag when tracking is off', async () => {
+            process.env = { ...process.env, NODE_ENV: 'development' }
+            const { initAnalytics, flushAnalytics } = await import('./analytics')
+            initAnalytics()
+
+            await expect(flushAnalytics()).resolves.toBeUndefined()
+            expect(gtag).not.toHaveBeenCalled()
+        })
+
+        it('waits for gtag to answer a get command, which creates no hit', async () => {
+            const { initAnalytics, flushAnalytics } = await import('./analytics')
+            initAnalytics()
+            gtag.mockClear()
+
+            let settled = false
+            const done = flushAnalytics().then(() => { settled = true })
+            await Promise.resolve()
+
+            expect(gtag).toHaveBeenCalledTimes(1)
+            expect(gtag).toHaveBeenCalledWith('get', 'G-TEST123', 'client_id', expect.any(Function))
+            expect(settled).toBe(false)
+
+            const callback = gtag.mock.calls[0][3] as (value: string) => void
+            callback('123.456')
+            await done
+            expect(settled).toBe(true)
+            expect(gtag).not.toHaveBeenCalledWith('event', expect.anything(), expect.anything())
+        })
+
+        it('resolves after the timeout when gtag never answers', async () => {
+            vi.useFakeTimers()
+            try {
+                const { initAnalytics, flushAnalytics } = await import('./analytics')
+                initAnalytics()
+
+                let settled = false
+                const done = flushAnalytics().then(() => { settled = true })
+                await vi.advanceTimersByTimeAsync(999)
+                expect(settled).toBe(false)
+                await vi.advanceTimersByTimeAsync(1)
+                await done
+                expect(settled).toBe(true)
+            } finally {
+                vi.useRealTimers()
+            }
         })
     })
 
@@ -154,7 +241,7 @@ describe('analytics', () => {
             expect(isInternal()).toBe(true)
             expect(localStorage.getItem('moc_internal')).toBe('1')
             expect(initialize).toHaveBeenCalledWith('G-TEST123', {
-                gtagOptions: { traffic_type: 'internal' }
+                gtagOptions: { traffic_type: 'internal', send_page_view: false, page_location: 'https://www.math-on-canvas.com/en' }
             })
             expect(gtag).toHaveBeenCalledWith('set', 'user_properties', { internal: true })
         })
@@ -166,7 +253,7 @@ describe('analytics', () => {
             initAnalytics()
 
             expect(initialize).toHaveBeenCalledWith('G-TEST123', {
-                gtagOptions: { traffic_type: 'internal' }
+                gtagOptions: { traffic_type: 'internal', send_page_view: false, page_location: 'https://www.math-on-canvas.com/en' }
             })
             expect(gtag).toHaveBeenCalledWith('set', 'user_properties', { internal: true })
         })

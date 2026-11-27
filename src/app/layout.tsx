@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { BASE_URL, OG_IMAGE } from '@/lib/site'
 import { AnalyticsInit } from '@/common/utils/AnalyticsInit'
@@ -62,9 +61,7 @@ export default function RootLayout({
                 <AuthProvider>
                     {/* useSearchParams() needs request-time data — wrapping it lets the
                         rest of the tree (now header()-free) still prerender statically. */}
-                    <Suspense fallback={null}>
-                        <AnalyticsInit />
-                    </Suspense>
+                    <AnalyticsInit />
                     {children}
                     <NativeAuthModal />
                     <SessionExpiredModal />
