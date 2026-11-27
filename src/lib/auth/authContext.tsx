@@ -14,8 +14,20 @@ import { normalizeLanguage } from '@/lib/i18n/constants'
 import { authApiClient } from './authApiClient'
 import { installAuthInterceptor, uninstallAuthInterceptor } from './authInterceptor'
 import { mapNativeAuthError } from './mapAuthError'
-import { consumeAuthErrorMarker, mapOAuthErrorToBanner } from './authErrorMarker'
-import { AuthNativeError } from './authTypes'
+import { consumeAuthErrorMarker, mapOAuthErrorToBanner, type AuthErrorMarker } from './authErrorMarker'
+import { consumeAuthResultMarker, type AuthResultMarker } from './authResultMarker'
+import { AuthNativeError, type UserProfile } from './authTypes'
+import { clearPendingAuthSession } from './pendingAuthAction'
+import {
+    loginFailureReason,
+    recordAuthTrigger,
+    settleAuthInit,
+    signUpFailureReason,
+    trackAuthPromptOpened,
+    trackAuthSuccess,
+} from './authAnalytics'
+import { track } from '@/common/analytics/track'
+import type { AuthModalTrigger } from '@/common/analytics/events'
 import {
     authReducer,
     initialAuthState,
@@ -32,9 +44,15 @@ function errorKey(err: unknown): string {
 
 // ─── Context ─────────────────────────────────────────────────────────────────
 
+export interface OpenAuthModalOptions {
+    context?: AuthModalContext
+    /** The prompt was already counted (dropdown menu shown): record the trigger only. */
+    silent?: boolean
+}
+
 interface AuthContextValue extends AuthState {
-    openSignInModal(context?: AuthModalContext): void
-    openSignUpModal(context?: AuthModalContext): void
+    openSignInModal(trigger: AuthModalTrigger, options?: OpenAuthModalOptions): void
+    openSignUpModal(trigger: AuthModalTrigger, options?: OpenAuthModalOptions): void
     closeNativeAuthModal(): void
     setModalView(view: ModalView, prefillEmail?: string): void
     /** Resolves false when the credentials were rejected and the view should let the user retry. */
@@ -78,17 +96,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     }, [pathname])
 
+    // OAuth markers are stripped from the URL on first read; StrictMode runs the init effect
+    // twice in development, so the first read is kept here for the second run.
+    const markersRef = useRef<{ result: AuthResultMarker | null; error: AuthErrorMarker | null } | null>(null)
+
     // Auth init on mount
     useEffect(() => {
         let cancelled = false
-        const authError = consumeAuthErrorMarker()
+        const markers = markersRef.current ??= {
+            result: consumeAuthResultMarker(),
+            error: consumeAuthErrorMarker(),
+        }
         authApiClient.getMe().then(
-            (user) => { if (!cancelled) dispatch({ type: 'AUTH_INIT_DONE', user }) },
+            (user) => {
+                if (cancelled) return
+                // Before AUTH_INIT_DONE: the admin flag is set before AnalyticsInit sees the user.
+                settleAuthInit(markers, user)
+                dispatch({ type: 'AUTH_INIT_DONE', user })
+            },
             () => {
                 if (cancelled) return
+                settleAuthInit(markers, null)
                 dispatch({ type: 'AUTH_INIT_DONE', user: null })
-                if (authError) {
-                    const banner = mapOAuthErrorToBanner(authError)
+                if (markers.error) {
+                    const banner = mapOAuthErrorToBanner(markers.error)
                     dispatch({ type: 'OPEN_OAUTH_ERROR', error: banner.error, notice: banner.notice })
                 }
             },
@@ -102,19 +133,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return () => uninstallAuthInterceptor()
     }, [])
 
-    const openSignInModal = useCallback((context?: AuthModalContext) => dispatch({ type: 'OPEN_MODAL', view: 'signIn', context }), [])
-    const openSignUpModal = useCallback((context?: AuthModalContext) => dispatch({ type: 'OPEN_MODAL', view: 'signUp', context }), [])
+    const openAuthModal = useCallback((view: 'signIn' | 'signUp', trigger: AuthModalTrigger, options?: OpenAuthModalOptions) => {
+        recordAuthTrigger(trigger)
+        if (!options?.silent) trackAuthPromptOpened(view, trigger)
+        dispatch({ type: 'OPEN_MODAL', view, context: options?.context })
+    }, [])
+    const openSignInModal = useCallback(
+        (trigger: AuthModalTrigger, options?: OpenAuthModalOptions) => openAuthModal('signIn', trigger, options),
+        [openAuthModal],
+    )
+    const openSignUpModal = useCallback(
+        (trigger: AuthModalTrigger, options?: OpenAuthModalOptions) => openAuthModal('signUp', trigger, options),
+        [openAuthModal],
+    )
     const closeNativeAuthModal = useCallback(() => {
         signUpCredentials.current = null
+        clearPendingAuthSession()
         dispatch({ type: 'CLOSE_MODAL' })
     }, [])
     const setModalView = useCallback((view: ModalView, prefillEmail?: string) => dispatch({ type: 'SET_VIEW', view, prefillEmail }), [])
     const closeSessionExpiredModal = useCallback(() => dispatch({ type: 'SET_SESSION_EXPIRED', open: false }), [])
 
-    const finishSignIn = useCallback(async () => {
-        const user = await authApiClient.getMe()
+    /**
+     * Called once the backend accepted the credentials, so it never throws: a failed getMe
+     * still counts as a sign-in (the cookies are set) and never as login_failed.
+     */
+    const finishSignIn = useCallback(async (emit?: 'login' | 'sign_up') => {
+        let user: UserProfile | null = null
+        try {
+            user = await authApiClient.getMe()
+        } catch {
+            // profile unavailable — the refresh below picks the session up
+        }
         signUpCredentials.current = null
-        dispatch({ type: 'AUTH_INIT_DONE', user })
+        trackAuthSuccess(emit ? [emit] : [], 'email', user)
+        if (user) dispatch({ type: 'AUTH_INIT_DONE', user })
         dispatch({ type: 'CLOSE_MODAL' })
         router.refresh()
     }, [router])
@@ -122,8 +175,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const submitSignIn = useCallback(async (email: string, password: string) => {
         dispatch({ type: 'SET_LOADING', loading: true })
         try {
-            await authApiClient.signIn(email, password)
-            await finishSignIn()
+            try {
+                await authApiClient.signIn(email, password)
+            } catch (err) {
+                // Sent for not_confirmed too, before the confirm-email branch, as in the editor.
+                track({ name: 'login_failed', reason: loginFailureReason(err) })
+                throw err
+            }
+            await finishSignIn('login')
             return true
         } catch (err) {
             if (err instanceof AuthNativeError && err.code === 'user_not_confirmed') {
@@ -144,16 +203,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const submitSignUp = useCallback(async (email: string, password: string, displayName: string) => {
         dispatch({ type: 'SET_LOADING', loading: true })
         try {
-            const res = await authApiClient.signUp(email, password, displayName)
+            let res: Awaited<ReturnType<typeof authApiClient.signUp>>
+            try {
+                res = await authApiClient.signUp(email, password, displayName)
+            } catch (err) {
+                track({ name: 'sign_up_failed', step: 'submit', reason: signUpFailureReason(err) })
+                dispatch({ type: 'SET_ERROR', error: errorKey(err) })
+                return
+            }
+            track({ name: 'sign_up_submitted', method: 'email' })
             if (res.confirmationRequired) {
                 signUpCredentials.current = { email, password }
                 dispatch({ type: 'SET_PENDING_EMAIL', email })
                 dispatch({ type: 'SET_VIEW', view: 'confirmEmail', prefillEmail: email })
-            } else {
-                await finishSignIn()
+                return
             }
-        } catch (err) {
-            dispatch({ type: 'SET_ERROR', error: errorKey(err) })
+            // The account exists already, but /auth/signup sets no cookies: sign in explicitly.
+            try {
+                await authApiClient.signIn(email, password)
+            } catch {
+                trackAuthSuccess(['sign_up'], 'email', null)
+                dispatch({ type: 'SET_VIEW', view: 'signIn', prefillEmail: email })
+                return
+            }
+            await finishSignIn('sign_up')
         } finally {
             dispatch({ type: 'SET_LOADING', loading: false })
         }
@@ -164,6 +237,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
             await authApiClient.confirmSignUp(email, code)
         } catch (err) {
+            track({ name: 'sign_up_failed', step: 'confirm', reason: signUpFailureReason(err) })
             dispatch({ type: 'SET_ERROR', error: errorKey(err) })
             dispatch({ type: 'SET_LOADING', loading: false })
             return
@@ -172,15 +246,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         dispatch({ type: 'SET_PENDING_EMAIL', email: null })
         const creds = signUpCredentials.current
         if (creds && creds.email === email) {
+            let signedIn = false
             try {
                 await authApiClient.signIn(creds.email, creds.password)
-                await finishSignIn()
-                dispatch({ type: 'SET_LOADING', loading: false })
-                return
+                signedIn = true
             } catch {
                 // fall through to the manual sign-in screen
             }
+            if (signedIn) {
+                await finishSignIn('sign_up')
+                dispatch({ type: 'SET_LOADING', loading: false })
+                return
+            }
         }
+        // The account is confirmed: that is the sign-up, even without the automatic sign-in.
+        trackAuthSuccess(['sign_up'], 'email', null)
         signUpCredentials.current = null
         dispatch({ type: 'SET_VIEW', view: 'signIn', prefillEmail: email })
         dispatch({ type: 'SET_NOTICE', notice: 'auth:notice.emailConfirmed' })
@@ -238,6 +318,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (res.signedIn) {
                 try {
                     const user = await authApiClient.getMe()
+                    // Signed in by a password reset: no login event, but the trigger is used up
+                    // and an admin is marked internal.
+                    trackAuthSuccess([], 'email', user)
                     dispatch({ type: 'AUTH_INIT_DONE', user })
                     router.refresh()
                     signedIn = true
