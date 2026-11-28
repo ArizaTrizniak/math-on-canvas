@@ -27,7 +27,14 @@ const SAMPLES = {
 const params = (event: AnalyticsEvent): Array<[string, unknown]> =>
     Object.entries(event).filter(([key]) => key !== 'name')
 
-const RESERVED = ['source', 'medium', 'campaign', 'term', 'content']
+const SAMPLE_EVENTS = Object.values(SAMPLES) as AnalyticsEvent[]
+
+// Same lists as the editor's tests/analytics/pii-guard.test.ts (one GA4 property for both apps).
+const RESERVED = [
+    'source', 'medium', 'campaign', 'term', 'content',
+    'campaign_id', 'campaign_source', 'campaign_medium', 'campaign_name', 'campaign_term', 'campaign_content',
+]
+const BANNED = ['email', 'userId', 'displayName', 'code', 'documentId', 'doc_id', 'title', 'prompt', 'fileName', 'latex']
 
 describe('analytics PII guard', () => {
     beforeEach(() => trackAnalyticsEvent.mockClear())
@@ -43,11 +50,42 @@ describe('analytics PII guard', () => {
     })
 
     it('no reserved GA4 attribution params', () => {
-        for (const event of Object.values(SAMPLES) as AnalyticsEvent[]) {
+        for (const event of SAMPLE_EVENTS) {
             for (const [key] of params(event)) {
-                expect(RESERVED).not.toContain(key)
+                expect(RESERVED, `${event.name} uses reserved param "${key}"`).not.toContain(key)
                 expect(key.startsWith('campaign_')).toBe(false)
             }
+        }
+        // Also the whitelist itself: an optional param missing from SAMPLES is still checked here.
+        for (const key of Object.keys(EVENT_PROP_VALUES)) {
+            expect(RESERVED, `EVENT_PROP_VALUES uses reserved key "${key}"`).not.toContain(key)
+            expect(key.startsWith('campaign_')).toBe(false)
+        }
+    })
+
+    it('no identifier-shaped param names', () => {
+        for (const event of SAMPLE_EVENTS) {
+            for (const [key] of params(event)) {
+                expect(BANNED, `${event.name} carries forbidden param "${key}"`).not.toContain(key)
+            }
+        }
+        for (const key of Object.keys(EVENT_PROP_VALUES)) {
+            expect(BANNED, `EVENT_PROP_VALUES has forbidden key "${key}"`).not.toContain(key)
+        }
+    })
+
+    it('respects GA4 name and value limits', () => {
+        for (const event of SAMPLE_EVENTS) {
+            expect(event.name.length).toBeLessThanOrEqual(40)
+            expect(params(event).length).toBeLessThanOrEqual(25)
+            for (const [key, value] of params(event)) {
+                expect(key.length).toBeLessThanOrEqual(40)
+                if (typeof value === 'string') expect(value.length).toBeLessThanOrEqual(100)
+            }
+        }
+        for (const [key, values] of Object.entries(EVENT_PROP_VALUES)) {
+            expect(key.length).toBeLessThanOrEqual(40)
+            for (const value of values) expect(value.length).toBeLessThanOrEqual(100)
         }
     })
 

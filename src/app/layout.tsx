@@ -59,8 +59,6 @@ export default function RootLayout({
             </head>
             <body className={`${geistSans.variable} ${geistMono.variable}`}>
                 <AuthProvider>
-                    {/* useSearchParams() needs request-time data — wrapping it lets the
-                        rest of the tree (now header()-free) still prerender statically. */}
                     <AnalyticsInit />
                     {children}
                     <NativeAuthModal />
