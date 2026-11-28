@@ -18,6 +18,7 @@ import { consumeAuthErrorMarker, mapOAuthErrorToBanner, type AuthErrorMarker } f
 import { consumeAuthResultMarker, type AuthResultMarker } from './authResultMarker'
 import { AuthNativeError, type UserProfile } from './authTypes'
 import { clearPendingAuthSession } from './pendingAuthAction'
+import { reloadToRecoverSession } from './recoverSession'
 import {
     loginFailureReason,
     recordAuthTrigger,
@@ -163,13 +164,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
             user = await authApiClient.getMe()
         } catch {
-            // profile unavailable — the refresh below picks the session up
+            // profile unavailable — recovered by the full reload below
         }
         signUpCredentials.current = null
         trackAuthSuccess(emit ? [emit] : [], 'email', user)
-        if (user) dispatch({ type: 'AUTH_INIT_DONE', user })
         dispatch({ type: 'CLOSE_MODAL' })
-        router.refresh()
+        if (user) {
+            dispatch({ type: 'AUTH_INIT_DONE', user })
+            router.refresh()
+        } else {
+            // router.refresh() does not re-run the session check; without a reload the page
+            // would keep showing "Sign in" although the user is signed in.
+            void reloadToRecoverSession()
+        }
     }, [router])
 
     const submitSignIn = useCallback(async (email: string, password: string) => {
