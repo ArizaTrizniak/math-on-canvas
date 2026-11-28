@@ -45,7 +45,7 @@
       "landscape": "horizontal",
       "howTo": {
           "title": "Cómo usarla",
-          "step1": "Abre la plantilla en el editor: se guardará una copia en tu cuenta",
+          "step1": "Abre la plantilla en el editor: tendrás tu propia copia editable",
           "step2": "Cambia el texto, los números y las fórmulas para tu clase",
           "step3": "Imprímela o expórtala a PDF"
       },
