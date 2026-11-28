@@ -14,6 +14,7 @@ import LanguageSwitch from '@/app/(marketing)/landing/widgets/LanguageSwitch/Lan
 import { LandingAuthSlot } from '@/app/(marketing)/landing/widgets/LandingAuthSlot/LandingAuthSlot'
 import { LandingCTALink } from '@/app/(marketing)/landing/widgets/LandingCTALink/LandingCTALink'
 import { getCatalogStrings } from '../i18n'
+import { CatalogIntentResume } from './CatalogIntentResume'
 import './CatalogShell.css'
 
 const landing = { en: landingEN, ru: landingRU, es: landingES, de: landingDE } as const
@@ -36,6 +37,7 @@ export function CatalogShell({ lang, pathSuffix, children }: Props) {
 
   return (
     <div className="catalog-shell">
+      <CatalogIntentResume />
       <div className="catalog-shell__grid" aria-hidden="true" />
 
       <header className="catalog-shell__header catalog-shell__container">

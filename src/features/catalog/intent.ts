@@ -31,3 +31,14 @@ export function readIntent(now: number = Date.now()): string | null {
 export function clearIntent(): void {
   try { sessionStorage.removeItem(KEY) } catch { /* ignore */ }
 }
+
+export function consumeIntent(now: number = Date.now()): string | null {
+  const id = readIntent(now)
+  if (!id) return null
+  clearIntent()
+  return id
+}
+
+export function editorDocumentHref(documentId: string): string {
+  return `/editor?doc=${encodeURIComponent(documentId)}`
+}
