@@ -15,7 +15,6 @@ import LanguageSwitch from './widgets/LanguageSwitch/LandingLanguageSwitch'
 import { LandingFilmstrip } from './widgets/LandingFilmstrip/LandingFilmstrip'
 import { LandingCTALink } from './widgets/LandingCTALink/LandingCTALink'
 import { LandingAuthSlot } from './widgets/LandingAuthSlot/LandingAuthSlot'
-import { LandingAdminNavLink, LandingAdminCatalogTeaser } from './widgets/LandingAdminOnly/LandingAdminOnly'
 import {
     featureKeys,
     highlightKeys,
@@ -96,7 +95,9 @@ export function LandingPage({ lang }: LandingPageProps) {
 
                 <div className="landing__actions">
                     <LanguageSwitch currentLang={lang} />
-                    <LandingAdminNavLink href={`/${lang}/catalog`}>{tCatalog.nav}</LandingAdminNavLink>
+                    <Link href={`/${lang}/catalog`} className="landing__ghost">
+                        {tCatalog.nav}
+                    </Link>
                     <Link href={`/${lang}/pricing`} className="landing__ghost">
                         {t.cta.pricing}
                     </Link>
@@ -143,14 +144,25 @@ export function LandingPage({ lang }: LandingPageProps) {
 
                 <LandingFilmstrip images={filmstripImages} label={t.preview.caption} />
 
-                <LandingAdminCatalogTeaser
-                    lang={lang}
-                    title={t.catalogTeaser.title}
-                    description={t.catalogTeaser.description}
-                    cta={t.catalogTeaser.cta}
-                    categoriesLabel={t.catalogTeaser.categoriesLabel}
-                    categories={topCategoriesWithLabels}
-                />
+                <section className="landing__catalog">
+                    <div className="landing__catalog-copy">
+                        <h2>{t.catalogTeaser.title}</h2>
+                        <p>{t.catalogTeaser.description}</p>
+                        <Link href={`/${lang}/catalog`} className="landing__catalog-cta">
+                            {t.catalogTeaser.cta}
+                        </Link>
+                    </div>
+                    <div className="landing__catalog-categories">
+                        <div className="landing__catalog-categories-title">{t.catalogTeaser.categoriesLabel}</div>
+                        <ul>
+                            {topCategoriesWithLabels.map(({ category, label }) => (
+                                <li key={category}>
+                                    <Link href={`/${lang}/catalog/category/${category}`}>{label}</Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </section>
 
                 <section className="landing__highlights">
                     <div className="landing__highlights-header">
