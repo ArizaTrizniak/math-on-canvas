@@ -3,7 +3,7 @@ import { LANGUAGES } from '@/lib/i18n/constants'
 import type { CatalogDocumentMeta, DocumentSummary } from '../types'
 import { buildThumbnailUrl } from '../thumbnail'
 import { getCatalogStrings, getCategoryLabel } from '../i18n'
-import { categoryGlyph } from '../taxonomy'
+import { categoryGlyph, resolveDocumentCategory } from '../taxonomy'
 import { formatCompactCount, sheetOrientation } from '../format'
 import { buildPageStrip, formatRelativeDate } from '../docPage'
 import { documentLocalizedMeta } from '../seo/metadata'
@@ -35,7 +35,8 @@ export function DocumentView({ doc, lang, related }: Props) {
   // (Date.now() during prerender is a build error there).
   // eslint-disable-next-line react-hooks/purity -- see above
   const updated = formatRelativeDate(doc.updatedAt, Date.now(), lang)
-  const categoryLabel = doc.category ? getCategoryLabel(doc.category, lang) : null
+  const category = resolveDocumentCategory(doc)
+  const categoryLabel = category ? getCategoryLabel(category, lang) : null
   const languageLabel = LANGUAGES.find((l) => l.code === doc.language)?.label ?? doc.language
   const tags = doc.tags ?? []
 
@@ -43,9 +44,9 @@ export function DocumentView({ doc, lang, related }: Props) {
     <article className="catalog-doc">
       <header className="catalog-doc__head">
         <div className="catalog-doc__kicker">
-          {doc.category && categoryLabel && (
-            <Link href={`/${lang}/catalog/category/${doc.category}`} className="catalog-doc__category">
-              <span className="catalog-doc__glyph" aria-hidden="true">{categoryGlyph(doc.category)}</span>
+          {category && categoryLabel && (
+            <Link href={`/${lang}/catalog/category/${category}`} className="catalog-doc__category">
+              <span className="catalog-doc__glyph" aria-hidden="true">{categoryGlyph(category)}</span>
               {categoryLabel}
             </Link>
           )}
@@ -68,7 +69,7 @@ export function DocumentView({ doc, lang, related }: Props) {
             pages={buildPageStrip(doc)}
             alt={title}
             orientation={orientation}
-            category={doc.category}
+            category={category}
             labels={{
               region: s.previewLabel,
               fullscreen: s.fullscreen,
@@ -146,7 +147,7 @@ export function DocumentView({ doc, lang, related }: Props) {
         documents={related}
         lang={lang}
         label={s.relatedTitle}
-        moreHref={doc.category ? `/${lang}/catalog/category/${doc.category}` : undefined}
+        moreHref={category ? `/${lang}/catalog/category/${category}` : undefined}
         moreLabel={categoryLabel ? s.allInCategory.replace('{category}', categoryLabel) : undefined}
       />
 

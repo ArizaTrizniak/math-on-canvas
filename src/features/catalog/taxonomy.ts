@@ -30,3 +30,48 @@ export function categoryGlyph(slug: string | null): string {
 export function humanizeSlug(slug: string): string {
   return slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
 }
+
+/**
+ * Resolve the primary catalog category to display/link for a document.
+ * Reads only Stage-1 `subjects` so badges, breadcrumbs, and related links stay
+ * consistent with `?subjects=` API filtering.
+ */
+export function resolveDocumentCategory(
+  doc: { subjects?: string[] | null },
+): Category | null {
+  for (const subject of doc.subjects ?? []) {
+    if (isCategory(subject)) return subject
+  }
+  return null
+}
+
+/**
+ * Categories that have at least one document, in canonical `CATEGORIES` order.
+ * Reads only `subjects` to match the `?subjects=` query used by category pages.
+ */
+export function activeCategories(
+  documents: ReadonlyArray<{ subjects?: string[] | null }>,
+): Category[] {
+  const present = new Set<Category>()
+  for (const doc of documents) {
+    for (const subject of doc.subjects ?? []) {
+      if (isCategory(subject)) present.add(subject)
+    }
+  }
+  return CATEGORIES.filter((c) => present.has(c))
+}
+
+/**
+ * Categories with `count > 0` from catalog `facets.subjects`, in canonical `CATEGORIES` order.
+ * Returns `null` when the API response did not include `facets.subjects`.
+ */
+export function activeCategoriesFromFacets(
+  facets?: { subjects?: ReadonlyArray<{ id: string; count: number }> } | null,
+): Category[] | null {
+  if (!facets?.subjects) return null
+  const present = new Set<Category>()
+  for (const facet of facets.subjects) {
+    if (facet.count > 0 && isCategory(facet.id)) present.add(facet.id)
+  }
+  return CATEGORIES.filter((c) => present.has(c))
+}

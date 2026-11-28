@@ -82,7 +82,7 @@ export default async function CatalogHubPage({
     const showTop = !filtered && !cursor
 
     const [mainResult, topResult] = await Promise.all([
-        listPublicDocuments({ category, tags: tags.length ? tags : undefined, language, sort, cursor, limit: 24 }),
+        listPublicDocuments({ subjects: category ? [category] : undefined, tags: tags.length ? tags : undefined, language, sort, cursor, limit: 24 }),
         showTop ? listPublicDocuments({ sort: 'likesCount', limit: 3 }) : Promise.resolve(null),
     ])
     const main = mainResult.documents

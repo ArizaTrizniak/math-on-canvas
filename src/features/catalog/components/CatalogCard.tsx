@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { buildSlug } from '../slug'
 import { buildThumbnailUrl } from '../thumbnail'
 import { getCatalogStrings, getCategoryLabel } from '../i18n'
-import { categoryGlyph } from '../taxonomy'
+import { categoryGlyph, resolveDocumentCategory } from '../taxonomy'
 import { formatCompactCount, formatSheet, sheetOrientation } from '../format'
 import type { DocumentSummary } from '../types'
 import { OpenInEditorCTA } from './OpenInEditorCTA'
@@ -21,7 +21,8 @@ export function CatalogCard({ doc, lang }: Props) {
   const thumbnailUrl = buildThumbnailUrl(doc.thumbnailS3Key)
   const orientation = sheetOrientation(doc.metadata)
   const sheet = formatSheet(doc.metadata, strings.stats.pages)
-  const glyph = categoryGlyph(doc.category)
+  const category = resolveDocumentCategory(doc)
+  const glyph = categoryGlyph(category)
   const tags = (doc.tags ?? []).slice(0, MAX_TAGS)
 
   return (
@@ -42,10 +43,10 @@ export function CatalogCard({ doc, lang }: Props) {
           )}
         </div>
 
-        {doc.category && (
+        {category && (
           <span className="catalog-card__category">
             <span className="catalog-card__glyph" aria-hidden="true">{glyph}</span>
-            {getCategoryLabel(doc.category, lang)}
+            {getCategoryLabel(category, lang)}
           </span>
         )}
         {doc.language && doc.language !== lang && (
