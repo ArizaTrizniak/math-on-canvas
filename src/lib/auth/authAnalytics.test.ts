@@ -103,9 +103,8 @@ describe('trackAuthSuccess', () => {
     it('marks an admin internal before sending login with the stored trigger', () => {
         recordAuthTrigger('landing')
 
-        const trigger = trackAuthSuccess(['login'], 'email', profile('admin'))
+        trackAuthSuccess(['login'], 'email', profile('admin'))
 
-        expect(trigger).toBe('landing')
         expect(syncInternalFromRole).toHaveBeenCalledWith('admin')
         expect(track).toHaveBeenCalledWith({ name: 'login', method: 'email', trigger: 'landing' })
         expect(syncInternalFromRole.mock.invocationCallOrder[0]).toBeLessThan(track.mock.invocationCallOrder[0])
@@ -113,9 +112,8 @@ describe('trackAuthSuccess', () => {
     })
 
     it('still sends login when the profile could not be loaded', () => {
-        const trigger = trackAuthSuccess(['login'], 'email', null)
+        trackAuthSuccess(['login'], 'email', null)
 
-        expect(trigger).toBeNull()
         expect(syncInternalFromRole).toHaveBeenCalledWith(undefined)
         expect(track).toHaveBeenCalledWith({ name: 'login', method: 'email', trigger: undefined })
     })
@@ -123,9 +121,8 @@ describe('trackAuthSuccess', () => {
     it('with no events (password reset) sends nothing but uses up the trigger', () => {
         recordAuthTrigger('landing')
 
-        const trigger = trackAuthSuccess([], 'email', profile('free_user'))
+        trackAuthSuccess([], 'email', profile('free_user'))
 
-        expect(trigger).toBe('landing')
         expect(track).not.toHaveBeenCalled()
         expect(sessionStorage.getItem(TRIGGER_KEY)).toBeNull()
     })
@@ -135,9 +132,8 @@ describe('settleAuthInit', () => {
     it('user + signup marker → sign_up then login, both with the stored trigger', () => {
         recordAuthTrigger('pricing')
 
-        const trigger = settleAuthInit({ result: 'signup', error: null }, profile('free_user'))
+        settleAuthInit({ result: 'signup', error: null }, profile('free_user'))
 
-        expect(trigger).toBe('pricing')
         expect(track.mock.calls).toEqual([
             [{ name: 'sign_up', method: 'google', trigger: 'pricing' }],
             [{ name: 'login', method: 'google', trigger: 'pricing' }],
@@ -147,18 +143,16 @@ describe('settleAuthInit', () => {
     it('user + login marker → login only', () => {
         recordAuthTrigger('landing')
 
-        const trigger = settleAuthInit({ result: 'login', error: null }, profile('free_user'))
+        settleAuthInit({ result: 'login', error: null }, profile('free_user'))
 
-        expect(trigger).toBe('landing')
         expect(track.mock.calls).toEqual([[{ name: 'login', method: 'google', trigger: 'landing' }]])
     })
 
     it('user without a marker (ordinary load) → nothing sent, stale trigger cleared', () => {
         recordAuthTrigger('landing')
 
-        const trigger = settleAuthInit({ result: null, error: null }, profile('free_user'))
+        settleAuthInit({ result: null, error: null }, profile('free_user'))
 
-        expect(trigger).toBeNull()
         expect(track).not.toHaveBeenCalled()
         expect(sessionStorage.getItem(TRIGGER_KEY)).toBeNull()
     })
@@ -166,9 +160,8 @@ describe('settleAuthInit', () => {
     it('no user + OAuth error → nothing sent, trigger kept for the retry', () => {
         recordAuthTrigger('landing')
 
-        const trigger = settleAuthInit({ result: null, error: 'access_denied' }, null)
+        settleAuthInit({ result: null, error: 'access_denied' }, null)
 
-        expect(trigger).toBeNull()
         expect(track).not.toHaveBeenCalled()
         expect(sessionStorage.getItem(TRIGGER_KEY)).toBe('landing')
     })
@@ -176,9 +169,8 @@ describe('settleAuthInit', () => {
     it('no user and no error → nothing sent, trigger cleared', () => {
         recordAuthTrigger('landing')
 
-        const trigger = settleAuthInit({ result: 'login', error: null }, null)
+        settleAuthInit({ result: 'login', error: null }, null)
 
-        expect(trigger).toBeNull()
         expect(track).not.toHaveBeenCalled()
         expect(sessionStorage.getItem(TRIGGER_KEY)).toBeNull()
     })

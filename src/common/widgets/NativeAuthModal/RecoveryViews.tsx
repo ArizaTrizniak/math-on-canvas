@@ -166,7 +166,7 @@ export function ResetPasswordView() {
 
 export function ResetDoneView() {
     const { t } = useTranslation('auth')
-    const { resetSignedIn, user, prefillEmail, setModalView, closeNativeAuthModal, completeNativeAuthModal } = useAuthContext()
+    const { resetSignedIn, user, prefillEmail, setModalView, closeNativeAuthModal } = useAuthContext()
 
     if (!resetSignedIn) {
         return (
@@ -200,7 +200,7 @@ export function ResetDoneView() {
                     components={{ b: <strong className="am-strong" /> }}
                 />
             </p>
-            <button type="button" className="am-submit am-submit--stretch" onClick={completeNativeAuthModal} autoFocus>
+            <button type="button" className="am-submit am-submit--stretch" onClick={closeNativeAuthModal} autoFocus>
                 {t('resetDone.continue')}
             </button>
         </section>

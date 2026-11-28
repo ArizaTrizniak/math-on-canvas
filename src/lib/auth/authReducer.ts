@@ -1,4 +1,3 @@
-import type { AuthModalTrigger } from '@/common/analytics/events'
 import type { UserProfile } from './authTypes'
 
 export type AuthStatus = 'loading' | 'authenticated' | 'guest'
@@ -34,8 +33,6 @@ export interface AuthState {
     pendingResetEmail: string | null
     /** Whether the backend signed the user in after a password reset. */
     resetSignedIn: boolean
-    /** Trigger recorded for the latest completed sign-in/sign-up (`catalog`, `landing`, `pricing`, or null). */
-    lastAuthTrigger: AuthModalTrigger | null
     sessionExpiredModalOpen: boolean
     modalContext: AuthModalContext | null
 }
@@ -52,13 +49,12 @@ export const initialAuthState: AuthState = {
     pendingConfirmEmail: null,
     pendingResetEmail: null,
     resetSignedIn: false,
-    lastAuthTrigger: null,
     sessionExpiredModalOpen: false,
     modalContext: null,
 }
 
 export type AuthAction =
-    | { type: 'AUTH_INIT_DONE'; user: UserProfile | null; authTrigger?: AuthModalTrigger | null }
+    | { type: 'AUTH_INIT_DONE'; user: UserProfile | null }
     | { type: 'SET_LOADING'; loading: boolean }
     | { type: 'SET_ERROR'; error: string | null }
     | { type: 'SET_NOTICE'; notice: string | null }
@@ -84,12 +80,7 @@ const clearedFlow = {
 export function authReducer(state: AuthState, action: AuthAction): AuthState {
     switch (action.type) {
         case 'AUTH_INIT_DONE':
-            return {
-                ...state,
-                status: action.user ? 'authenticated' : 'guest',
-                user: action.user,
-                lastAuthTrigger: action.user ? (action.authTrigger ?? null) : null,
-            }
+            return { ...state, status: action.user ? 'authenticated' : 'guest', user: action.user }
         case 'SET_LOADING':
             return action.loading
                 ? { ...state, nativeAuthLoading: true, nativeAuthError: null, nativeAuthNotice: null }
@@ -149,7 +140,7 @@ export function authReducer(state: AuthState, action: AuthAction): AuthState {
         case 'SET_SESSION_EXPIRED':
             return { ...state, sessionExpiredModalOpen: action.open }
         case 'SIGN_OUT':
-            return { ...state, status: 'guest', user: null, lastAuthTrigger: null }
+            return { ...state, status: 'guest', user: null }
         default:
             return state
     }

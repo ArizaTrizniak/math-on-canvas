@@ -1,7 +1,7 @@
 'use client'
 
 import { useAuthContext } from '@/lib/auth/authContext'
-import { clearIntent, editorDocumentHref, saveIntent } from '../intent'
+import { editorDocumentHref, saveIntent } from '../intent'
 
 interface Props {
   documentId: string
@@ -21,10 +21,7 @@ export function OpenInEditorCTA({ documentId, title, thumbnailUrl, label, intro,
       return
     }
     saveIntent(documentId)
-    openSignUpModal('catalog', {
-      context: { kind: 'catalogOpen', title, thumbnailUrl, intro },
-      onDismiss: clearIntent,
-    })
+    openSignUpModal('catalog', { context: { kind: 'catalogOpen', title, thumbnailUrl, intro } })
   }
 
   return (

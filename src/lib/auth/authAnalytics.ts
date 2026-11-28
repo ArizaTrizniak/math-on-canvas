@@ -56,28 +56,26 @@ export function trackAuthSuccess(
     events: readonly ('sign_up' | 'login')[],
     method: AuthMethod,
     user: UserProfile | null,
-): AuthModalTrigger | null {
-    const trigger = consumeLastAuthTrigger()
+): void {
+    const trigger = consumeLastAuthTrigger() ?? undefined
     syncInternalFromRole(user?.role)
     for (const name of events) {
-        track({ name, method, trigger: trigger ?? undefined })
+        track({ name, method, trigger })
     }
-    return trigger
 }
 
 /** Settles the OAuth markers read on page load once the session check is done. */
 export function settleAuthInit(
     markers: { result: AuthResultMarker | null; error: AuthErrorMarker | null },
     user: UserProfile | null,
-): AuthModalTrigger | null {
+): void {
     if (user) {
-        if (markers.result === 'signup') return trackAuthSuccess(['sign_up', 'login'], 'google', user)
-        if (markers.result === 'login') return trackAuthSuccess(['login'], 'google', user)
-        clearPendingAuthSession()
-        return null
+        if (markers.result === 'signup') trackAuthSuccess(['sign_up', 'login'], 'google', user)
+        else if (markers.result === 'login') trackAuthSuccess(['login'], 'google', user)
+        else clearPendingAuthSession()
+        return
     }
     // A failed Google attempt keeps the trigger: the user usually retries from the banner.
-    if (markers.error) return null
+    if (markers.error) return
     clearPendingAuthSession()
-    return null
 }
