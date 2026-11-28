@@ -87,3 +87,33 @@ describe('authReducer — loading, errors, notices', () => {
         expect(s.nativeAuthError).toBe('auth:errors.invalidCode')
     })
 })
+
+describe('authReducer — auth trigger tracking', () => {
+    const user = {
+        userId: 'u1',
+        email: 'a@b.ru',
+        displayName: 'A',
+        role: 'free_user' as const,
+        entitlements: { products: [], aiCredits: null, plan: null },
+    }
+
+    it('AUTH_INIT_DONE stores lastAuthTrigger for authenticated users and clears it for guests', () => {
+        const authed = authReducer(initialAuthState, { type: 'AUTH_INIT_DONE', user, authTrigger: 'catalog' })
+        expect(authed.status).toBe('authenticated')
+        expect(authed.lastAuthTrigger).toBe('catalog')
+
+        const withoutTrigger = authReducer(authed, { type: 'AUTH_INIT_DONE', user })
+        expect(withoutTrigger.lastAuthTrigger).toBeNull()
+
+        const guest = authReducer(authed, { type: 'AUTH_INIT_DONE', user: null, authTrigger: 'catalog' })
+        expect(guest.status).toBe('guest')
+        expect(guest.lastAuthTrigger).toBeNull()
+    })
+
+    it('SIGN_OUT clears lastAuthTrigger', () => {
+        const authed = authReducer(initialAuthState, { type: 'AUTH_INIT_DONE', user, authTrigger: 'catalog' })
+        const signedOut = authReducer(authed, { type: 'SIGN_OUT' })
+        expect(signedOut.status).toBe('guest')
+        expect(signedOut.lastAuthTrigger).toBeNull()
+    })
+})

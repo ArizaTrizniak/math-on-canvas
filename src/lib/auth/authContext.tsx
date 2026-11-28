@@ -18,7 +18,7 @@ import { consumeAuthErrorMarker, mapOAuthErrorToBanner, type AuthErrorMarker } f
 import { consumeAuthResultMarker, type AuthResultMarker } from './authResultMarker'
 import { AuthNativeError, type UserProfile } from './authTypes'
 import { clearPendingAuthSession } from './pendingAuthAction'
-import { clearIntent } from '@/features/catalog/intent'
+import { createModalDismissTracker } from './modalDismiss'
 import { reloadToRecoverSession } from './recoverSession'
 import {
     loginFailureReason,
@@ -50,12 +50,15 @@ export interface OpenAuthModalOptions {
     context?: AuthModalContext
     /** The prompt was already counted (dropdown menu shown): record the trigger only. */
     silent?: boolean
+    /** Invoked when the user cancels/dismisses the modal (X or Escape), not on successful completion. */
+    onDismiss?: () => void
 }
 
 interface AuthContextValue extends AuthState {
     openSignInModal(trigger: AuthModalTrigger, options?: OpenAuthModalOptions): void
     openSignUpModal(trigger: AuthModalTrigger, options?: OpenAuthModalOptions): void
     closeNativeAuthModal(): void
+    completeNativeAuthModal(): void
     setModalView(view: ModalView, prefillEmail?: string): void
     /** Resolves false when the credentials were rejected and the view should let the user retry. */
     submitSignIn(email: string, password: string): Promise<boolean>
@@ -88,6 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Password typed at sign-up, kept in memory only so that confirming the
     // email can sign the user straight in ("Create account and open").
     const signUpCredentials = useRef<{ email: string; password: string } | null>(null)
+    const dismissTracker = useRef(createModalDismissTracker())
 
     // Sync i18next language from the URL segment (e.g. /ru/pricing → 'ru')
     useEffect(() => {
@@ -113,8 +117,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             (user) => {
                 if (cancelled) return
                 // Before AUTH_INIT_DONE: the admin flag is set before AnalyticsInit sees the user.
-                settleAuthInit(markers, user)
-                dispatch({ type: 'AUTH_INIT_DONE', user })
+                const authTrigger = settleAuthInit(markers, user)
+                dispatch({ type: 'AUTH_INIT_DONE', user, authTrigger })
             },
             () => {
                 if (cancelled) return
@@ -138,6 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const openAuthModal = useCallback((view: 'signIn' | 'signUp', trigger: AuthModalTrigger, options?: OpenAuthModalOptions) => {
         recordAuthTrigger(trigger)
         if (!options?.silent) trackAuthPromptOpened(view, trigger)
+        dismissTracker.current.set(options?.onDismiss)
         dispatch({ type: 'OPEN_MODAL', view, context: options?.context })
     }, [])
     const openSignInModal = useCallback(
@@ -151,7 +156,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const closeNativeAuthModal = useCallback(() => {
         signUpCredentials.current = null
         clearPendingAuthSession()
-        clearIntent()
+        dismissTracker.current.dismiss()
+        dispatch({ type: 'CLOSE_MODAL' })
+    }, [])
+    const completeNativeAuthModal = useCallback(() => {
+        signUpCredentials.current = null
+        dismissTracker.current.complete()
         dispatch({ type: 'CLOSE_MODAL' })
     }, [])
     const setModalView = useCallback((view: ModalView, prefillEmail?: string) => dispatch({ type: 'SET_VIEW', view, prefillEmail }), [])
@@ -169,10 +179,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // profile unavailable — recovered by the full reload below
         }
         signUpCredentials.current = null
-        trackAuthSuccess(emit ? [emit] : [], 'email', user)
+        const authTrigger = trackAuthSuccess(emit ? [emit] : [], 'email', user)
+        dismissTracker.current.complete()
         dispatch({ type: 'CLOSE_MODAL' })
         if (user) {
-            dispatch({ type: 'AUTH_INIT_DONE', user })
+            dispatch({ type: 'AUTH_INIT_DONE', user, authTrigger })
             router.refresh()
         } else {
             // router.refresh() does not re-run the session check; without a reload the page
@@ -329,8 +340,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     const user = await authApiClient.getMe()
                     // Signed in by a password reset: no login event, but the trigger is used up
                     // and an admin is marked internal.
-                    trackAuthSuccess([], 'email', user)
-                    dispatch({ type: 'AUTH_INIT_DONE', user })
+                    const authTrigger = trackAuthSuccess([], 'email', user)
+                    dispatch({ type: 'AUTH_INIT_DONE', user, authTrigger })
                     router.refresh()
                     signedIn = true
                 } catch {
@@ -356,6 +367,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         openSignInModal,
         openSignUpModal,
         closeNativeAuthModal,
+        completeNativeAuthModal,
         setModalView,
         submitSignIn,
         submitSignUp,

@@ -1,8 +1,8 @@
 const KEY = 'catalog:openIntent'
 
 /**
- * How long a pending "open in editor" survives. Every catalog card mounts the CTA,
- * so a stale intent would otherwise hijack any later sign-in on any catalog page.
+ * How long a pending "open in editor" survives in sessionStorage across an OAuth
+ * redirect before CatalogIntentResume (mounted in CatalogShell) drops it as stale.
  */
 export const INTENT_TTL_MS = 10 * 60 * 1000
 
