@@ -18,6 +18,7 @@ import { consumeAuthErrorMarker, mapOAuthErrorToBanner, type AuthErrorMarker } f
 import { consumeAuthResultMarker, type AuthResultMarker } from './authResultMarker'
 import { AuthNativeError, type UserProfile } from './authTypes'
 import { clearPendingAuthSession } from './pendingAuthAction'
+import { clearIntent } from '@/features/catalog/intent'
 import { reloadToRecoverSession } from './recoverSession'
 import {
     loginFailureReason,
@@ -150,6 +151,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const closeNativeAuthModal = useCallback(() => {
         signUpCredentials.current = null
         clearPendingAuthSession()
+        clearIntent()
         dispatch({ type: 'CLOSE_MODAL' })
     }, [])
     const setModalView = useCallback((view: ModalView, prefillEmail?: string) => dispatch({ type: 'SET_VIEW', view, prefillEmail }), [])
