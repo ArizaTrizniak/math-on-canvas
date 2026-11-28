@@ -164,6 +164,31 @@ describe('AuthProvider + CatalogIntentResume integration', () => {
     expect(readIntent()).toBeNull()
   })
 
+  // AUTH_INIT_DONE (guest) and OPEN_OAUTH_ERROR must land in the same render: a guest render
+  // with the modal closed in between would clear the intent before the retry banner shows.
+  it('keeps intent while the OAuth error banner is open (?auth_error=access_denied) and clears it on close', async () => {
+    saveIntent('doc-6')
+    window.history.replaceState(null, '', '/en/catalog?auth_error=access_denied')
+    mockAuthApiClient.getMe.mockRejectedValueOnce(new AuthUnauthenticatedError())
+
+    await act(async () => {
+      root.render(renderProbe())
+    })
+    await flushEffects()
+
+    expect(latestAuth?.status).toBe('guest')
+    expect(latestAuth?.nativeAuthModalOpen).toBe(true)
+    expect(readIntent()).toBe('doc-6')
+
+    await act(async () => {
+      latestAuth?.closeNativeAuthModal()
+    })
+    await flushEffects()
+
+    expect(readIntent()).toBeNull()
+    expect(assignSpy).not.toHaveBeenCalled()
+  })
+
   it('clears intent when guest closes the modal and does not redirect on later sign-in', async () => {
     mockAuthApiClient.getMe
       .mockRejectedValueOnce(new AuthUnauthenticatedError())
