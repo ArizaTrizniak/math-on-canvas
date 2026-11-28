@@ -51,6 +51,8 @@ export const readInternalFromQuery = (): void => {
 
 const canTrack = () => initialized && isProduction()
 
+const pageLocation = (pathname: string) => window.location.origin + pathname
+
 export const syncInternalFromRole = (role: string | undefined): void => {
     if (role !== 'admin') return
     markInternal()
@@ -75,20 +77,17 @@ export const initAnalytics = () => {
     }
 
     const internal = isInternal()
-    if (internal) {
-        ReactGA.initialize(measurementId, {
-            gtagOptions: {
-                traffic_type: 'internal'
-            }
-        })
-    } else {
-        ReactGA.initialize(measurementId)
-    }
-    ReactGA.gtag('set', 'user_properties', { internal })
-    ReactGA.send({
-        hitType: 'pageview',
-        page: window.location.pathname + window.location.search
+    // gtag `config` sends its own page_view unless told not to; the first page_view comes from
+    // AnalyticsInit instead. page_location never carries the query, so one-shot markers like
+    // ?auth_result / ?auth_error never reach GA4 (BL-0009).
+    ReactGA.initialize(measurementId, {
+        gtagOptions: {
+            ...(internal ? { traffic_type: 'internal' } : {}),
+            send_page_view: false,
+            page_location: pageLocation(window.location.pathname)
+        }
     })
+    ReactGA.gtag('set', 'user_properties', { internal })
 
     initialized = true
 }
@@ -101,10 +100,28 @@ export const trackAnalyticsEvent = (
     ReactGA.event(eventName, params)
 }
 
-export const trackPageView = (path?: string) => {
+/** Sends page_view for a pathname. The query is never sent (see initAnalytics). */
+export const trackPageView = (pathname: string) => {
     if (!canTrack() || typeof window === 'undefined') return
-    ReactGA.send({
-        hitType: 'pageview',
-        page: path ?? window.location.pathname + window.location.search
+    const location = pageLocation(pathname)
+    // Later events in this page inherit page_location from `set`, not from the URL bar.
+    ReactGA.gtag('set', { page_location: location })
+    ReactGA.gtag('event', 'page_view', { page_path: pathname, page_location: location })
+}
+
+/**
+ * Resolves once gtag has processed everything queued before the call (or after `timeoutMs`).
+ * Uses a `get` command, which creates no hit: call it before a full-page navigation so the
+ * events sent just before it are not lost.
+ */
+export const flushAnalytics = (timeoutMs = 1000): Promise<void> => {
+    const measurementId = getMeasurementId()
+    if (!canTrack() || !measurementId) return Promise.resolve()
+    return new Promise((resolve) => {
+        const timer = setTimeout(resolve, timeoutMs)
+        ReactGA.gtag('get', measurementId, 'client_id', () => {
+            clearTimeout(timer)
+            resolve()
+        })
     })
 }

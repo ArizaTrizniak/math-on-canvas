@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { trackAnalyticsEvent } from '@/common/utils/analytics'
+import { trackAuthPromptOpened } from '@/lib/auth/authAnalytics'
 import { AuthDropdown } from '@/common/widgets/AuthDropdown/AuthDropdown'
 
 interface LandingSignInProps {
@@ -14,7 +14,8 @@ export function LandingSignIn({ label }: LandingSignInProps) {
     const btnRef = useRef<HTMLButtonElement>(null)
 
     const handleClick = () => {
-        trackAnalyticsEvent('sign_in')
+        // In the click handler, not an effect: one event per shown menu, also under StrictMode.
+        trackAuthPromptOpened('signIn', 'landing')
         if (btnRef.current) {
             const rect = btnRef.current.getBoundingClientRect()
             setAnchorRect({ bottom: rect.bottom, left: rect.left, width: rect.width })
@@ -32,6 +33,7 @@ export function LandingSignIn({ label }: LandingSignInProps) {
                 open={dropdownOpen}
                 onClose={() => setDropdownOpen(false)}
                 defaultView="signIn"
+                trigger="landing"
             />
         </>
     )

@@ -1,13 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import { trackAnalyticsEvent } from '@/common/utils/analytics'
+import { track } from '@/common/analytics/track'
+import type { CtaLocation } from '@/common/analytics/events'
 
 interface LandingCTALinkProps {
     href: string
     className?: string
     testId?: string
-    location?: string
+    location?: CtaLocation
     children: React.ReactNode
 }
 
@@ -17,7 +18,7 @@ export function LandingCTALink({ href, className, testId, location = 'landing', 
             href={href}
             className={className}
             data-testid={testId}
-            onClick={() => trackAnalyticsEvent('cta_click', { location })}
+            onClick={() => track({ name: 'cta_click', location })}
         >
             {children}
         </Link>
