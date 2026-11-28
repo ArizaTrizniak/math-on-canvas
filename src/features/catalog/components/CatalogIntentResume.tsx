@@ -3,19 +3,22 @@
 import { useEffect } from 'react'
 import { useAuthContext } from '@/lib/auth/authContext'
 import { flushAnalytics } from '@/common/utils/analytics'
-import { consumeIntent, editorDocumentHref } from '../intent'
+import { resolveCatalogIntentAction } from '../resumeIntent'
 
 export function CatalogIntentResume() {
-  const { status } = useAuthContext()
+  const { status, nativeAuthModalOpen } = useAuthContext()
 
-  // After authentication, resume any pending "open in editor" intent regardless of filters/pagination.
+  // After authentication (and once any modal view has closed), resume a pending
+  // "open in editor" intent regardless of catalog filters or pagination.
   useEffect(() => {
-    if (status !== 'authenticated') return
-    const documentId = consumeIntent()
-    if (!documentId) return
+    const decision = resolveCatalogIntentAction({
+      status,
+      modalOpen: nativeAuthModalOpen,
+    })
+    if (decision.kind !== 'redirect') return
     // The sign-in events were queued just now: let gtag send them before leaving the page.
-    void flushAnalytics().then(() => window.location.assign(editorDocumentHref(documentId)))
-  }, [status])
+    void flushAnalytics().then(() => window.location.assign(decision.href))
+  }, [status, nativeAuthModalOpen])
 
   return null
 }

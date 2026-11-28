@@ -18,7 +18,6 @@ import { consumeAuthErrorMarker, mapOAuthErrorToBanner, type AuthErrorMarker } f
 import { consumeAuthResultMarker, type AuthResultMarker } from './authResultMarker'
 import { AuthNativeError, type UserProfile } from './authTypes'
 import { clearPendingAuthSession } from './pendingAuthAction'
-import { clearIntent } from '@/features/catalog/intent'
 import { reloadToRecoverSession } from './recoverSession'
 import {
     loginFailureReason,
@@ -115,6 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 // Before AUTH_INIT_DONE: the admin flag is set before AnalyticsInit sees the user.
                 settleAuthInit(markers, user)
                 dispatch({ type: 'AUTH_INIT_DONE', user })
+                dispatch({ type: 'CLOSE_MODAL' })
             },
             () => {
                 if (cancelled) return
@@ -151,7 +151,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const closeNativeAuthModal = useCallback(() => {
         signUpCredentials.current = null
         clearPendingAuthSession()
-        clearIntent()
         dispatch({ type: 'CLOSE_MODAL' })
     }, [])
     const setModalView = useCallback((view: ModalView, prefillEmail?: string) => dispatch({ type: 'SET_VIEW', view, prefillEmail }), [])
@@ -170,13 +169,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         signUpCredentials.current = null
         trackAuthSuccess(emit ? [emit] : [], 'email', user)
-        dispatch({ type: 'CLOSE_MODAL' })
         if (user) {
             dispatch({ type: 'AUTH_INIT_DONE', user })
+            dispatch({ type: 'CLOSE_MODAL' })
             router.refresh()
         } else {
             // router.refresh() does not re-run the session check; without a reload the page
-            // would keep showing "Sign in" although the user is signed in.
+            // would keep showing "Sign in" although the user is signed in. Keep the modal
+            // open until reload so a pending catalog intent is not cleared as guest state.
             void reloadToRecoverSession()
         }
     }, [router])
